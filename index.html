@@ -43,7 +43,8 @@
         .overlay {
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(224, 187, 228, 0.4), rgba(191, 252, 198, 0.4));
+            /* 영상 로딩 전에도 색상이 보이도록 배경 설정 */
+            background: linear-gradient(135deg, rgba(224, 187, 228, 0.6), rgba(191, 252, 198, 0.6));
             z-index: -1;
         }
 
@@ -81,7 +82,7 @@
 
         /* [5. 홈 섹션] */
         .main-title h1 {
-            font-size: 5rem; margin-bottom: 10px;
+            font-size: clamp(2.5rem, 8vw, 5rem); margin-bottom: 10px;
             text-shadow: 0 0 20px var(--lavender);
         }
 
@@ -93,7 +94,7 @@
             padding: 20px; border-radius: 20px;
             border: 1px solid var(--lavender);
         }
-        .stat-card h3 { font-size: 3rem; color: var(--mint); margin: 10px 0; }
+        .stat-card h3 { font-size: 2.5rem; color: var(--mint); margin: 10px 0; }
 
         /* [7. 게임 섹션] */
         .nickname-input { padding: 12px; border-radius: 10px; border: none; margin-bottom: 15px; width: 250px; text-align: center; color: #333; }
@@ -119,12 +120,16 @@
 <body>
 
     <div id="intro-overlay">
-        <h2 style="color: white; margin-bottom: 20px;">Poyo 9th Anniversary</h2>
+        <h2 style="color: white; margin-bottom: 20px; text-align:center;">Poyo 9th Anniversary</h2>
         <button class="enter-btn" onclick="startSite()">입장하기 (Music On 🎵)</button>
     </div>
 
     <audio id="myAudio" loop><source src="bgm.mp3" type="audio/mpeg"></audio>
-    <video autoplay muted loop playsinline id="bg-video"><source src="poyo_bg.mp4" type="video/mp4"></video>
+    
+    <video autoplay muted loop playsinline id="bg-video">
+        <source src="2026-04 _ 월간 재첩 - Chrome 2026-04-27 01-50-13.mp4" type="video/mp4">
+    </video>
+    
     <div class="overlay"></div>
 
     <div id="music-btn" onclick="toggleMusic()">🎵 Music On</div>
@@ -133,123 +138,4 @@
         <div class="nav-menu">
             <a href="#home">홈</a>
             <a href="#stats">통계</a>
-            <a href="#game">게임</a>
-        </div>
-    </nav>
-
-    <section id="home">
-        <div class="main-title">
-            <h1>포요 9주년</h1>
-            <p style="font-size: 1.8rem; font-weight: 300;">9년의 계절, 우리가 함께 써 내려간 이야기</p>
-        </div>
-    </section>
-
-    <section id="stats">
-        <div class="content-box">
-            <h2 style="color:var(--mint)">9년의 발자취</h2>
-            <div class="stats-container">
-                <div class="stat-card"><p>함께한 시간</p><h3>9년</h3></div>
-                <div class="stat-card"><p>함께한 날들</p><h3>3,285일</h3></div>
-                <div class="stat-card"><p>우리의 마음</p><h3>∞</h3></div>
-            </div>
-        </div>
-    </section>
-
-    <section id="game">
-        <div class="content-box">
-            <h2 style="color:var(--mint)">포동이 퀴즈: 조회수 대결!</h2>
-            
-            <div id="start-screen">
-                <p>닉네임을 입력하고 도전을 시작하세요!</p>
-                <input type="text" id="nickname" class="nickname-input" placeholder="포동이 닉네임 입력">
-                <br>
-                <button class="enter-btn" style="font-size: 1rem;" onclick="startGame()">게임 시작</button>
-            </div>
-
-            <div id="game-screen" class="game-area">
-                <p><span id="user-display" style="color:var(--mint); font-weight:bold;"></span> 포동이님, 조회수가 더 높은 영상은?</p>
-                <p>현재 점수: <span id="score-display">0</span></p>
-                <div class="game-container">
-                    <div class="game-item" onclick="checkAnswer(true)">
-                        <div id="thumb-a" style="background:#555; height:150px; border-radius:10px; margin-bottom:10px; display:flex; align-items:center; justify-content:center;">썸네일 A</div>
-                        <p id="title-a">영상 제목 A</p>
-                    </div>
-                    <div style="font-weight:bold; font-size:1.5rem;">VS</div>
-                    <div class="game-item" onclick="checkAnswer(false)">
-                        <div id="thumb-b" style="background:#555; height:150px; border-radius:10px; margin-bottom:10px; display:flex; align-items:center; justify-content:center;">썸네일 B</div>
-                        <p id="title-b">영상 제목 B</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="ranking">
-                <p>🏆 나의 최고 기록</p>
-                <div id="best-record" style="color:var(--mint); font-weight:bold;">기록을 세워보세요!</div>
-            </div>
-        </div>
-    </section>
-
-    <script>
-        const audio = document.getElementById("myAudio");
-        let score = 0;
-        let nick = "";
-
-        function startSite() {
-            audio.play();
-            document.getElementById("intro-overlay").style.opacity = '0';
-            setTimeout(() => { document.getElementById("intro-overlay").style.display = 'none'; }, 1000);
-            updateBestDisplay();
-        }
-
-        function toggleMusic() {
-            const btn = document.getElementById("music-btn");
-            if (audio.paused) {
-                audio.play();
-                btn.innerText = "🎵 Music On";
-            } else {
-                audio.pause();
-                btn.innerText = "🔇 Music Off";
-            }
-        }
-
-        function startGame() {
-            nick = document.getElementById('nickname').value;
-            if(!nick) { alert("닉네임을 입력해주세요!"); return; }
-            document.getElementById('start-screen').style.display = 'none';
-            document.getElementById('game-screen').style.display = 'block';
-            document.getElementById('user-display').innerText = nick;
-            score = 0;
-            document.getElementById('score-display').innerText = score;
-        }
-
-        function checkAnswer(isA) {
-            // 현재는 A를 누르면 점수가 오르게 설정되어 있습니다.
-            if(isA) {
-                score++;
-                document.getElementById('score-display').innerText = score;
-                alert("정답! 조회수가 더 높네요!");
-            } else {
-                alert("아쉬워요! 최종 점수: " + score);
-                saveRecord();
-                document.getElementById('start-screen').style.display = 'block';
-                document.getElementById('game-screen').style.display = 'none';
-            }
-        }
-
-        function saveRecord() {
-            const best = localStorage.getItem('poyo_best') || 0;
-            if(score > best) {
-                localStorage.setItem('poyo_best', score);
-                localStorage.setItem('poyo_nick', nick);
-            }
-            updateBestDisplay();
-        }
-
-        function updateBestDisplay() {
-            const bS = localStorage.getItem('poyo_best');
-            const bN = localStorage.getItem('poyo_nick');
-            if(bS) document.getElementById('best-record').innerText = bN + " 포동이 : " + bS + "문제 성공!";
-        }
-    </script>
-</body>
-</html>
+            <a href="#game">게임
