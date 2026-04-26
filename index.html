@@ -3,45 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>포요 9주년 기념 페이지</title>
+    <title>포요 9주년</title>
     <style>
         :root { --mint: #BFFCC6; --lavender: #E0BBE4; }
-        body, html { margin: 0; padding: 0; font-family: 'Pretendard', sans-serif; color: white; scroll-behavior: smooth; background-color: #000; overflow-x: hidden; }
-        
+        body, html { margin: 0; padding: 0; font-family: sans-serif; color: white; background-color: #000; overflow-x: hidden; }
+
         /* 인트로 화면 */
         #intro-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, var(--lavender), var(--mint));
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 9999; opacity: 1; transition: opacity 0.5s ease;
+            z-index: 9999;
         }
         .enter-btn {
             padding: 15px 40px; font-size: 1.2rem; font-weight: bold;
-            background: white; color: #777; border: none; border-radius: 50px;
-            cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            background: white; color: #555; border: none; border-radius: 50px;
+            cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         /* 배경 및 레이아웃 */
         #bg-video { position: fixed; top: 0; left: 0; min-width: 100%; min-height: 100%; z-index: -2; object-fit: cover; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(224, 187, 228, 0.5), rgba(191, 252, 198, 0.5)); z-index: -1; }
+        
         nav { position: fixed; top: 20px; width: 100%; display: flex; justify-content: center; z-index: 100; }
-        .nav-menu { display: flex; gap: 30px; background: rgba(255, 255, 255, 0.2); padding: 12px 40px; border-radius: 40px; backdrop-filter: blur(10px); border: 1px solid var(--mint); }
-        .nav-menu a { color: white; text-decoration: none; font-weight: 600; }
+        .nav-menu { display: flex; gap: 25px; background: rgba(255, 255, 255, 0.2); padding: 10px 30px; border-radius: 30px; backdrop-filter: blur(10px); }
+        .nav-menu a { color: white; text-decoration: none; font-weight: bold; }
+        
         section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        h1 { font-size: clamp(2.5rem, 8vw, 5rem); text-shadow: 0 0 20px var(--lavender); margin: 0; }
+        h1 { font-size: 4rem; text-shadow: 0 0 15px var(--lavender); margin: 0; }
     </style>
 </head>
 <body>
 
     <div id="intro-overlay">
         <h2 style="color: white; margin-bottom: 20px;">Poyo 9th Anniversary</h2>
-        <button class="enter-btn" onclick="startSite()">입장하기 (Music On 🎵)</button>
+        <button class="enter-btn" onclick="startProject()">입장하기</button>
     </div>
 
-    <audio id="myAudio" loop><source src="bgm.mp3" type="audio/mpeg"></audio>
-    <video autoplay muted loop playsinline id="bg-video">
-        <source src="video.mp4" type="video/mp4">
-    </video>
+    <audio id="mainAudio" loop><source src="bgm.mp3" type="audio/mpeg"></audio>
+    <video autoplay muted loop playsinline id="bg-video"><source src="video.mp4" type="video/mp4"></video>
     <div class="overlay"></div>
 
     <nav>
@@ -54,30 +54,28 @@
 
     <section id="home">
         <h1>포요 9주년</h1>
-        <p style="font-size: 1.5rem; font-weight: 300;">9년의 계절, 우리가 함께 써 내려간 이야기</p>
+        <p style="font-size: 1.5rem;">9년의 계절, 우리가 함께 써 내려간 이야기</p>
+    </section>
+
+    <section id="stats">
+        <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 20px; border: 1px solid var(--lavender);">
+            <h2>9년의 발자취</h2>
+            <p>3,285일 동안 함께해주셔서 감사합니다.</p>
+        </div>
     </section>
 
     <script>
-        function startSite() {
-            // 1. 음악 재생 시도 (에러가 나도 무시하고 진행)
-            try {
-                const audio = document.getElementById("myAudio");
-                if(audio) {
-                    audio.play().catch(function(error) {
-                        console.log("음악 재생 실패 (파일 확인 필요):", error);
-                    });
-                }
-            } catch(e) {
-                console.log("오디오 관련 에러 무시함");
+        function startProject() {
+            // 1. 소리 재생
+            var audio = document.getElementById("mainAudio");
+            if (audio) {
+                audio.play().catch(function(e) { console.log("Audio play blocked"); });
             }
 
-            // 2. 인트로 화면 제거 (무조건 실행)
-            const intro = document.getElementById("intro-overlay");
-            if(intro) {
-                intro.style.opacity = '0';
-                setTimeout(function() {
-                    intro.style.display = 'none';
-                }, 500);
+            // 2. 인트로 제거
+            var intro = document.getElementById("intro-overlay");
+            if (intro) {
+                intro.style.display = "none";
             }
         }
     </script>
