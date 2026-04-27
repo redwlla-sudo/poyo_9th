@@ -8,30 +8,29 @@
 <style>
 @import url('https://fonts.cafe24.com/css/cafe24ssurround.css');
 
-body{
+/* 🚨 완전 초기 깜빡임 방지 */
+html, body{
     margin:0;
     padding:0;
     font-family:'Cafe24 Ssurround', sans-serif;
-    overflow-x:hidden;
     background:linear-gradient(135deg,#d8c7ff,#b8f2e6);
+    overflow-x:hidden;
 }
 
 /* =========================
-   🚨 메인 (절대 초기 상태 숨김)
+   🚨 PRELOAD LOCK (핵심)
 ========================= */
-#main{
+#app{
     opacity:0;
-    pointer-events:none;
-    transition:0.5s ease;
+    transition:0.2s ease;
 }
 
-#main.show{
+#app.ready{
     opacity:1;
-    pointer-events:auto;
 }
 
 /* =========================
-   🎬 인트로 (항상 최상단)
+   🎬 인트로
 ========================= */
 #intro{
     position:fixed;
@@ -50,7 +49,7 @@ body{
     z-index:-1;
 }
 
-/* UI 그룹 */
+/* UI */
 .intro-group{
     display:flex;
     flex-direction:column;
@@ -58,7 +57,6 @@ body{
     gap:20px;
 }
 
-/* 103초 전 숨김 */
 #introText,
 #enterBtn{
     opacity:0;
@@ -91,7 +89,6 @@ body{
     cursor:pointer;
 }
 
-/* 스킵 */
 #skipBtn{
     position:absolute;
     top:20px;
@@ -104,7 +101,7 @@ body{
 }
 
 /* =========================
-   🧭 UI
+   🧭 상단 UI (타원)
 ========================= */
 .top-nav{
     position:fixed;
@@ -112,19 +109,23 @@ body{
     left:50%;
     transform:translateX(-50%);
     display:flex;
-    gap:15px;
+    gap:10px;
+    padding:10px 25px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.4);
+    backdrop-filter:blur(10px);
     z-index:1000;
 }
 
 .top-nav div{
-    padding:12px 28px;
-    border-radius:50px;
+    padding:10px 20px;
+    border-radius:999px;
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
     font-weight:800;
 }
 
 /* =========================
-   🟣 점 네비
+   🟣 점 네비 (5개 고정)
 ========================= */
 .dots{
     position:fixed;
@@ -162,12 +163,31 @@ body{
     text-align:center;
 }
 
+/* 메인 텍스트 */
+.main-title{
+    font-size:5rem;
+    font-weight:900;
+    color:black;
+}
+
+.sub-title{
+    font-size:2.4rem;
+    font-weight:800;
+    color:black;
+    margin-top:20px;
+}
+
 /* audio */
 audio{display:none;}
 </style>
 </head>
 
 <body>
+
+<!-- =========================
+   🚨 APP WRAPPER (핵심 구조)
+========================= -->
+<div id="app">
 
 <!-- 🎬 인트로 -->
 <div id="intro">
@@ -184,11 +204,6 @@ audio{display:none;}
     </div>
 
 </div>
-
-<!-- 🎵 BGM -->
-<audio id="audio" loop>
-    <source src="bgm.mp3">
-</audio>
 
 <!-- 🧭 UI -->
 <div class="top-nav">
@@ -209,56 +224,73 @@ audio{display:none;}
 <!-- ========================= MAIN ========================= -->
 <div id="main">
 
-    <section class="page"><h1>HOME</h1></section>
-    <section class="page"><h1>CHZZK STYLE</h1></section>
+    <section class="page">
+        <div class="main-title">POYO 9TH ANNIVERSARY</div>
+        <div class="sub-title">
+            포동이들과 함께 걸어온 9년이라는 시간의 발자취
+        </div>
+    </section>
+
+    <section class="page" style="background:#0b3d2e;color:#00ff9d;">
+        <h1>치지직 스타일</h1>
+    </section>
+
     <section class="page"><h1>PAGE 3</h1></section>
     <section class="page"><h1>PAGE 4</h1></section>
-    <section class="page"><h1>GAME</h1></section>
+
+    <section class="page">
+        <h1 style="font-size:2.8rem;">
+            상단 통계 / 게임 탭을 눌러주세요
+        </h1>
+    </section>
+
+</div>
 
 </div>
 
 <script>
 
-window.addEventListener("DOMContentLoaded", () => {
+const app = document.getElementById("app");
+const intro = document.getElementById("intro");
+const video = document.getElementById("introVideo");
 
-    const video = document.getElementById("introVideo");
-    const audio = document.getElementById("audio");
+let shown = false;
 
-    let shown = false;
-
-    /* 🔊 안정화 (중요) */
-    function unlock(){
-        video.muted = false;
-        video.volume = 0.7;
-        audio.volume = 0.5;
-    }
-
-    window.addEventListener("click", unlock, {once:true});
-
-    /* 🔥 103초 UI */
-    function loop(){
-        if(!shown && video.currentTime >= 103){
-            shown = true;
-            document.getElementById("introText").classList.add("show");
-            document.getElementById("enterBtn").classList.add("show");
-        }
-        requestAnimationFrame(loop);
-    }
-    loop();
-
-    /* ▶ 시작 */
-    window.enter = function(){
-        audio.play().catch(()=>{});
-        document.getElementById("intro").style.display="none";
-        document.getElementById("main").classList.add("show");
-    };
-
-    window.skipIntro = function(){
-        video.pause();
-        enter();
-    };
-
+/* 🚨 완전 초기 로딩 후 표시 (깜빡임 제거 핵심) */
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        app.classList.add("ready");
+    }, 50);
 });
+
+/* 🔊 안정화 */
+window.addEventListener("click", () => {
+    video.muted = false;
+    video.volume = 0.7;
+}, {once:true});
+
+/* 🔥 103초 UI */
+function loop(){
+    if(!shown && video.currentTime >= 103){
+        shown = true;
+        document.getElementById("introText").classList.add("show");
+        document.getElementById("enterBtn").classList.add("show");
+    }
+    requestAnimationFrame(loop);
+}
+loop();
+
+/* ▶ 시작 */
+window.enter = function(){
+    intro.remove();
+    app.classList.add("ready");
+};
+
+/* ⏭ 스킵 */
+window.skipIntro = function(){
+    video.pause();
+    enter();
+};
 
 </script>
 
