@@ -1,177 +1,223 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>포요 9주년</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>포요 9주년</title>
 
-    <style>
-        :root { 
-            --mint: #BFFCC6; 
-            --lavender: #E0BBE4; 
-            --main-bg: linear-gradient(135deg, #E0BBE4, #BFFCC6);
-        }
+<style>
+:root { 
+    --mint: #BFFCC6; 
+    --lavender: #E0BBE4; 
+    --main-bg: linear-gradient(135deg, #E0BBE4, #BFFCC6);
+}
 
-        body, html { 
-            margin: 0; padding: 0; 
-            font-family: 'Pretendard', sans-serif; 
-            color: white; 
-            background: var(--main-bg) fixed !important;
-            overflow-x: hidden; 
-            scroll-behavior: smooth; 
-        }
+body, html { 
+    margin: 0; padding: 0; 
+    font-family: 'Pretendard', sans-serif; 
+    color: white; 
+    background: var(--main-bg);
+    overflow-x: hidden;
+}
 
-        /* ⭐ 인트로 */
-        #intro-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            transition: opacity 0.8s ease;
-        }
+/* ⭐ 인트로 */
+#intro-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    transition: all 0.8s ease;
+}
 
-        #intro-video {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -1;
-            opacity: 0.6;
-        }
+/* ⭐ 인트로 영상 (문제 해결 핵심) */
+#intro-video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+}
 
-        .intro-content {
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
+/* ⭐ 어둡게 필터 */
+#intro-overlay::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+}
 
-        .enter-btn {
-            padding: 15px 45px;
-            font-size: 1.2rem;
-            background: white;
-            color: #888;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            margin-top: 15px;
-        }
+/* 가운데 컨텐츠 */
+.intro-content {
+    text-align: center;
+    z-index: 2;
+}
 
-        /* 배경 영상 */
-        #bg-video { 
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: -1;
-            object-fit: cover;
-            opacity: 0.7;
-        }
+.enter-btn {
+    padding: 15px 45px;
+    font-size: 1.2rem;
+    background: white;
+    color: #888;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+}
 
-        nav {
-            position: fixed;
-            top: 20px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            z-index: 100;
-        }
+/* ⭐ 볼륨 위치 (우측 상단) */
+.volume-box {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 3;
+}
 
-        .nav-menu {
-            display: flex;
-            gap: 20px;
-            background: rgba(255,255,255,0.3);
-            padding: 10px 25px;
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
-        }
+/* ⭐ 본문 숨김 */
+.main-content {
+    opacity: 0;
+    transform: scale(1.1);
+    transition: all 1s ease;
+}
 
-        section {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-    </style>
+/* ⭐ 본문 활성화 */
+.main-content.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* 배경 영상 */
+#bg-video { 
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.7;
+}
+
+/* nav 숨김 시작 */
+nav {
+    display: none;
+}
+
+/* nav 활성화 */
+nav.active {
+    display: flex;
+    position: fixed;
+    top: 20px;
+    width: 100%;
+    justify-content: center;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 20px;
+    background: rgba(255,255,255,0.3);
+    padding: 10px 25px;
+    border-radius: 30px;
+}
+
+/* 글씨 크게 */
+h1 {
+    font-size: 4rem;
+}
+
+p {
+    font-size: 1.5rem;
+}
+
+section {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+</style>
 </head>
 
 <body>
 
 <!-- ⭐ 인트로 -->
 <div id="intro-overlay">
+
+    <!-- 영상 -->
     <video autoplay muted loop playsinline id="intro-video">
-        <source src="./video.mp4" type="video/mp4">
+        <source src="video.mp4" type="video/mp4">
     </video>
 
+    <!-- 볼륨 -->
+    <div class="volume-box">
+        <input type="range" min="0" max="1" step="0.01" value="0.5"
+        oninput="setVolume(this.value)">
+    </div>
+
+    <!-- 중앙 -->
     <div class="intro-content">
         <h2>Poyo 9th Anniversary</h2>
-
-        <input type="range" min="0" max="1" step="0.01" value="0.5"
-               oninput="setVolume(this.value)">
-
-        <br>
-
         <button class="enter-btn" onclick="startProject()">입장하기</button>
     </div>
+
 </div>
 
-<!-- 음악 -->
-<audio id="mainAudio" loop>
-    <source src="bgm.mp3" type="audio/mpeg">
-</audio>
+<!-- ⭐ 본편 전체 묶기 -->
+<div class="main-content" id="mainContent">
 
-<!-- 배경 영상 -->
-<video autoplay muted loop playsinline id="bg-video">
-    <source src="./video.mp4" type="video/mp4">
-</video>
+    <audio id="mainAudio" loop>
+        <source src="bgm.mp3" type="audio/mpeg">
+    </audio>
 
-<!-- 메뉴 -->
-<nav>
-    <div class="nav-menu">
-        <a href="#home">홈</a>
-        <a href="#stats">통계</a>
-    </div>
-</nav>
+    <video autoplay muted loop playsinline id="bg-video">
+        <source src="video.mp4" type="video/mp4">
+    </video>
 
-<!-- 본문 -->
-<section id="home">
-    <div>
-        <h1>포요 9주년</h1>
-        <p>9년의 계절, 포동이들과 함께 써 내려간 이야기</p>
-    </div>
-</section>
+    <nav id="nav">
+        <div class="nav-menu">
+            <a href="#home">홈</a>
+            <a href="#stats">통계</a>
+        </div>
+    </nav>
 
-<section id="stats">
-    <div>
-        <h2>9년의 발자취</h2>
-        <p>9년 · 3,285일 · ∞</p>
-    </div>
-</section>
+    <section id="home">
+        <div>
+            <h1>포요 9주년</h1>
+            <p>9년의 계절, 포동이들과 함께 써 내려간 이야기</p>
+        </div>
+    </section>
 
-<!-- ⭐ JS (하나만!) -->
+    <section id="stats">
+        <div>
+            <h2>9년의 발자취</h2>
+            <p>9년 · 3,285일 · ∞</p>
+        </div>
+    </section>
+
+</div>
+
 <script>
 function setVolume(value) {
-    var audio = document.getElementById("mainAudio");
-    if (audio) {
-        audio.volume = value;
-    }
+    document.getElementById("mainAudio").volume = value;
 }
 
 function startProject() {
-    var audio = document.getElementById("mainAudio");
-    if (audio) {
-        audio.volume = 0.5;
-        audio.play().catch(() => {});
-    }
+    document.getElementById("mainAudio").play();
 
+    // 인트로 제거
     var intro = document.getElementById("intro-overlay");
-    if (intro) {
-        intro.style.opacity = '0';
-        setTimeout(function() {
-            intro.style.display = "none";
-        }, 800);
-    }
+    intro.style.opacity = "0";
+
+    setTimeout(function(){
+        intro.style.display = "none";
+
+        // 본문 등장
+        document.getElementById("mainContent").classList.add("active");
+
+        // 메뉴 등장
+        document.getElementById("nav").classList.add("active");
+
+    }, 800);
 }
 </script>
 
