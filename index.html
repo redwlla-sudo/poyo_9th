@@ -12,10 +12,10 @@ body, html {
     font-family: sans-serif;
     overflow-x:hidden;
     scroll-behavior:smooth;
-    color:white;
 
-    /* 🔥 핵심: 영상 실패해도 무조건 보이게 */
-    background: linear-gradient(135deg, #1a1a1a, #2c2c2c);
+    /* 🎨 연보라 + 민트 */
+    background: linear-gradient(135deg, #d8c7ff, #b8f2e6);
+    color:white;
 }
 
 /* ⭐ 인트로 */
@@ -29,24 +29,27 @@ body, html {
     z-index:9999;
 }
 
-/* ⭐ 인트로 영상 (있으면 보여주고 없어도 문제 없음) */
+/* 인트로 영상 */
 #intro video{
     position:absolute;
     width:100%;
     height:100%;
     object-fit:cover;
     z-index:-1;
-    opacity:0.7;
+    opacity:0.75;
 }
 
-/* ⭐ 인트로 텍스트 */
 .intro-content{
     text-align:center;
     z-index:2;
 }
 
+/* ⭐ 제목 (연보라+민트 그라데이션) */
 .intro-content h1{
     font-size:clamp(3rem,8vw,5rem);
+    background: linear-gradient(90deg, #cdb4ff, #7fffd4);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
 }
 
 /* 버튼 */
@@ -62,14 +65,14 @@ button{
     display:none;
 }
 
-/* ⭐ 배경 영상 (죽어도 영향 없음) */
+/* ⭐ 배경 영상 */
 #bg-video{
     position:fixed;
     width:100%;
     height:100%;
     object-fit:cover;
     z-index:-1;
-    opacity:0.4;
+    opacity:0.35;
 }
 
 /* ⭐ 페이지 */
@@ -83,18 +86,18 @@ button{
     padding:20px;
 }
 
-/* ⭐ 페이드 */
+/* ⭐ 빠른 페이드 */
 .fade{
     opacity:0;
-    transform:translateY(40px);
-    transition:1s;
+    transform:translateY(20px);
+    transition:0.4s ease;
 }
 .fade.show{
     opacity:1;
     transform:translateY(0);
 }
 
-/* ⭐ 점 네비 */
+/* ⭐ 점 네비 (스크롤 따라 active 변경) */
 .dots{
     position:fixed;
     right:20px;
@@ -108,19 +111,20 @@ button{
     background:white;
     margin:10px 0;
     opacity:0.3;
+    transition:0.3s;
 }
 .dot.active{
     opacity:1;
 }
 
-/* ⭐ 통계 */
+/* ⭐ 카드 */
 .stats-grid{
     display:flex;
     gap:20px;
     flex-wrap:wrap;
 }
 .card{
-    background:rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.25);
     padding:25px;
     border-radius:20px;
     min-width:150px;
@@ -133,34 +137,59 @@ button{
     right:20px;
     z-index:1000;
 }
+
+/* ⭐ 1-2 페이지 TV 느낌 */
+.tv-bg{
+    background: repeating-linear-gradient(
+        45deg,
+        #000,
+        #000 10px,
+        #0f3d2e 10px,
+        #0f3d2e 20px
+    );
+}
+.big-text{
+    font-size:2.5rem;
+    font-weight:bold;
+}
+
+/* 치지직 이미지 */
+.chzzk-img{
+    width:200px;
+    margin-top:20px;
+}
 </style>
 </head>
 
 <body>
 
+<!-- 🎵 공통 음악 (인트로 → 본문 이어짐) -->
+<audio id="audio" loop>
+    <source src="bgm.mp3">
+</audio>
+
 <!-- ⭐ 인트로 -->
 <div id="intro">
 
-    <!-- 🔥 video2 (있어도 되고 없어도 됨) -->
-    <video autoplay muted loop playsinline onerror="this.style.display='none'">
-        <source src="video2.mp4" type="video/mp4">
+    <!-- video2 -->
+    <video id="introVideo" autoplay muted playsinline>
+        <source src="video2.mp4">
     </video>
 
     <div class="intro-content">
         <h1>Poyo 9th Anniversary</h1>
-        <button onclick="enter()">입장하기</button>
+
+        <!-- 영상 끝나면 버튼 표시 -->
+        <button id="enterBtn" onclick="enter()" style="display:none;">
+            입장하기
+        </button>
     </div>
 </div>
 
 <!-- ⭐ 메인 -->
 <div id="main">
 
-    <audio id="audio" loop>
-        <source src="bgm.mp3">
-    </audio>
-
-    <!-- 🔥 배경 영상 (깨져도 영향 없음) -->
-    <video autoplay muted loop playsinline id="bg-video" onerror="this.style.display='none'">
+    <video autoplay muted loop playsinline id="bg-video">
         <source src="video.mp4">
     </video>
 
@@ -175,21 +204,26 @@ button{
         <div class="dot active"></div>
         <div class="dot"></div>
         <div class="dot"></div>
-        <div class="dot"></div>
     </div>
 
     <!-- 1페이지 -->
     <section class="page fade">
-        <h1 style="font-size:clamp(3rem,10vw,6rem)">포요 9주년</h1>
+        <h1 style="font-size:4rem; background:linear-gradient(90deg,#cdb4ff,#7fffd4);
+        -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
+        포요 9주년
+        </h1>
         <p>9년의 계절, 포동이들과 함께 써 내려간 이야기</p>
     </section>
 
-    <!-- 1-2페이지 -->
-    <section class="page fade">
-        <p style="font-size:1.5rem">
-        치지직 데뷔 3285일째<br>
-        약 8만명의 포동이들이 함께했습니다
-        </p>
+    <!-- 1-2 페이지 -->
+    <section class="page fade tv-bg">
+        <div class="big-text">
+            치지직 데뷔 3285일째<br>
+            약 8만명의 포동이들이 함께했습니다
+        </div>
+
+        <!-- PNG 로고 -->
+        <img src="img.png" class="chzzk-img">
     </section>
 
     <!-- 2페이지 -->
@@ -205,29 +239,57 @@ button{
 </div>
 
 <script>
+
+const introVideo = document.getElementById("introVideo");
+const enterBtn = document.getElementById("enterBtn");
+const audio = document.getElementById("audio");
+
+/* 🎬 영상 끝나면 버튼 등장 */
+introVideo.addEventListener("ended", ()=>{
+    enterBtn.style.display="inline-block";
+});
+
+/* 🎵 음악 (가능한 즉시 재생 시도) */
+window.addEventListener("load", ()=>{
+    audio.volume = 0.5;
+    audio.play().catch(()=>{});
+});
+
+/* 🎵 입장 */
 function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
 
-    const audio = document.getElementById("audio");
-    audio.volume = 0.5;
     audio.play().catch(()=>{});
 }
 
+/* 볼륨 */
 function setVolume(v){
-    const audio = document.getElementById("audio");
-    if(audio) audio.volume = v;
+    audio.volume = v;
 }
 
-/* ⭐ 절대 안 터지는 페이드 */
+/* ⭐ 빠른 페이드 */
 window.addEventListener("scroll", ()=>{
     document.querySelectorAll(".fade").forEach(el=>{
         const top = el.getBoundingClientRect().top;
-        if(top < window.innerHeight - 100){
+        if(top < window.innerHeight - 80){
             el.classList.add("show");
         }
     });
+
+    /* ⭐ 점 네비 활성화 */
+    const pages = document.querySelectorAll(".page");
+    const dots = document.querySelectorAll(".dot");
+
+    pages.forEach((p,i)=>{
+        const rect = p.getBoundingClientRect();
+        if(rect.top < window.innerHeight/2 && rect.bottom > window.innerHeight/2){
+            dots.forEach(d=>d.classList.remove("active"));
+            if(dots[i]) dots[i].classList.add("active");
+        }
+    });
 });
+
 </script>
 
 </body>
