@@ -12,10 +12,12 @@ body, html {
     font-family:sans-serif;
     overflow-x:hidden;
     color:white;
-
     background: linear-gradient(135deg,#d8c7ff,#b8f2e6);
 }
 
+/* =======================
+   ⭐ 인트로 (완전 수정)
+======================= */
 #intro{
     position:fixed;
     width:100%;
@@ -26,7 +28,8 @@ body, html {
     z-index:9999;
 }
 
-#intro video{
+/* 인트로 영상 */
+#introVideo{
     position:absolute;
     width:100%;
     height:100%;
@@ -35,18 +38,24 @@ body, html {
     z-index:-1;
 }
 
+/* 인트로 박스 */
 .intro-box{
     text-align:center;
 }
 
+/* ⭐ 제목 (연보라 + 민트) */
 .intro-title{
     font-size:clamp(3rem,7vw,5rem);
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
-    opacity:1;
+
+    opacity:0;
+    transform:translateY(20px);
+    transition:0.5s ease;
 }
 
+/* ⭐ 버튼 */
 #enterBtn{
     margin-top:20px;
     padding:15px 40px;
@@ -56,8 +65,21 @@ body, html {
 
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
     color:#000;
+
+    opacity:0;
+    transform:translateY(20px);
+    transition:0.5s ease;
 }
 
+/* 등장 */
+.show{
+    opacity:1 !important;
+    transform:translateY(0) !important;
+}
+
+/* =======================
+   ⭐ 메인
+======================= */
 #main{
     display:none;
 }
@@ -79,10 +101,6 @@ body, html {
     flex-direction:column;
     text-align:center;
     padding:20px;
-}
-
-.fade{
-    opacity:1;
 }
 
 .dots{
@@ -131,24 +149,38 @@ body, html {
 
 <body>
 
+<!-- 🎵 음악 -->
 <audio id="audio" loop>
     <source src="bgm.mp3">
 </audio>
 
-<!-- ================= 인트로 ================= -->
+<!-- =======================
+     ⭐ 인트로 (수정 완료)
+======================= -->
 <div id="intro">
 
+    <!-- 영상 -->
     <video id="introVideo" autoplay muted playsinline>
         <source src="video2.mp4">
     </video>
 
+    <!-- 텍스트 -->
     <div class="intro-box">
-        <div class="intro-title">Poyo 9th Anniversary</div>
-        <button id="enterBtn" onclick="enter()">입장하기</button>
+
+        <div id="title" class="intro-title">
+            Poyo 9th Anniversary
+        </div>
+
+        <button id="enterBtn" onclick="enter()">
+            입장하기
+        </button>
+
     </div>
 </div>
 
-<!-- ================= 메인 ================= -->
+<!-- =======================
+     ⭐ 메인
+======================= -->
 <div id="main">
 
     <video autoplay muted loop playsinline id="bg-video">
@@ -199,20 +231,25 @@ body, html {
 <script>
 
 const audio = document.getElementById("audio");
-const introVideo = document.getElementById("introVideo");
+const video = document.getElementById("introVideo");
+const title = document.getElementById("title");
+const btn = document.getElementById("enterBtn");
 
+/* 🎵 음악 (클릭 시 확실 재생) */
 window.addEventListener("click", ()=>{
     audio.play().catch(()=>{});
 }, {once:true});
 
-setTimeout(()=>{
-    document.getElementById("enterBtn").style.display="inline-block";
-}, 4000);
+/* 🎬 영상 끝 or fallback */
+video.addEventListener("ended", showIntro);
+setTimeout(showIntro, 5000);
 
-introVideo.addEventListener("ended", ()=>{
-    document.getElementById("enterBtn").style.display="inline-block";
-});
+function showIntro(){
+    title.classList.add("show");
+    btn.classList.add("show");
+}
 
+/* 🎮 입장 */
 function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
