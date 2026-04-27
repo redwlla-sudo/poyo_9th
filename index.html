@@ -6,10 +6,16 @@
 <title>포요 9주년</title>
 
 <style>
+:root { 
+    --mint: #BFFCC6; 
+    --lavender: #E0BBE4; 
+    --main-bg: linear-gradient(135deg, #E0BBE4, #BFFCC6);
+}
+
 body {
     margin: 0;
     font-family: sans-serif;
-    background: linear-gradient(135deg,#E0BBE4,#BFFCC6);
+    background: var(--main-bg);
     color: white;
 }
 
@@ -18,34 +24,28 @@ body {
     position: fixed;
     width: 100%;
     height: 100%;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 9999;
 }
 
-/* ⭐ 영상 (핵심 수정) */
 #intro video {
     position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: 0; /* 절대 음수 쓰지 마 */
+    z-index: 0;
 }
 
-/* ⭐ 어두운 필터 제거 (밝게) */
-#intro::after {
-    display: none;
-}
-
-/* 중앙 텍스트 */
-.center {
+.intro-content {
     position: relative;
     z-index: 2;
     text-align: center;
 }
 
-/* 볼륨 위치 */
 .volume {
     position: absolute;
     top: 20px;
@@ -53,12 +53,12 @@ body {
     z-index: 3;
 }
 
-/* 본문 숨김 */
+/* ⭐ 본문 숨김 */
 #main {
     display: none;
 }
 
-/* 배경 영상 */
+/* ⭐ 배경 영상 */
 #bg-video {
     position: fixed;
     width: 100%;
@@ -68,6 +68,7 @@ body {
     opacity: 0.7;
 }
 
+/* 메뉴 */
 nav {
     display: none;
     position: fixed;
@@ -80,14 +81,41 @@ nav.active {
     display: flex;
 }
 
-h1 { font-size: 4rem; }
-p { font-size: 1.4rem; }
+.nav-menu {
+    display: flex;
+    gap: 20px;
+    background: rgba(255,255,255,0.3);
+    padding: 10px 25px;
+    border-radius: 30px;
+}
 
+/* ⭐ 통계 카드 원래대로 */
+.stats-box {
+    background: rgba(255,255,255,0.2);
+    padding: 40px;
+    border-radius: 30px;
+    max-width: 800px;
+}
+
+.stats-grid {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-card {
+    background: rgba(255,255,255,0.2);
+    padding: 20px;
+    border-radius: 20px;
+    flex: 1;
+}
+
+/* 섹션 */
 section {
-    height: 100vh;
+    min-height: 100vh;
     display:flex;
     justify-content:center;
     align-items:center;
+    text-align:center;
 }
 </style>
 </head>
@@ -97,7 +125,8 @@ section {
 <!-- ⭐ 인트로 -->
 <div id="intro">
 
-    <video autoplay muted loop playsinline>
+    <!-- 🔥 영상 테스트 (중요) -->
+    <video autoplay muted loop playsinline controls>
         <source src="video.mp4" type="video/mp4">
     </video>
 
@@ -106,7 +135,7 @@ section {
         oninput="setVolume(this.value)">
     </div>
 
-    <div class="center">
+    <div class="intro-content">
         <h2>Poyo 9th Anniversary</h2>
         <button onclick="enter()">입장하기</button>
     </div>
@@ -125,8 +154,11 @@ section {
     </video>
 
     <nav id="nav">
-        <a href="#home">홈</a>
-        <a href="#stats">통계</a>
+        <div class="nav-menu">
+            <a href="#home">홈</a>
+            <a href="#stats">통계</a>
+            <a href="#game">게임</a>
+        </div>
     </nav>
 
     <section id="home">
@@ -137,10 +169,18 @@ section {
     </section>
 
     <section id="stats">
-        <div>
+        <div class="stats-box">
             <h2>9년의 발자취</h2>
-            <p>9년 · 3,285일 · ∞</p>
+            <div class="stats-grid">
+                <div class="stat-card"><p>시간</p><h3>9년</h3></div>
+                <div class="stat-card"><p>날짜</p><h3>3,285일</h3></div>
+                <div class="stat-card"><p>마음</p><h3>∞</h3></div>
+            </div>
         </div>
+    </section>
+
+    <section id="game">
+        <h2>🎮 게임 영역 (나중에 추가)</h2>
     </section>
 
 </div>
@@ -150,16 +190,12 @@ function setVolume(v){
     document.getElementById("audio").volume = v;
 }
 
-/* ⭐ 인트로 들어가자마자 음악 */
-window.addEventListener("click", function firstClick(){
-    document.getElementById("audio").play().catch(()=>{});
-    window.removeEventListener("click", firstClick);
-});
-
 function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
     document.getElementById("nav").classList.add("active");
+
+    document.getElementById("audio").play().catch(()=>{});
 }
 </script>
 
