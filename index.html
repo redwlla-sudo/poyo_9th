@@ -26,7 +26,6 @@ body, html {
     justify-content:center;
     align-items:center;
     z-index:9999;
-    cursor:pointer;
 }
 
 #introVideo{
@@ -202,49 +201,64 @@ body, html {
 </div>
 
 <!-- =========================
-   ⭐ JS (여기만 수정됨)
+   ⭐ 안정 JS (화이트스크린 방지)
 ========================= -->
 <script>
 
-const video = document.getElementById("introVideo");
-const title = document.getElementById("title");
-const btn = document.getElementById("enterBtn");
-const audio = document.getElementById("audio");
+window.addEventListener("DOMContentLoaded", () => {
 
-let shown = false;
+    const video = document.getElementById("introVideo");
+    const title = document.getElementById("title");
+    const btn = document.getElementById("enterBtn");
+    const audio = document.getElementById("audio");
 
-/* 🎮 입장 = 음악 시작 */
-function enter(){
-    audio.volume = 0.5;
-    audio.play().catch(()=>{});
+    if (!video || !title || !btn || !audio) return;
 
-    document.getElementById("intro").style.display="none";
-    document.getElementById("main").style.display="block";
-}
+    let shown = false;
 
-/* 🔊 안정 재생 시스템 */
-function tryPlayAudio(){
-    audio.play().catch(()=>{});
-}
+    /* 🎮 입장 */
+    window.enter = function () {
+        try {
+            audio.volume = 0.5;
+            audio.play().catch(()=>{});
+        } catch(e) {}
 
-/* 🔥 새로고침/접속 안정화 */
-window.addEventListener("load", () => {
+        const intro = document.getElementById("intro");
+        const main = document.getElementById("main");
 
-    tryPlayAudio();
+        if (intro) intro.style.display = "none";
+        if (main) main.style.display = "block";
+    };
 
-    document.body.addEventListener("click", tryPlayAudio, { once:true });
-});
-
-/* 🎬 정확히 1분 43초 (103초) */
-video.addEventListener("timeupdate", () => {
-
-    if (shown) return;
-
-    if (video.currentTime >= 103) {
-        shown = true;
-        title.classList.add("show");
-        btn.classList.add("show");
+    /* 🔊 안전 재생 (복구용) */
+    function tryPlayAudio(){
+        try {
+            audio.play().catch(()=>{});
+        } catch(e) {}
     }
+
+    window.addEventListener("load", () => {
+        tryPlayAudio();
+        document.body.addEventListener("click", tryPlayAudio, { once:true });
+    });
+
+    /* 🎬 1분 43초 = 103초 정확 타이밍 */
+    video.addEventListener("timeupdate", () => {
+
+        if (shown) return;
+
+        try {
+            if (video.currentTime >= 103) {
+                shown = true;
+
+                if (title) title.classList.add("show");
+                if (btn) btn.classList.add("show");
+            }
+        } catch(e) {
+            console.warn("타이밍 오류 방지");
+        }
+    });
+
 });
 
 </script>
