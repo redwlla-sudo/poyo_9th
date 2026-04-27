@@ -168,7 +168,7 @@ body, html {
     </div>
 </div>
 
-<!-- 🎵 음악 -->
+<!-- 🎵 BGM -->
 <audio id="audio" loop>
     <source src="bgm.mp3">
 </audio>
@@ -201,7 +201,7 @@ body, html {
 </div>
 
 <!-- =========================
-   ⭐ 안정 JS (화이트스크린 방지)
+   ⭐ 안정 JS
 ========================= -->
 <script>
 
@@ -215,34 +215,34 @@ window.addEventListener("DOMContentLoaded", () => {
     if (!video || !title || !btn || !audio) return;
 
     let shown = false;
+    let introSoundOn = false;
 
-    /* 🎮 입장 */
+    /* 🎬 1. 인트로 영상 소리 (첫 클릭 시 ON) */
+    window.addEventListener("click", () => {
+        if (!introSoundOn) {
+            video.muted = false;
+            video.volume = 1.0;
+            introSoundOn = true;
+        }
+    }, { once:true });
+
+    /* 🎵 2. BGM (입장 후만 재생) */
     window.enter = function () {
+
         try {
             audio.volume = 0.5;
             audio.play().catch(()=>{});
         } catch(e) {}
 
-        const intro = document.getElementById("intro");
-        const main = document.getElementById("main");
-
-        if (intro) intro.style.display = "none";
-        if (main) main.style.display = "block";
+        document.getElementById("intro").style.display = "none";
+        document.getElementById("main").style.display = "block";
     };
 
-    /* 🔊 안전 재생 (복구용) */
-    function tryPlayAudio(){
-        try {
-            audio.play().catch(()=>{});
-        } catch(e) {}
-    }
+    /* ❌ BGM 초기 완전 차단 */
+    audio.pause();
+    audio.currentTime = 0;
 
-    window.addEventListener("load", () => {
-        tryPlayAudio();
-        document.body.addEventListener("click", tryPlayAudio, { once:true });
-    });
-
-    /* 🎬 1분 43초 = 103초 정확 타이밍 */
+    /* 🎬 1분 43초 = 103초 정확 등장 */
     video.addEventListener("timeupdate", () => {
 
         if (shown) return;
@@ -250,13 +250,10 @@ window.addEventListener("DOMContentLoaded", () => {
         try {
             if (video.currentTime >= 103) {
                 shown = true;
-
-                if (title) title.classList.add("show");
-                if (btn) btn.classList.add("show");
+                title.classList.add("show");
+                btn.classList.add("show");
             }
-        } catch(e) {
-            console.warn("타이밍 오류 방지");
-        }
+        } catch(e) {}
     });
 
 });
