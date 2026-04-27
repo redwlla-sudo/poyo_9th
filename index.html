@@ -7,6 +7,7 @@
 
 <style>
 @import url('https://fonts.cafe24.com/css/cafe24ssurround.css');
+@import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&display=swap');
 
 body, html {
     margin:0;
@@ -14,12 +15,11 @@ body, html {
     font-family:'Cafe24 Ssurround', sans-serif;
     overflow-x:hidden;
     scroll-behavior:smooth;
-    color:white;
     background: linear-gradient(135deg,#d8c7ff,#b8f2e6);
 }
 
 /* =========================
-   ⭐ 인트로 (절대 수정 금지 유지)
+   🎬 인트로
 ========================= */
 #intro{
     position:fixed;
@@ -37,6 +37,19 @@ body, html {
     height:100%;
     object-fit:cover;
     z-index:-1;
+}
+
+/* 스킵 버튼 */
+#skipBtn{
+    position:absolute;
+    top:20px;
+    right:20px;
+    padding:10px 20px;
+    border:none;
+    border-radius:20px;
+    background:white;
+    cursor:pointer;
+    font-weight:700;
 }
 
 .intro-box{
@@ -75,7 +88,7 @@ body, html {
 }
 
 /* =========================
-   ⭐ NAV (한글로 변경)
+   🧭 NAV (상단)
 ========================= */
 .nav{
     position:fixed;
@@ -94,29 +107,39 @@ body, html {
     color:black;
     font-weight:700;
     cursor:pointer;
-    transition:0.3s;
-}
-
-.nav-item:hover{
-    transform:scale(1.1);
 }
 
 /* =========================
-   ⭐ 메인
+   🟣 점 네비 (오른쪽 중앙)
 ========================= */
-#main{
-    display:none;
-}
-
-#bg-video{
+.dots{
     position:fixed;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    z-index:-1;
-    opacity:0.35;
+    right:20px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    z-index:999;
 }
 
+.dot{
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:white;
+    opacity:0.3;
+    cursor:pointer;
+}
+
+.dot.active{
+    opacity:1;
+    transform:scale(1.3);
+}
+
+/* =========================
+   📄 페이지
+========================= */
 .page{
     height:100vh;
     display:flex;
@@ -124,11 +147,10 @@ body, html {
     align-items:center;
     flex-direction:column;
     text-align:center;
-    padding:20px;
 }
 
 /* =========================
-   ⭐ Page 1
+   🏠 1페이지
 ========================= */
 .title-main{
     font-size:clamp(3rem,6vw,5rem);
@@ -138,13 +160,17 @@ body, html {
     -webkit-text-fill-color:transparent;
 }
 
+/* 9주년 문구 (필기체 + 강조) */
 .sub-text{
-    font-size:2rem;
+    font-family:'Gaegu', cursive;
+    font-size:2.2rem;
     margin-top:20px;
+    color:#2b2b2b;
+    text-shadow:0 2px 10px rgba(255,255,255,0.5);
 }
 
 /* =========================
-   ⭐ Page 2
+   📊 통계
 ========================= */
 .stats-grid{
     display:flex;
@@ -152,46 +178,45 @@ body, html {
 }
 
 .card{
-    background:rgba(255,255,255,0.25);
+    background:rgba(255,255,255,0.3);
     padding:25px;
     border-radius:20px;
+    font-weight:700;
 }
 
 /* =========================
-   ⭐ Page 3
+   🎮 게임
 ========================= */
 .game-box{
     font-size:2rem;
     font-weight:800;
 }
 
-/* volume */
-.volume{
-    position:fixed;
-    top:20px;
-    right:20px;
+/* =========================
+   🎵 BGM
+========================= */
+audio{
+    display:none;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎬 인트로 (그대로 유지) -->
+<!-- 🎬 인트로 -->
 <div id="intro">
 
     <video id="introVideo" autoplay muted playsinline>
         <source src="video2.mp4">
     </video>
 
+    <button id="skipBtn" onclick="skipIntro()">스킵</button>
+
     <div class="intro-box">
 
-        <div id="title" class="intro-title">
-            Poyo 9th Anniversary
-        </div>
+        <div id="title" class="intro-title">Poyo 9th Anniversary</div>
 
-        <button id="enterBtn" onclick="enter()">
-            입장하기
-        </button>
+        <button id="enterBtn" onclick="enter()">입장하기</button>
 
     </div>
 </div>
@@ -201,55 +226,47 @@ body, html {
     <source src="bgm.mp3">
 </audio>
 
-<!-- =========================
-   ⭐ NAV (한글)
-========================= -->
+<!-- 🧭 NAV -->
 <div class="nav">
     <div class="nav-item" onclick="goTo(0)">홈</div>
     <div class="nav-item" onclick="goTo(1)">통계</div>
     <div class="nav-item" onclick="goTo(2)">게임</div>
 </div>
 
-<!-- =========================
-   ⭐ MAIN
-========================= -->
+<!-- 🟣 DOT NAV -->
+<div class="dots">
+    <div class="dot active" onclick="goTo(0)"></div>
+    <div class="dot" onclick="goTo(1)"></div>
+    <div class="dot" onclick="goTo(2)"></div>
+</div>
+
+<!-- ========================= MAIN ========================= -->
 <div id="main">
 
-    <video autoplay muted loop playsinline id="bg-video">
-        <source src="video.mp4">
-    </video>
-
-    <div class="volume">
-        <input type="range" min="0" max="1" step="0.01"
-        oninput="document.getElementById('audio').volume=this.value">
-    </div>
-
-    <!-- PAGE 1 -->
+    <!-- 1 -->
     <section class="page">
         <div class="title-main">POYO 9TH ANNIVERSARY</div>
-        <div class="sub-text">🎉 9년의 여정, 함께해줘서 고마워 🎉</div>
+        <div class="sub-text">9년의 여정, 함께해줘서 고마워</div>
     </section>
 
-    <!-- PAGE 2 -->
-    <section class="page">
-        <h2>📊 STATISTICS</h2>
+    <!-- 2 -->
+    <section class="page" id="stats">
+        <h2>통계</h2>
         <div class="stats-grid">
-            <div class="card">9 YEARS</div>
-            <div class="card">3,285 DAYS</div>
-            <div class="card">78,840 HOURS</div>
+            <div class="card">9년</div>
+            <div class="card">3,285일</div>
+            <div class="card">78,840시간</div>
         </div>
     </section>
 
-    <!-- PAGE 3 -->
+    <!-- 3 -->
     <section class="page">
-        <div class="game-box">🎮 GAME COMING SOON</div>
+        <div class="game-box">게임 준비중</div>
     </section>
 
 </div>
 
-<!-- =========================
-   ⭐ JS (인트로 유지)
-========================= -->
+<!-- ========================= SCRIPT ========================= -->
 <script>
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -261,12 +278,26 @@ window.addEventListener("DOMContentLoaded", () => {
 
     let shown = false;
 
+    /* 🎬 소리 안정화 */
+    window.addEventListener("click", () => {
+        video.muted = false;
+        video.volume = 1;
+    }, { once:true });
+
+    /* 🎬 인트로 */
     window.enter = function () {
         audio.play().catch(()=>{});
         document.getElementById("intro").style.display="none";
         document.getElementById("main").style.display="block";
     };
 
+    /* ⏭ 스킵 */
+    window.skipIntro = function(){
+        video.pause();
+        enter();
+    };
+
+    /* ⏱ 등장 */
     video.addEventListener("timeupdate", () => {
         if (shown) return;
         if (video.currentTime >= 103) {
@@ -278,12 +309,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
 });
 
-/* 🧭 네비 이동 */
+/* 🧭 이동 + 점 활성화 */
 function goTo(page){
     window.scrollTo({
         top: page * window.innerHeight,
         behavior:"smooth"
     });
+
+    document.querySelectorAll(".dot").forEach(d => d.classList.remove("active"));
+    document.querySelectorAll(".dot")[page].classList.add("active");
 }
 
 </script>
