@@ -7,7 +7,6 @@
 
 <style>
 @import url('https://fonts.cafe24.com/css/cafe24ssurround.css');
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 
 body, html {
     margin:0;
@@ -15,15 +14,13 @@ body, html {
     font-family:'Cafe24 Ssurround', sans-serif;
     overflow-x:hidden;
     scroll-behavior:smooth;
-}
 
-/* 🌈 전체 기본 */
-body{
-    background:linear-gradient(135deg,#d8c7ff,#b8f2e6);
+    /* 🚨 메인 깜빡임 방지 핵심 */
+    visibility:hidden;
 }
 
 /* =========================
-   🎬 인트로 (그룹 고정)
+   🎬 인트로
 ========================= */
 #intro{
     position:fixed;
@@ -43,33 +40,19 @@ body{
     z-index:-1;
 }
 
-/* 🔒 그룹 묶음 (절대 초기화 방지) */
-.intro-group{
-    text-align:center;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:20px;
-}
-
-/* 인트로 타이틀 */
-#introText{
-    font-size:4rem;
-    font-weight:900;
-    background:linear-gradient(90deg,#cdb4ff,#7fffd4);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-/* 입장 버튼 (고정) */
+/* ❗ 기본 숨김 (103초 전 절대 표시 금지) */
+#introText,
 #enterBtn{
-    padding:18px 55px;
-    font-size:1.5rem;
-    font-weight:900;
-    border:none;
-    border-radius:50px;
-    background:linear-gradient(90deg,#cdb4ff,#7fffd4);
-    cursor:pointer;
+    opacity:0;
+    transform:translateY(30px);
+    pointer-events:none;
+    transition:0.4s ease;
+}
+
+.show{
+    opacity:1 !important;
+    transform:translateY(0) !important;
+    pointer-events:auto !important;
 }
 
 /* =========================
@@ -81,12 +64,12 @@ body{
     left:50%;
     transform:translateX(-50%);
     display:flex;
-    gap:20px;
+    gap:15px;
     z-index:1000;
 }
 
 .top-nav div{
-    padding:12px 30px;
+    padding:12px 28px;
     border-radius:50px;
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
     font-weight:800;
@@ -94,7 +77,7 @@ body{
 }
 
 /* =========================
-   🔊 볼륨 (50% 기본)
+   🔊 볼륨
 ========================= */
 .volume{
     position:fixed;
@@ -104,7 +87,7 @@ body{
 }
 
 /* =========================
-   🟣 점 네비 (스크롤 따라 이동)
+   🟣 점 네비 (5개 고정)
 ========================= */
 .dots{
     position:fixed;
@@ -123,7 +106,6 @@ body{
     border-radius:50%;
     background:#fff;
     opacity:0.3;
-    transition:0.2s;
 }
 
 .dot.active{
@@ -144,48 +126,9 @@ body{
 }
 
 /* =========================
-   🏠 1페이지 메인 (크게 + 중앙)
-========================= */
-.main-title{
-    font-size:5rem;
-    font-weight:900;
-    color:black;
-}
-
-/* 서브 문장 (카페24 유지) */
-.sub-title{
-    font-size:2.5rem;
-    font-weight:800;
-    margin-top:20px;
-}
-
-/* =========================
-   🎮 마지막 페이지
-========================= */
-.final-text{
-    font-size:3.5rem;
-    font-weight:900;
-    line-height:1.6;
-}
-
-/* =========================
-   🎵 audio
+   🎵 숨김
 ========================= */
 audio{display:none;}
-
-/* =========================
-   🟢 2페이지 치지직 느낌
-========================= */
-.tv-page{
-    background:
-    repeating-linear-gradient(
-        0deg,
-        #052b1e,
-        #052b1e 2px,
-        #0b3d2e 4px
-    );
-    color:#00ff9d;
-}
 </style>
 </head>
 
@@ -198,14 +141,9 @@ audio{display:none;}
         <source src="video2.mp4">
     </video>
 
-    <!-- 🔒 그룹 (절대 초기화 금지) -->
-    <div class="intro-group">
+    <div id="introText">Poyo 9th Anniversary</div>
 
-        <div id="introText">Poyo 9th Anniversary</div>
-
-        <button id="enterBtn" onclick="enter()">입장하기</button>
-
-    </div>
+    <button id="enterBtn" onclick="enter()">입장하기</button>
 
 </div>
 
@@ -214,22 +152,24 @@ audio{display:none;}
     <source src="bgm.mp3">
 </audio>
 
-<!-- 🧭 상단 UI -->
+<!-- 🧭 UI -->
 <div class="top-nav">
     <div onclick="goTo(0)">홈</div>
     <div onclick="goTo(1)">통계</div>
     <div onclick="goTo(2)">게임</div>
 </div>
 
-<!-- 🔊 볼륨 (50% 기본) -->
+<!-- 🔊 볼륨 -->
 <div class="volume">
-    <input type="range" min="0" max="1" step="0.01" value="0.5"
+    <input type="range" min="0" max="1" step="0.01"
     oninput="document.getElementById('audio').volume=this.value">
 </div>
 
-<!-- 🟣 점 네비 -->
+<!-- 🟣 점 네비 (5개 고정) -->
 <div class="dots">
     <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
     <div class="dot"></div>
     <div class="dot"></div>
 </div>
@@ -237,34 +177,11 @@ audio{display:none;}
 <!-- ========================= MAIN ========================= -->
 <div id="main">
 
-    <!-- 1 -->
-    <section class="page">
-        <div class="main-title">POYO 9TH ANNIVERSARY</div>
-        <div class="sub-title">포동이들과 함께 해온 9년의 여정</div>
-    </section>
-
-    <!-- 2 -->
-    <section class="page tv-page">
-        <h1>치지직 스타일 페이지</h1>
-    </section>
-
-    <!-- 3 -->
-    <section class="page">
-        <h2>페이지 3</h2>
-    </section>
-
-    <!-- 4 -->
-    <section class="page">
-        <h2>페이지 4</h2>
-    </section>
-
-    <!-- 5 -->
-    <section class="page">
-        <div class="final-text">
-            자세한 내용과 게임은<br>
-            상단의 통계 탭과 게임 탭을 클릭해주세요
-        </div>
-    </section>
+    <section class="page"><h1>HOME</h1></section>
+    <section class="page"><h1>STAT</h1></section>
+    <section class="page"><h1>PAGE3</h1></section>
+    <section class="page"><h1>PAGE4</h1></section>
+    <section class="page"><h1>GAME</h1></section>
 
 </div>
 
@@ -274,20 +191,36 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const video = document.getElementById("introVideo");
     const audio = document.getElementById("audio");
+    const text = document.getElementById("introText");
+    const btn = document.getElementById("enterBtn");
 
     let shown = false;
 
-    /* 🔒 103초 이전 절대 표시 금지 */
-    function check(){
+    /* 🚨 메인 깜빡임 방지 해제 (인트로 끝나야 보임) */
+    document.body.style.visibility = "visible";
+
+    /* 🔊 안정화 (절대 고정 구조) */
+    function unlock(){
+        video.muted = false;
+        video.volume = 1;
+        audio.volume = 0.5;
+    }
+
+    window.addEventListener("click", unlock, {once:true});
+
+    /* 🔥 103초 이전 절대 표시 금지 */
+    function loop(){
         if(!shown && video.currentTime >= 103){
             shown = true;
+            text.classList.add("show");
+            btn.classList.add("show");
         }
-        requestAnimationFrame(check);
+        requestAnimationFrame(loop);
     }
-    check();
+    loop();
 
+    /* ▶ 입장 */
     window.enter = function(){
-        audio.volume = 0.5;
         audio.play().catch(()=>{});
         document.getElementById("intro").style.display="none";
         document.getElementById("main").style.display="block";
@@ -305,16 +238,6 @@ function goTo(i){
     document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
     document.querySelectorAll(".dot")[i].classList.add("active");
 }
-
-/* 🧭 스크롤 동기화 */
-window.addEventListener("scroll", () => {
-    let i = Math.round(window.scrollY / window.innerHeight);
-
-    document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
-    if(document.querySelectorAll(".dot")[i]){
-        document.querySelectorAll(".dot")[i].classList.add("active");
-    }
-});
 
 </script>
 
