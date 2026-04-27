@@ -12,11 +12,13 @@
     --main-bg: linear-gradient(135deg, #E0BBE4, #BFFCC6);
 }
 
-body {
-    margin: 0;
-    font-family: sans-serif;
+body, html { 
+    margin: 0; padding: 0; 
+    font-family: 'Pretendard', sans-serif; 
+    color: white; 
     background: var(--main-bg);
-    color: white;
+    overflow-x: hidden;
+    text-align: center;
 }
 
 /* ⭐ 인트로 */
@@ -24,28 +26,29 @@ body {
     position: fixed;
     width: 100%;
     height: 100%;
-    top: 0;
-    left: 0;
+    top: 0; left: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
 }
 
+/* ⭐ 인트로 영상 */
 #intro video {
     position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: 0;
+    z-index: -1;
 }
 
+/* 중앙 내용 */
 .intro-content {
     position: relative;
     z-index: 2;
-    text-align: center;
 }
 
+/* 볼륨 */
 .volume {
     position: absolute;
     top: 20px;
@@ -59,10 +62,10 @@ body {
 }
 
 /* ⭐ 배경 영상 */
-#bg-video {
+#bg-video { 
     position: fixed;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     object-fit: cover;
     z-index: -1;
     opacity: 0.7;
@@ -70,11 +73,12 @@ body {
 
 /* 메뉴 */
 nav {
-    display: none;
     position: fixed;
     top: 20px;
     width: 100%;
+    display: none;
     justify-content: center;
+    z-index: 100;
 }
 
 nav.active {
@@ -87,9 +91,33 @@ nav.active {
     background: rgba(255,255,255,0.3);
     padding: 10px 25px;
     border-radius: 30px;
+    backdrop-filter: blur(10px);
 }
 
-/* ⭐ 통계 카드 원래대로 */
+.nav-menu a {
+    color: #555;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* 섹션 */
+section {
+    min-height: 100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* ⭐ 홈 */
+.home-title h1 {
+    font-size: 4rem;
+}
+
+.home-title p {
+    font-size: 1.4rem;
+}
+
+/* ⭐ 통계 카드 */
 .stats-box {
     background: rgba(255,255,255,0.2);
     padding: 40px;
@@ -100,22 +128,24 @@ nav.active {
 .stats-grid {
     display: flex;
     gap: 20px;
+    flex-wrap: wrap;
 }
 
 .stat-card {
     background: rgba(255,255,255,0.2);
-    padding: 20px;
+    padding: 25px;
     border-radius: 20px;
     flex: 1;
+    min-width: 150px;
 }
 
-/* 섹션 */
-section {
-    min-height: 100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
+.stat-card h3 {
+    font-size: 2rem;
+}
+
+/* ⭐ 게임 */
+#game h2 {
+    font-size: 2rem;
 }
 </style>
 </head>
@@ -125,8 +155,7 @@ section {
 <!-- ⭐ 인트로 -->
 <div id="intro">
 
-    <!-- 🔥 영상 테스트 (중요) -->
-    <video autoplay muted loop playsinline controls>
+    <video autoplay muted loop playsinline>
         <source src="video.mp4" type="video/mp4">
     </video>
 
@@ -137,7 +166,7 @@ section {
 
     <div class="intro-content">
         <h2>Poyo 9th Anniversary</h2>
-        <button onclick="enter()">입장하기</button>
+        <button onclick="enter()" style="padding:15px 40px;border:none;border-radius:50px;">입장하기</button>
     </div>
 
 </div>
@@ -161,26 +190,29 @@ section {
         </div>
     </nav>
 
+    <!-- 홈 -->
     <section id="home">
-        <div>
+        <div class="home-title">
             <h1>포요 9주년</h1>
             <p>9년의 계절, 포동이들과 함께 써 내려간 이야기</p>
         </div>
     </section>
 
+    <!-- 통계 -->
     <section id="stats">
         <div class="stats-box">
             <h2>9년의 발자취</h2>
             <div class="stats-grid">
-                <div class="stat-card"><p>시간</p><h3>9년</h3></div>
-                <div class="stat-card"><p>날짜</p><h3>3,285일</h3></div>
-                <div class="stat-card"><p>마음</p><h3>∞</h3></div>
+                <div class="stat-card"><p>함께한 시간</p><h3>9년</h3></div>
+                <div class="stat-card"><p>함께한 날들</p><h3>3,285일</h3></div>
+                <div class="stat-card"><p>우리의 마음</p><h3>∞</h3></div>
             </div>
         </div>
     </section>
 
+    <!-- 게임 -->
     <section id="game">
-        <h2>🎮 게임 영역 (나중에 추가)</h2>
+        <h2>🎮 게임 영역 (추가 예정)</h2>
     </section>
 
 </div>
