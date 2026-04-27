@@ -12,12 +12,13 @@ body, html {
     font-family:sans-serif;
     overflow-x:hidden;
     color:white;
+
     background: linear-gradient(135deg,#d8c7ff,#b8f2e6);
 }
 
-/* =======================
-   ⭐ 인트로 (완전 수정)
-======================= */
+/* =========================
+   ⭐ 인트로 (수정된 부분)
+========================= */
 #intro{
     position:fixed;
     width:100%;
@@ -28,7 +29,6 @@ body, html {
     z-index:9999;
 }
 
-/* 인트로 영상 */
 #introVideo{
     position:absolute;
     width:100%;
@@ -38,12 +38,11 @@ body, html {
     z-index:-1;
 }
 
-/* 인트로 박스 */
 .intro-box{
     text-align:center;
 }
 
-/* ⭐ 제목 (연보라 + 민트) */
+/* ⭐ 연보라 + 민트 */
 .intro-title{
     font-size:clamp(3rem,7vw,5rem);
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
@@ -55,7 +54,7 @@ body, html {
     transition:0.5s ease;
 }
 
-/* ⭐ 버튼 */
+/* 버튼 */
 #enterBtn{
     margin-top:20px;
     padding:15px 40px;
@@ -71,15 +70,15 @@ body, html {
     transition:0.5s ease;
 }
 
-/* 등장 */
+/* 등장 효과 */
 .show{
     opacity:1 !important;
     transform:translateY(0) !important;
 }
 
-/* =======================
-   ⭐ 메인
-======================= */
+/* =========================
+   ⭐ 메인 (기존 유지)
+========================= */
 #main{
     display:none;
 }
@@ -154,17 +153,15 @@ body, html {
     <source src="bgm.mp3">
 </audio>
 
-<!-- =======================
+<!-- =========================
      ⭐ 인트로 (수정 완료)
-======================= -->
+========================= -->
 <div id="intro">
 
-    <!-- 영상 -->
     <video id="introVideo" autoplay muted playsinline>
         <source src="video2.mp4">
     </video>
 
-    <!-- 텍스트 -->
     <div class="intro-box">
 
         <div id="title" class="intro-title">
@@ -178,9 +175,9 @@ body, html {
     </div>
 </div>
 
-<!-- =======================
-     ⭐ 메인
-======================= -->
+<!-- =========================
+     ⭐ 메인 (기존 그대로)
+========================= -->
 <div id="main">
 
     <video autoplay muted loop playsinline id="bg-video">
@@ -235,15 +232,17 @@ const video = document.getElementById("introVideo");
 const title = document.getElementById("title");
 const btn = document.getElementById("enterBtn");
 
-/* 🎵 음악 (클릭 시 확실 재생) */
+/* 🎵 음악 (브라우저 정책 대응) */
 window.addEventListener("click", ()=>{
+    audio.volume = 0.5;
     audio.play().catch(()=>{});
 }, {once:true});
 
 /* 🎬 영상 끝 or fallback */
 video.addEventListener("ended", showIntro);
-setTimeout(showIntro, 5000);
+setTimeout(showIntro, 4500);
 
+/* ⭐ 문구 + 버튼 등장 */
 function showIntro(){
     title.classList.add("show");
     btn.classList.add("show");
@@ -253,7 +252,7 @@ function showIntro(){
 function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
-    audio.play();
+    audio.play().catch(()=>{});
 }
 
 </script>
