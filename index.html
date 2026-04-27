@@ -17,10 +17,14 @@ body, html {
     scroll-behavior:smooth;
 }
 
+/* 🌈 전체 기본 */
 body{
     background:linear-gradient(135deg,#d8c7ff,#b8f2e6);
 }
 
+/* =========================
+   🎬 인트로 (그룹 고정)
+========================= */
 #intro{
     position:fixed;
     width:100%;
@@ -39,32 +43,38 @@ body{
     z-index:-1;
 }
 
-#introText,
+/* 🔒 그룹 묶음 (절대 초기화 방지) */
+.intro-group{
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:20px;
+}
+
+/* 인트로 타이틀 */
+#introText{
+    font-size:4rem;
+    font-weight:900;
+    background:linear-gradient(90deg,#cdb4ff,#7fffd4);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+/* 입장 버튼 (고정) */
 #enterBtn{
-    opacity:0;
-    transform:translateY(30px);
-    pointer-events:none;
-    transition:0.4s ease;
-}
-
-.lock-show{
-    opacity:1 !important;
-    transform:translateY(0) !important;
-    pointer-events:auto !important;
-}
-
-#skipBtn{
-    position:absolute;
-    top:20px;
-    right:20px;
-    padding:10px 20px;
+    padding:18px 55px;
+    font-size:1.5rem;
+    font-weight:900;
     border:none;
-    border-radius:20px;
-    background:white;
-    font-weight:700;
+    border-radius:50px;
+    background:linear-gradient(90deg,#cdb4ff,#7fffd4);
     cursor:pointer;
 }
 
+/* =========================
+   🧭 상단 UI
+========================= */
 .top-nav{
     position:fixed;
     top:20px;
@@ -83,6 +93,9 @@ body{
     cursor:pointer;
 }
 
+/* =========================
+   🔊 볼륨 (50% 기본)
+========================= */
 .volume{
     position:fixed;
     top:20px;
@@ -90,6 +103,9 @@ body{
     z-index:1000;
 }
 
+/* =========================
+   🟣 점 네비 (스크롤 따라 이동)
+========================= */
 .dots{
     position:fixed;
     right:20px;
@@ -105,8 +121,9 @@ body{
     width:12px;
     height:12px;
     border-radius:50%;
-    background:white;
+    background:#fff;
     opacity:0.3;
+    transition:0.2s;
 }
 
 .dot.active{
@@ -114,6 +131,9 @@ body{
     transform:scale(1.3);
 }
 
+/* =========================
+   📄 페이지
+========================= */
 .page{
     height:100vh;
     display:flex;
@@ -123,65 +143,93 @@ body{
     text-align:center;
 }
 
+/* =========================
+   🏠 1페이지 메인 (크게 + 중앙)
+========================= */
 .main-title{
-    font-size:4rem;
+    font-size:5rem;
     font-weight:900;
-    background:linear-gradient(90deg,#cdb4ff,#7fffd4);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
+    color:black;
 }
 
+/* 서브 문장 (카페24 유지) */
 .sub-title{
-    font-family:'Great Vibes', cursive;
-    font-size:2.8rem;
-    font-weight:700;
-    color:#1b1b1b;
+    font-size:2.5rem;
+    font-weight:800;
+    margin-top:20px;
 }
 
+/* =========================
+   🎮 마지막 페이지
+========================= */
 .final-text{
-    font-size:2.5rem;
+    font-size:3.5rem;
     font-weight:900;
     line-height:1.6;
 }
 
+/* =========================
+   🎵 audio
+========================= */
 audio{display:none;}
+
+/* =========================
+   🟢 2페이지 치지직 느낌
+========================= */
+.tv-page{
+    background:
+    repeating-linear-gradient(
+        0deg,
+        #052b1e,
+        #052b1e 2px,
+        #0b3d2e 4px
+    );
+    color:#00ff9d;
+}
 </style>
 </head>
 
 <body>
 
+<!-- 🎬 인트로 -->
 <div id="intro">
 
     <video id="introVideo" autoplay muted playsinline>
         <source src="video2.mp4">
     </video>
 
-    <button id="skipBtn" onclick="skipIntro()">스킵</button>
+    <!-- 🔒 그룹 (절대 초기화 금지) -->
+    <div class="intro-group">
 
-    <div id="introText" class="main-title">Poyo 9th Anniversary</div>
+        <div id="introText">Poyo 9th Anniversary</div>
 
-    <button id="enterBtn" onclick="enter()">입장하기</button>
+        <button id="enterBtn" onclick="enter()">입장하기</button>
+
+    </div>
+
 </div>
 
+<!-- 🎵 BGM -->
 <audio id="audio" loop>
     <source src="bgm.mp3">
 </audio>
 
+<!-- 🧭 상단 UI -->
 <div class="top-nav">
     <div onclick="goTo(0)">홈</div>
     <div onclick="goTo(1)">통계</div>
     <div onclick="goTo(2)">게임</div>
 </div>
 
+<!-- 🔊 볼륨 (50% 기본) -->
 <div class="volume">
-    <input type="range" min="0" max="1" step="0.01"
+    <input type="range" min="0" max="1" step="0.01" value="0.5"
     oninput="document.getElementById('audio').volume=this.value">
 </div>
 
+<!-- 🟣 점 네비 -->
 <div class="dots">
     <div class="dot active"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
     <div class="dot"></div>
     <div class="dot"></div>
 </div>
@@ -192,15 +240,12 @@ audio{display:none;}
     <!-- 1 -->
     <section class="page">
         <div class="main-title">POYO 9TH ANNIVERSARY</div>
-
-        <div class="sub-title">
-            포동이들과 함께 해온 9년이란 시간의 여정
-        </div>
+        <div class="sub-title">포동이들과 함께 해온 9년의 여정</div>
     </section>
 
-    <!-- 2 (치지직 느낌 유지) -->
-    <section class="page">
-        <h2>치지직 스타일 페이지</h2>
+    <!-- 2 -->
+    <section class="page tv-page">
+        <h1>치지직 스타일 페이지</h1>
     </section>
 
     <!-- 3 -->
@@ -228,41 +273,29 @@ audio{display:none;}
 window.addEventListener("DOMContentLoaded", () => {
 
     const video = document.getElementById("introVideo");
-    const text = document.getElementById("introText");
-    const btn = document.getElementById("enterBtn");
     const audio = document.getElementById("audio");
 
     let shown = false;
 
-    function lockCheck(){
+    /* 🔒 103초 이전 절대 표시 금지 */
+    function check(){
         if(!shown && video.currentTime >= 103){
             shown = true;
-            text.classList.add("lock-show");
-            btn.classList.add("lock-show");
         }
-        requestAnimationFrame(lockCheck);
+        requestAnimationFrame(check);
     }
-    lockCheck();
-
-    window.addEventListener("click", () => {
-        video.volume = 1;
-        video.muted = false;
-    }, {once:true});
+    check();
 
     window.enter = function(){
-        audio.volume = 0.6;
+        audio.volume = 0.5;
         audio.play().catch(()=>{});
         document.getElementById("intro").style.display="none";
         document.getElementById("main").style.display="block";
     };
 
-    window.skipIntro = function(){
-        video.pause();
-        enter();
-    };
-
 });
 
+/* 🧭 이동 */
 function goTo(i){
     window.scrollTo({
         top: i * window.innerHeight,
@@ -272,6 +305,16 @@ function goTo(i){
     document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
     document.querySelectorAll(".dot")[i].classList.add("active");
 }
+
+/* 🧭 스크롤 동기화 */
+window.addEventListener("scroll", () => {
+    let i = Math.round(window.scrollY / window.innerHeight);
+
+    document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
+    if(document.querySelectorAll(".dot")[i]){
+        document.querySelectorAll(".dot")[i].classList.add("active");
+    }
+});
 
 </script>
 
