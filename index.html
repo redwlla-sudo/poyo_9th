@@ -16,9 +16,6 @@ body, html {
     background: linear-gradient(135deg,#d8c7ff,#b8f2e6);
 }
 
-/* =========================
-   ⭐ 인트로 (수정된 부분)
-========================= */
 #intro{
     position:fixed;
     width:100%;
@@ -42,7 +39,6 @@ body, html {
     text-align:center;
 }
 
-/* ⭐ 연보라 + 민트 */
 .intro-title{
     font-size:clamp(3rem,7vw,5rem);
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
@@ -76,9 +72,6 @@ body, html {
     transform:translateY(0) !important;
 }
 
-/* =========================
-   ⭐ 메인 (기존 유지)
-========================= */
 #main{
     display:none;
 }
@@ -148,14 +141,10 @@ body, html {
 
 <body>
 
-<!-- 🎵 음악 -->
 <audio id="audio" loop>
     <source src="bgm.mp3">
 </audio>
 
-<!-- =========================
-     ⭐ 인트로 (수정 완료)
-========================= -->
 <div id="intro">
 
     <video id="introVideo" autoplay muted playsinline>
@@ -175,9 +164,6 @@ body, html {
     </div>
 </div>
 
-<!-- =========================
-     ⭐ 메인 (기존 그대로)
-========================= -->
 <div id="main">
 
     <video autoplay muted loop playsinline id="bg-video">
@@ -232,27 +218,23 @@ const video = document.getElementById("introVideo");
 const title = document.getElementById("title");
 const btn = document.getElementById("enterBtn");
 
-/* 🎵 음악 (브라우저 정책 대응) */
 window.addEventListener("click", ()=>{
     audio.volume = 0.5;
     audio.play().catch(()=>{});
 }, {once:true});
 
-/* 🎬 영상 끝 or fallback */
 video.addEventListener("ended", showIntro);
 setTimeout(showIntro, 4500);
 
-/* ⭐ 문구 + 버튼 등장 */
 function showIntro(){
     title.classList.add("show");
     btn.classList.add("show");
 }
 
-/* 🎮 입장 */
 function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
-    audio.play().catch(()=>{});
+    audio.play();
 }
 
 </script>
