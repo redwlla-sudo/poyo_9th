@@ -26,7 +26,6 @@ body, html {
     justify-content:center;
     align-items:center;
     z-index:9999;
-    cursor:pointer;
 }
 
 #introVideo{
@@ -35,13 +34,16 @@ body, html {
     height:100%;
     object-fit:cover;
     z-index:-1;
+
+    /* 🔥 핵심: 무조건 음소거 */
+    muted: true;
 }
 
-/* 텍스트 */
 .intro-box{
     text-align:center;
 }
 
+/* 텍스트 */
 .intro-title{
     font-size:clamp(4rem,8vw,6rem);
     font-weight:900;
@@ -55,6 +57,7 @@ body, html {
     transition:0.4s ease;
 }
 
+/* 버튼 */
 #enterBtn{
     margin-top:25px;
     padding:18px 55px;
@@ -73,6 +76,7 @@ body, html {
     transition:0.4s ease;
 }
 
+/* 등장 */
 .show{
     opacity:1 !important;
     transform:translateY(0) !important;
@@ -150,13 +154,10 @@ body, html {
 
 <body>
 
-<!-- =========================
-   ⭐ 인트로 (영상 사운드 사용)
-========================= -->
-<div id="intro" onclick="enableSound()">
+<!-- 🎬 인트로 영상 (무조건 muted) -->
+<div id="intro">
 
-    <!-- 🔊 소리 포함 영상 -->
-    <video id="introVideo" autoplay playsinline>
+    <video id="introVideo" autoplay muted playsinline>
         <source src="video2.mp4" type="video/mp4">
     </video>
 
@@ -173,6 +174,11 @@ body, html {
     </div>
 </div>
 
+<!-- 🎵 메인 음악 -->
+<audio id="audio" loop>
+    <source src="bgm.mp3">
+</audio>
+
 <!-- =========================
    ⭐ 메인
 ========================= -->
@@ -183,8 +189,8 @@ body, html {
     </video>
 
     <div class="volume">
-        <input type="range" min="0" max="1" step="0.01" value="0.5"
-        oninput="audio.volume=this.value">
+        <input type="range" min="0" max="1" step="0.01"
+        oninput="document.getElementById('audio').volume=this.value">
     </div>
 
     <section class="page">
@@ -202,28 +208,26 @@ body, html {
 
 <script>
 
-const video = document.getElementById("introVideo");
+const audio = document.getElementById("audio");
 const title = document.getElementById("title");
 const btn = document.getElementById("enterBtn");
 
-/* 🎬 문구 등장 */
+/* ⏱️ 1분40초 (100초) 등장 */
 setTimeout(()=>{
     title.classList.add("show");
     btn.classList.add("show");
-}, 70000);
+}, 100000);
 
-/* 🔊 핵심: 클릭하면 영상 소리 켜짐 */
-function enableSound(){
-    video.muted = false;
-    video.volume = 1.0;
-}
-
-/* 🎮 입장 */
+/* 🔊 핵심: 입장 버튼 클릭 = 음악 시작 */
 function enter(){
+
+    // 🎵 음악 시작 (여기서만 허용)
+    audio.volume = 0.5;
+    audio.play().catch(()=>{});
+
+    // 화면 전환
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
-
-    video.pause();
 }
 
 </script>
