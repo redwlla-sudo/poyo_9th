@@ -5,147 +5,125 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>포요 9주년</title>
 
-<style>
-:root { 
-    --mint: #BFFCC6; 
-    --lavender: #E0BBE4; 
-    --main-bg: linear-gradient(135deg, #E0BBE4, #BFFCC6);
-}
+<!-- 폰트 -->
+<link href="https://fonts.googleapis.com/css2?family=Pretendard&display=swap" rel="stylesheet">
 
-body, html { 
-    margin: 0; padding: 0; 
-    font-family: 'Pretendard', sans-serif; 
-    color: white; 
-    background: var(--main-bg);
-    overflow-x: hidden;
-    text-align: center;
+<style>
+body, html {
+    margin:0;
+    padding:0;
+    font-family: 'Pretendard', sans-serif;
+    overflow-x:hidden;
+    scroll-behavior:smooth;
+    color:white;
 }
 
 /* ⭐ 인트로 */
-#intro {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0; left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-
-/* ⭐ 인트로 영상 */
-#intro video {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -1;
-}
-
-/* 중앙 내용 */
-.intro-content {
-    position: relative;
-    z-index: 2;
-}
-
-/* 볼륨 */
-.volume {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 3;
-}
-
-/* ⭐ 본문 숨김 */
-#main {
-    display: none;
-}
-
-/* ⭐ 배경 영상 */
-#bg-video { 
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
-    z-index: -1;
-    opacity: 0.7;
-}
-
-/* 메뉴 */
-nav {
-    position: fixed;
-    top: 20px;
-    width: 100%;
-    display: none;
-    justify-content: center;
-    z-index: 100;
-}
-
-nav.active {
-    display: flex;
-}
-
-.nav-menu {
-    display: flex;
-    gap: 20px;
-    background: rgba(255,255,255,0.3);
-    padding: 10px 25px;
-    border-radius: 30px;
-    backdrop-filter: blur(10px);
-}
-
-.nav-menu a {
-    color: #555;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-/* 섹션 */
-section {
-    min-height: 100vh;
+#intro{
+    position:fixed;
+    width:100%;
+    height:100%;
     display:flex;
     justify-content:center;
     align-items:center;
+    z-index:9999;
 }
 
-/* ⭐ 홈 */
-.home-title h1 {
-    font-size: 4rem;
+#intro video{
+    position:absolute;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    z-index:-1;
 }
 
-.home-title p {
-    font-size: 1.4rem;
+.intro-content{
+    text-align:center;
+}
+
+.intro-content h1{
+    font-size:clamp(2.5rem,8vw,5rem);
+}
+
+button{
+    padding:15px 40px;
+    border:none;
+    border-radius:50px;
+    cursor:pointer;
+}
+
+/* ⭐ 메인 숨김 */
+#main{display:none;}
+
+/* ⭐ 배경 영상 */
+#bg-video{
+    position:fixed;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    z-index:-1;
+    opacity:0.6;
+}
+
+/* ⭐ 페이지 섹션 */
+.page{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    flex-direction:column;
+    padding:20px;
+}
+
+/* ⭐ 페이드 인 */
+.fade{
+    opacity:0;
+    transform:translateY(30px);
+    transition:1s;
+}
+.fade.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* ⭐ 점 네비게이션 */
+.dots{
+    position:fixed;
+    right:20px;
+    top:50%;
+    transform:translateY(-50%);
+}
+.dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:white;
+    margin:10px 0;
+    opacity:0.4;
+}
+.dot.active{
+    opacity:1;
 }
 
 /* ⭐ 통계 카드 */
-.stats-box {
-    background: rgba(255,255,255,0.2);
-    padding: 40px;
-    border-radius: 30px;
-    max-width: 800px;
+.stats-grid{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+}
+.card{
+    background:rgba(255,255,255,0.2);
+    padding:20px;
+    border-radius:20px;
 }
 
-.stats-grid {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.stat-card {
-    background: rgba(255,255,255,0.2);
-    padding: 25px;
-    border-radius: 20px;
-    flex: 1;
-    min-width: 150px;
-}
-
-.stat-card h3 {
-    font-size: 2rem;
-}
-
-/* ⭐ 게임 */
-#game h2 {
-    font-size: 2rem;
+/* ⭐ 볼륨 */
+.volume{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:1000;
 }
 </style>
 </head>
@@ -154,24 +132,17 @@ section {
 
 <!-- ⭐ 인트로 -->
 <div id="intro">
-
-    <video autoplay muted loop playsinline>
-        <source src="video.mp4" type="video/mp4">
+    <video autoplay muted loop playsinline id="introVideo">
+        <source src="video.mp4">
     </video>
 
-    <div class="volume">
-        <input type="range" min="0" max="1" step="0.01" value="0.5"
-        oninput="setVolume(this.value)">
-    </div>
-
     <div class="intro-content">
-        <h2>Poyo 9th Anniversary</h2>
-        <button onclick="enter()" style="padding:15px 40px;border:none;border-radius:50px;">입장하기</button>
+        <h1>Poyo 9th Anniversary</h1>
+        <button onclick="enter()">입장하기</button>
     </div>
-
 </div>
 
-<!-- ⭐ 본문 -->
+<!-- ⭐ 메인 -->
 <div id="main">
 
     <audio id="audio" loop>
@@ -182,53 +153,70 @@ section {
         <source src="video.mp4">
     </video>
 
-    <nav id="nav">
-        <div class="nav-menu">
-            <a href="#home">홈</a>
-            <a href="#stats">통계</a>
-            <a href="#game">게임</a>
-        </div>
-    </nav>
+    <div class="volume">
+        <input type="range" min="0" max="1" step="0.01" value="0.5"
+        oninput="setVolume(this.value)">
+    </div>
 
-    <!-- 홈 -->
-    <section id="home">
-        <div class="home-title">
-            <h1>포요 9주년</h1>
-            <p>9년의 계절, 포동이들과 함께 써 내려간 이야기</p>
-        </div>
+    <!-- 점 -->
+    <div class="dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+
+    <!-- 1페이지 -->
+    <section class="page fade">
+        <h1 style="font-size:clamp(3rem,10vw,6rem)">포요 9주년</h1>
+        <p>9년의 계절, 포동이들과 함께 써 내려간 이야기</p>
     </section>
 
-    <!-- 통계 -->
-    <section id="stats">
-        <div class="stats-box">
-            <h2>9년의 발자취</h2>
-            <div class="stats-grid">
-                <div class="stat-card"><p>함께한 시간</p><h3>9년</h3></div>
-                <div class="stat-card"><p>함께한 날들</p><h3>3,285일</h3></div>
-                <div class="stat-card"><p>우리의 마음</p><h3>∞</h3></div>
-            </div>
-        </div>
+    <!-- 1-2페이지 -->
+    <section class="page fade">
+        <p style="font-size:1.5rem">
+        치지직의 데뷔한지 3285일째<br>
+        지금까지 약 8만명의 포동이들이 포요님을 팔로우 했네요.
+        </p>
     </section>
 
-    <!-- 게임 -->
-    <section id="game">
-        <h2>🎮 게임 영역 (추가 예정)</h2>
+    <!-- 2페이지 -->
+    <section class="page fade">
+        <h2>9년의 발자취</h2>
+        <div class="stats-grid">
+            <div class="card">9년</div>
+            <div class="card">3,285일</div>
+            <div class="card">약 78,840시간</div>
+        </div>
     </section>
 
 </div>
 
 <script>
-function setVolume(v){
-    document.getElementById("audio").volume = v;
-}
-
 function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
-    document.getElementById("nav").classList.add("active");
 
-    document.getElementById("audio").play().catch(()=>{});
+    const audio = document.getElementById("audio");
+    audio.volume=0.5;
+    audio.play();
+
+    document.getElementById("introVideo").play();
 }
+
+function setVolume(v){
+    document.getElementById("audio").volume=v;
+}
+
+/* ⭐ 페이드 효과 */
+const fades = document.querySelectorAll(".fade");
+window.addEventListener("scroll", ()=>{
+    fades.forEach(el=>{
+        const top = el.getBoundingClientRect().top;
+        if(top < window.innerHeight - 100){
+            el.classList.add("show");
+        }
+    });
+});
 </script>
 
 </body>
