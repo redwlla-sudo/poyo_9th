@@ -15,6 +15,9 @@ body, html {
     background: linear-gradient(135deg,#d8c7ff,#b8f2e6);
 }
 
+/* =========================
+   ⭐ 인트로
+========================= */
 #intro{
     position:fixed;
     width:100%;
@@ -23,7 +26,7 @@ body, html {
     justify-content:center;
     align-items:center;
     z-index:9999;
-    cursor:pointer; 
+    cursor:pointer;
 }
 
 #introVideo{
@@ -31,10 +34,10 @@ body, html {
     width:100%;
     height:100%;
     object-fit:cover;
-    opacity:0.75;
     z-index:-1;
 }
 
+/* 텍스트 */
 .intro-box{
     text-align:center;
 }
@@ -75,6 +78,9 @@ body, html {
     transform:translateY(0) !important;
 }
 
+/* =========================
+   ⭐ 메인
+========================= */
 #main{
     display:none;
 }
@@ -144,14 +150,14 @@ body, html {
 
 <body>
 
-<audio id="audio" loop>
-    <source src="bgm.mp3">
-</audio>
+<!-- =========================
+   ⭐ 인트로 (영상 사운드 사용)
+========================= -->
+<div id="intro" onclick="enableSound()">
 
-<div id="intro" onclick="startIntroSound()">
-
-    <video id="introVideo" autoplay muted playsinline>
-        <source src="video2.mp4">
+    <!-- 🔊 소리 포함 영상 -->
+    <video id="introVideo" autoplay playsinline>
+        <source src="video2.mp4" type="video/mp4">
     </video>
 
     <div class="intro-box">
@@ -167,6 +173,9 @@ body, html {
     </div>
 </div>
 
+<!-- =========================
+   ⭐ 메인
+========================= -->
 <div id="main">
 
     <video autoplay muted loop playsinline id="bg-video">
@@ -176,12 +185,6 @@ body, html {
     <div class="volume">
         <input type="range" min="0" max="1" step="0.01" value="0.5"
         oninput="audio.volume=this.value">
-    </div>
-
-    <div class="dots">
-        <div class="dot active"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
     </div>
 
     <section class="page">
@@ -195,38 +198,32 @@ body, html {
         <p>9년의 계절, 포동이들과 함께 써 내려간 이야기</p>
     </section>
 
-    <section class="page tv-bg">
-        <h2 style="font-size:2rem">
-            치지직 데뷔 3285일째<br>
-            약 8만명의 포동이들이 함께했습니다
-        </h2>
-
-        <img src="img.png" width="200">
-    </section>
-
 </div>
 
 <script>
 
-const audio = document.getElementById("audio");
+const video = document.getElementById("introVideo");
 const title = document.getElementById("title");
 const btn = document.getElementById("enterBtn");
 
+/* 🎬 문구 등장 */
 setTimeout(()=>{
     title.classList.add("show");
     btn.classList.add("show");
-}, 100000);
+}, 70000);
 
-function startIntroSound(){
-    audio.volume = 0.5;
-    audio.play().catch(()=>{});
+/* 🔊 핵심: 클릭하면 영상 소리 켜짐 */
+function enableSound(){
+    video.muted = false;
+    video.volume = 1.0;
 }
 
+/* 🎮 입장 */
 function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
 
-    audio.play().catch(()=>{});
+    video.pause();
 }
 
 </script>
