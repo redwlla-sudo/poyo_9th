@@ -12,7 +12,6 @@ body, html {
     font-family:sans-serif;
     overflow-x:hidden;
     color:white;
-
     background: linear-gradient(135deg,#d8c7ff,#b8f2e6);
 }
 
@@ -29,7 +28,6 @@ body, html {
     z-index:9999;
 }
 
-/* 인트로 영상 */
 #introVideo{
     position:absolute;
     width:100%;
@@ -39,12 +37,11 @@ body, html {
     z-index:-1;
 }
 
-/* 인트로 텍스트 영역 */
 .intro-box{
     text-align:center;
 }
 
-/* ⭐ 연보라 + 민트 제목 */
+/* ⭐ 연보라 + 민트 */
 .intro-title{
     font-size:clamp(3rem,7vw,5rem);
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
@@ -72,7 +69,7 @@ body, html {
     transition:0.5s ease;
 }
 
-/* 등장 효과 */
+/* 등장 */
 .show{
     opacity:1 !important;
     transform:translateY(0) !important;
@@ -156,7 +153,7 @@ body, html {
 </audio>
 
 <!-- =========================
-   ⭐ 인트로 (완성형)
+   ⭐ 인트로 (수정 핵심)
 ========================= -->
 <div id="intro">
 
@@ -230,7 +227,6 @@ body, html {
 <script>
 
 const audio = document.getElementById("audio");
-const video = document.getElementById("introVideo");
 const title = document.getElementById("title");
 const btn = document.getElementById("enterBtn");
 
@@ -240,15 +236,11 @@ window.addEventListener("click", ()=>{
     audio.play().catch(()=>{});
 }, {once:true});
 
-/* 🎬 영상 끝 or fallback */
-video.addEventListener("ended", showIntro);
-setTimeout(showIntro, 4500);
-
-/* ⭐ 문구 + 버튼 등장 */
-function showIntro(){
+/* ⏱️ 핵심: 영상 의존 제거 (무조건 실행) */
+setTimeout(()=>{
     title.classList.add("show");
     btn.classList.add("show");
-}
+}, 4000);
 
 /* 🎮 입장 */
 function enter(){
