@@ -1,209 +1,3 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>포요 9주년</title>
-
-<style>
-body, html {
-    margin:0;
-    padding:0;
-    font-family:sans-serif;
-    overflow-x:hidden;
-    color:white;
-    background: linear-gradient(135deg,#d8c7ff,#b8f2e6);
-}
-
-/* =========================
-   ⭐ 인트로
-========================= */
-#intro{
-    position:fixed;
-    width:100%;
-    height:100%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-    cursor:pointer;
-}
-
-#introVideo{
-    position:absolute;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    z-index:-1;
-}
-
-.intro-box{
-    text-align:center;
-}
-
-.intro-title{
-    font-size:clamp(4rem,8vw,6rem);
-    font-weight:900;
-
-    background:linear-gradient(90deg,#cdb4ff,#7fffd4);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-
-    opacity:0;
-    transform:translateY(20px);
-    transition:0.4s ease;
-}
-
-#enterBtn{
-    margin-top:25px;
-    padding:18px 55px;
-    font-size:1.5rem;
-    font-weight:800;
-
-    border:none;
-    border-radius:50px;
-    cursor:pointer;
-
-    background:linear-gradient(90deg,#cdb4ff,#7fffd4);
-    color:#000;
-
-    opacity:0;
-    transform:translateY(20px);
-    transition:0.4s ease;
-}
-
-.show{
-    opacity:1 !important;
-    transform:translateY(0) !important;
-}
-
-/* =========================
-   ⭐ 메인
-========================= */
-#main{
-    display:none;
-}
-
-#bg-video{
-    position:fixed;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    z-index:-1;
-    opacity:0.35;
-}
-
-.page{
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    text-align:center;
-    padding:20px;
-}
-
-.dots{
-    position:fixed;
-    right:20px;
-    top:50%;
-    transform:translateY(-50%);
-}
-.dot{
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background:white;
-    margin:10px 0;
-    opacity:0.3;
-}
-.dot.active{opacity:1}
-
-.stats-grid{
-    display:flex;
-    gap:20px;
-}
-.card{
-    background:rgba(255,255,255,0.25);
-    padding:20px;
-    border-radius:20px;
-}
-
-.tv-bg{
-    background:repeating-linear-gradient(
-        45deg,
-        #000,
-        #000 10px,
-        #0f3d2e 10px,
-        #0f3d2e 20px
-    );
-}
-
-.volume{
-    position:fixed;
-    top:20px;
-    right:20px;
-}
-</style>
-</head>
-
-<body>
-
-<!-- 🎬 인트로 -->
-<div id="intro">
-
-    <video id="introVideo" autoplay muted playsinline>
-        <source src="video2.mp4">
-    </video>
-
-    <div class="intro-box">
-
-        <div id="title" class="intro-title">
-            Poyo 9th Anniversary
-        </div>
-
-        <button id="enterBtn" onclick="enter()">
-            입장하기
-        </button>
-
-    </div>
-</div>
-
-<!-- 🎵 음악 -->
-<audio id="audio" loop>
-    <source src="bgm.mp3">
-</audio>
-
-<!-- =========================
-   ⭐ 메인
-========================= -->
-<div id="main">
-
-    <video autoplay muted loop playsinline id="bg-video">
-        <source src="video.mp4">
-    </video>
-
-    <div class="volume">
-        <input type="range" min="0" max="1" step="0.01"
-        oninput="document.getElementById('audio').volume=this.value">
-    </div>
-
-    <section class="page">
-        <h1 style="font-size:4rem;
-        font-weight:900;
-        background:linear-gradient(90deg,#cdb4ff,#7fffd4);
-        -webkit-background-clip:text;
-        -webkit-text-fill-color:transparent;">
-        포요 9주년
-        </h1>
-        <p>9년의 계절, 포동이들과 함께 써 내려간 이야기</p>
-    </section>
-
-</div>
-
-<!-- =========================
-   ⭐ 수정된 JS (핵심)
-========================= -->
 <script>
 
 const video = document.getElementById("introVideo");
@@ -213,21 +7,48 @@ const audio = document.getElementById("audio");
 
 let shown = false;
 
-/* 🎮 입장 = 음악 시작 + 화면 전환 */
-function enter(){
+/* 🎵 안정 오디오 시스템 */
+function startAudio(){
     audio.volume = 0.5;
-    audio.play().catch(()=>{});
+
+    // 🔥 재생 시도 (브라우저 정책 대응)
+    const playPromise = audio.play();
+
+    if (playPromise !== undefined) {
+        playPromise.catch(() => {
+            // 실패 시 다시 클릭으로 복구
+            document.body.addEventListener("click", () => {
+                audio.play().catch(()=>{});
+            }, { once:true });
+        });
+    }
+}
+
+/* 🎮 입장 */
+function enter(){
+
+    startAudio();
 
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
 }
 
-/* 🎬 핵심 수정: 1분 41초 = 101초 정확 기준 */
+/* 🔥 새로고침 복구 시스템 */
+window.addEventListener("load", () => {
+
+    // 자동 재생 시도 (가능한 브라우저만)
+    startAudio();
+
+    // fallback (사용자 첫 클릭)
+    document.body.addEventListener("click", startAudio, { once:true });
+});
+
+/* 🎬 1분 43초 = 103초 정확 타이밍 */
 video.addEventListener("timeupdate", () => {
 
     if (shown) return;
 
-    if (video.currentTime >= 101) {
+    if (video.currentTime >= 103) { // 🔥 1:43 정확
         shown = true;
         title.classList.add("show");
         btn.classList.add("show");
@@ -235,6 +56,3 @@ video.addEventListener("timeupdate", () => {
 });
 
 </script>
-
-</body>
-</html>
