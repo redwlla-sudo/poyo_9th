@@ -16,7 +16,7 @@ body, html {
 }
 
 /* =========================
-   ⭐ 인트로 (수정 완료)
+   ⭐ 인트로 (기존 유지)
 ========================= */
 #intro{
     position:fixed;
@@ -41,7 +41,6 @@ body, html {
     text-align:center;
 }
 
-/* ⭐ 연보라 + 민트 */
 .intro-title{
     font-size:clamp(3rem,7vw,5rem);
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
@@ -53,7 +52,6 @@ body, html {
     transition:0.5s ease;
 }
 
-/* 버튼 */
 #enterBtn{
     margin-top:20px;
     padding:15px 40px;
@@ -69,7 +67,6 @@ body, html {
     transition:0.5s ease;
 }
 
-/* 등장 */
 .show{
     opacity:1 !important;
     transform:translateY(0) !important;
@@ -153,7 +150,7 @@ body, html {
 </audio>
 
 <!-- =========================
-   ⭐ 인트로 (수정 핵심)
+   ⭐ 인트로 (기존 유지)
 ========================= -->
 <div id="intro">
 
@@ -175,7 +172,7 @@ body, html {
 </div>
 
 <!-- =========================
-   ⭐ 메인 (기존 그대로)
+   ⭐ 메인 (기존 유지)
 ========================= -->
 <div id="main">
 
@@ -230,23 +227,24 @@ const audio = document.getElementById("audio");
 const title = document.getElementById("title");
 const btn = document.getElementById("enterBtn");
 
-/* 🎵 음악 (브라우저 정책 대응) */
-window.addEventListener("click", ()=>{
-    audio.volume = 0.5;
-    audio.play().catch(()=>{});
-}, {once:true});
-
-/* ⏱️ 핵심: 영상 의존 제거 (무조건 실행) */
+/* ⏱️ 문구 등장 (1분10초 기준 유지) */
 setTimeout(()=>{
     title.classList.add("show");
     btn.classList.add("show");
-}, 4000);
+}, 70000);
 
-/* 🎮 입장 */
+/* 🎮 핵심 수정: 입장 버튼 = 음악 시작 + 이동 */
 function enter(){
+
+    // 🎵 여기서만 음악 시작 (autoplay 완전 회피)
+    audio.volume = 0.5;
+    audio.play().catch(()=>{});
+
+    // 🧹 인트로 제거
     document.getElementById("intro").style.display="none";
+
+    // 📺 메인 표시
     document.getElementById("main").style.display="block";
-    audio.play();
 }
 
 </script>
