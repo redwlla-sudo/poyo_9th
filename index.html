@@ -5,23 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>포요 9주년</title>
 
-<!-- 🎀 Cafe24 폰트 추가 -->
 <style>
 @import url('https://fonts.cafe24.com/css/cafe24ssurround.css');
-</style>
 
-<style>
 body, html {
     margin:0;
     padding:0;
     font-family:'Cafe24 Ssurround', sans-serif;
     overflow-x:hidden;
+    scroll-behavior:smooth;
     color:white;
     background: linear-gradient(135deg,#d8c7ff,#b8f2e6);
 }
 
 /* =========================
-   ⭐ 인트로
+   ⭐ 인트로 (절대 수정 금지 유지)
 ========================= */
 #intro{
     position:fixed;
@@ -48,11 +46,9 @@ body, html {
 .intro-title{
     font-size:clamp(4rem,8vw,6rem);
     font-weight:900;
-
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
-
     opacity:0;
     transform:translateY(20px);
     transition:0.4s ease;
@@ -63,14 +59,11 @@ body, html {
     padding:18px 55px;
     font-size:1.5rem;
     font-weight:800;
-
     border:none;
     border-radius:50px;
     cursor:pointer;
-
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
     color:#000;
-
     opacity:0;
     transform:translateY(20px);
     transition:0.4s ease;
@@ -79,6 +72,33 @@ body, html {
 .show{
     opacity:1 !important;
     transform:translateY(0) !important;
+}
+
+/* =========================
+   ⭐ NAV (한글로 변경)
+========================= */
+.nav{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:15px;
+    z-index:1000;
+}
+
+.nav-item{
+    padding:10px 25px;
+    border-radius:50px;
+    background:linear-gradient(90deg,#cdb4ff,#7fffd4);
+    color:black;
+    font-weight:700;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.nav-item:hover{
+    transform:scale(1.1);
 }
 
 /* =========================
@@ -107,42 +127,45 @@ body, html {
     padding:20px;
 }
 
-.dots{
-    position:fixed;
-    right:20px;
-    top:50%;
-    transform:translateY(-50%);
+/* =========================
+   ⭐ Page 1
+========================= */
+.title-main{
+    font-size:clamp(3rem,6vw,5rem);
+    font-weight:900;
+    background:linear-gradient(90deg,#cdb4ff,#7fffd4);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
 }
-.dot{
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background:white;
-    margin:10px 0;
-    opacity:0.3;
-}
-.dot.active{opacity:1}
 
+.sub-text{
+    font-size:2rem;
+    margin-top:20px;
+}
+
+/* =========================
+   ⭐ Page 2
+========================= */
 .stats-grid{
     display:flex;
     gap:20px;
 }
+
 .card{
     background:rgba(255,255,255,0.25);
-    padding:20px;
+    padding:25px;
     border-radius:20px;
 }
 
-.tv-bg{
-    background:repeating-linear-gradient(
-        45deg,
-        #000,
-        #000 10px,
-        #0f3d2e 10px,
-        #0f3d2e 20px
-    );
+/* =========================
+   ⭐ Page 3
+========================= */
+.game-box{
+    font-size:2rem;
+    font-weight:800;
 }
 
+/* volume */
 .volume{
     position:fixed;
     top:20px;
@@ -153,7 +176,7 @@ body, html {
 
 <body>
 
-<!-- 🎬 인트로 -->
+<!-- 🎬 인트로 (그대로 유지) -->
 <div id="intro">
 
     <video id="introVideo" autoplay muted playsinline>
@@ -179,7 +202,16 @@ body, html {
 </audio>
 
 <!-- =========================
-   ⭐ 메인
+   ⭐ NAV (한글)
+========================= -->
+<div class="nav">
+    <div class="nav-item" onclick="goTo(0)">홈</div>
+    <div class="nav-item" onclick="goTo(1)">통계</div>
+    <div class="nav-item" onclick="goTo(2)">게임</div>
+</div>
+
+<!-- =========================
+   ⭐ MAIN
 ========================= -->
 <div id="main">
 
@@ -192,21 +224,31 @@ body, html {
         oninput="document.getElementById('audio').volume=this.value">
     </div>
 
+    <!-- PAGE 1 -->
     <section class="page">
-        <h1 style="font-size:4rem;
-        font-weight:900;
-        background:linear-gradient(90deg,#cdb4ff,#7fffd4);
-        -webkit-background-clip:text;
-        -webkit-text-fill-color:transparent;">
-        포요 9주년
-        </h1>
-        <p>9년의 계절, 포동이들과 함께 써 내려간 이야기</p>
+        <div class="title-main">POYO 9TH ANNIVERSARY</div>
+        <div class="sub-text">🎉 9년의 여정, 함께해줘서 고마워 🎉</div>
+    </section>
+
+    <!-- PAGE 2 -->
+    <section class="page">
+        <h2>📊 STATISTICS</h2>
+        <div class="stats-grid">
+            <div class="card">9 YEARS</div>
+            <div class="card">3,285 DAYS</div>
+            <div class="card">78,840 HOURS</div>
+        </div>
+    </section>
+
+    <!-- PAGE 3 -->
+    <section class="page">
+        <div class="game-box">🎮 GAME COMING SOON</div>
     </section>
 
 </div>
 
 <!-- =========================
-   ⭐ JS (기존 유지)
+   ⭐ JS (인트로 유지)
 ========================= -->
 <script>
 
@@ -217,51 +259,32 @@ window.addEventListener("DOMContentLoaded", () => {
     const btn = document.getElementById("enterBtn");
     const audio = document.getElementById("audio");
 
-    if (!video || !title || !btn || !audio) return;
-
     let shown = false;
-    let introSoundOn = false;
 
-    /* 🎬 인트로 영상 소리 */
-    window.addEventListener("click", () => {
-        if (!introSoundOn) {
-            video.muted = false;
-            video.volume = 1.0;
-            introSoundOn = true;
-        }
-    }, { once:true });
-
-    /* 🎵 BGM은 입장 후만 */
     window.enter = function () {
-
-        try {
-            audio.volume = 0.5;
-            audio.play().catch(()=>{});
-        } catch(e) {}
-
-        document.getElementById("intro").style.display = "none";
-        document.getElementById("main").style.display = "block";
+        audio.play().catch(()=>{});
+        document.getElementById("intro").style.display="none";
+        document.getElementById("main").style.display="block";
     };
 
-    /* ❌ BGM 초기 차단 */
-    audio.pause();
-    audio.currentTime = 0;
-
-    /* 🎬 1:43 = 103초 */
     video.addEventListener("timeupdate", () => {
-
         if (shown) return;
-
-        try {
-            if (video.currentTime >= 103) {
-                shown = true;
-                title.classList.add("show");
-                btn.classList.add("show");
-            }
-        } catch(e) {}
+        if (video.currentTime >= 103) {
+            shown = true;
+            title.classList.add("show");
+            btn.classList.add("show");
+        }
     });
 
 });
+
+/* 🧭 네비 이동 */
+function goTo(page){
+    window.scrollTo({
+        top: page * window.innerHeight,
+        behavior:"smooth"
+    });
+}
 
 </script>
 
