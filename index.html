@@ -9,23 +9,15 @@
 body, html {
     margin:0;
     padding:0;
-    font-family: sans-serif;
+    font-family:sans-serif;
     overflow-x:hidden;
-    scroll-behavior:smooth;
-
-    /* 🎨 연보라 + 민트 */
-    background: linear-gradient(135deg, #d8c7ff, #b8f2e6);
     color:white;
+
+    /* 🎨 확실한 변경 (연보라+민트) */
+    background: linear-gradient(135deg,#d8c7ff,#b8f2e6);
 }
 
-/* ⭐ 공통 음악 */
-audio{
-    display:none;
-}
-
-/* =========================
-   ⭐ 인트로
-========================= */
+/* ================= 인트로 ================= */
 #intro{
     position:fixed;
     width:100%;
@@ -36,34 +28,29 @@ audio{
     z-index:9999;
 }
 
-/* 인트로 영상 */
 #intro video{
     position:absolute;
     width:100%;
     height:100%;
     object-fit:cover;
-    z-index:-1;
     opacity:0.75;
+    z-index:-1;
 }
 
-/* 인트로 콘텐츠 */
-.intro-content{
+/* 인트로 박스 */
+.intro-box{
     text-align:center;
-    z-index:2;
 }
 
-/* ⭐ 포요 9주년 문구 (연보라+민트) */
+/* ⭐ 확실히 보이게 (중요) */
 .intro-title{
-    font-size:clamp(3rem,8vw,5rem);
-    background: linear-gradient(90deg, #cdb4ff, #7fffd4);
+    font-size:clamp(3rem,7vw,5rem);
+    background:linear-gradient(90deg,#cdb4ff,#7fffd4);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
-    opacity:0;
-    transform:translateY(20px);
-    transition:1s;
+    opacity:1;
 }
 
-/* 버튼 (같이 숨겼다가 등장) */
 #enterBtn{
     margin-top:20px;
     padding:15px 40px;
@@ -71,28 +58,15 @@ audio{
     border-radius:50px;
     cursor:pointer;
 
-    background: linear-gradient(90deg, #cdb4ff, #7fffd4);
+    background:linear-gradient(90deg,#cdb4ff,#7fffd4);
     color:#000;
-
-    opacity:0;
-    transform:translateY(20px);
-    transition:1s;
 }
 
-/* 표시 상태 */
-.show{
-    opacity:1 !important;
-    transform:translateY(0) !important;
-}
-
-/* =========================
-   ⭐ 메인
-========================= */
+/* ================= 메인 ================= */
 #main{
     display:none;
 }
 
-/* 배경 영상 */
 #bg-video{
     position:fixed;
     width:100%;
@@ -108,23 +82,17 @@ audio{
     display:flex;
     justify-content:center;
     align-items:center;
-    text-align:center;
     flex-direction:column;
+    text-align:center;
     padding:20px;
 }
 
-/* 페이드 */
+/* 빠른 등장 */
 .fade{
-    opacity:0;
-    transform:translateY(20px);
-    transition:0.4s ease;
-}
-.fade.show{
     opacity:1;
-    transform:translateY(0);
 }
 
-/* 점 네비 */
+/* 점 */
 .dots{
     position:fixed;
     right:20px;
@@ -139,34 +107,22 @@ audio{
     margin:10px 0;
     opacity:0.3;
 }
-.dot.active{
-    opacity:1;
-}
+.dot.active{opacity:1}
 
 /* 카드 */
 .stats-grid{
     display:flex;
     gap:20px;
-    flex-wrap:wrap;
 }
 .card{
     background:rgba(255,255,255,0.25);
-    padding:25px;
+    padding:20px;
     border-radius:20px;
-    min-width:150px;
 }
 
-/* 볼륨 */
-.volume{
-    position:fixed;
-    top:20px;
-    right:20px;
-    z-index:1000;
-}
-
-/* 1-2 TV 느낌 */
+/* TV 느낌 */
 .tv-bg{
-    background: repeating-linear-gradient(
+    background:repeating-linear-gradient(
         45deg,
         #000,
         #000 10px,
@@ -175,72 +131,55 @@ audio{
     );
 }
 
-/* 큰 글씨 */
-.big-text{
-    font-size:2.5rem;
-    font-weight:bold;
-}
-
-/* 치지직 이미지 */
-.chzzk-img{
-    width:200px;
-    margin-top:20px;
+/* 볼륨 */
+.volume{
+    position:fixed;
+    top:20px;
+    right:20px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎵 공통 음악 (인트로 → 본문 이어짐) -->
+<!-- 🎵 음악 (무조건 재생 시도) -->
 <audio id="audio" loop>
     <source src="bgm.mp3">
 </audio>
 
-<!-- =========================
-     ⭐ 인트로
-========================= -->
+<!-- ================= 인트로 ================= -->
 <div id="intro">
 
     <video id="introVideo" autoplay muted playsinline>
         <source src="video2.mp4">
     </video>
 
-    <div class="intro-content">
-
-        <!-- ⭐ 문구 -->
-        <div id="introTitle" class="intro-title">Poyo 9th Anniversary</div>
-
-        <!-- ⭐ 버튼 -->
+    <div class="intro-box">
+        <div class="intro-title">Poyo 9th Anniversary</div>
         <button id="enterBtn" onclick="enter()">입장하기</button>
     </div>
 </div>
 
-<!-- =========================
-     ⭐ 메인
-========================= -->
+<!-- ================= 메인 ================= -->
 <div id="main">
 
     <video autoplay muted loop playsinline id="bg-video">
         <source src="video.mp4">
     </video>
 
-    <!-- 볼륨 -->
     <div class="volume">
         <input type="range" min="0" max="1" step="0.01" value="0.5"
-        oninput="setVolume(this.value)">
+        oninput="audio.volume=this.value">
     </div>
 
-    <!-- 점 -->
     <div class="dots">
         <div class="dot active"></div>
         <div class="dot"></div>
         <div class="dot"></div>
     </div>
 
-    <!-- 1페이지 -->
-    <section class="page fade">
-        <h1 style="
-        font-size:4rem;
+    <section class="page">
+        <h1 style="font-size:4rem;
         background:linear-gradient(90deg,#cdb4ff,#7fffd4);
         -webkit-background-clip:text;
         -webkit-text-fill-color:transparent;">
@@ -249,18 +188,16 @@ audio{
         <p>9년의 계절, 포동이들과 함께 써 내려간 이야기</p>
     </section>
 
-    <!-- 1-2 페이지 -->
-    <section class="page fade tv-bg">
-        <div class="big-text">
+    <section class="page tv-bg">
+        <h2 style="font-size:2rem">
             치지직 데뷔 3285일째<br>
             약 8만명의 포동이들이 함께했습니다
-        </div>
+        </h2>
 
-        <img src="img.png" class="chzzk-img">
+        <img src="img.png" width="200">
     </section>
 
-    <!-- 2페이지 -->
-    <section class="page fade">
+    <section class="page">
         <h2>9년의 발자취</h2>
         <div class="stats-grid">
             <div class="card">9년</div>
@@ -275,61 +212,29 @@ audio{
 
 const audio = document.getElementById("audio");
 const introVideo = document.getElementById("introVideo");
-const enterBtn = document.getElementById("enterBtn");
-const introTitle = document.getElementById("introTitle");
 
-/* 🎵 인트로에서도 음악 시작 */
-window.addEventListener("load", ()=>{
-    audio.volume = 0.5;
+/* 🔥 음악 (무조건 시도) */
+window.addEventListener("click", ()=>{
     audio.play().catch(()=>{});
-});
+}, {once:true});
 
-/* 🎬 영상 끝나면 문구 + 버튼 등장 */
-introVideo.addEventListener("ended", ()=>{
-    introTitle.classList.add("show");
-    enterBtn.classList.add("show");
-});
-
-/* 🎬 일부 브라우저 loop일 경우 대비 */
+/* 🔥 안전 fallback (영상 끝 안나와도 버튼 표시) */
 setTimeout(()=>{
-    introTitle.classList.add("show");
-    enterBtn.classList.add("show");
-}, 5000);
+    document.getElementById("enterBtn").style.display="inline-block";
+}, 4000);
 
-/* 🎵 입장 */
+/* 🔥 영상 끝났을 때 */
+introVideo.addEventListener("ended", ()=>{
+    document.getElementById("enterBtn").style.display="inline-block";
+});
+
+/* 🔥 입장 */
 function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
-
-    audio.play().catch(()=>{});
+    audio.play();
 }
 
-/* 볼륨 */
-function setVolume(v){
-    audio.volume = v;
-}
-
-/* 페이드 */
-window.addEventListener("scroll", ()=>{
-    document.querySelectorAll(".fade").forEach(el=>{
-        const top = el.getBoundingClientRect().top;
-        if(top < window.innerHeight - 80){
-            el.classList.add("show");
-        }
-    });
-
-    /* 점 네비 */
-    const pages = document.querySelectorAll(".page");
-    const dots = document.querySelectorAll(".dot");
-
-    pages.forEach((p,i)=>{
-        const rect = p.getBoundingClientRect();
-        if(rect.top < window.innerHeight/2 && rect.bottom > window.innerHeight/2){
-            dots.forEach(d=>d.classList.remove("active"));
-            if(dots[i]) dots[i].classList.add("active");
-        }
-    });
-});
 </script>
 
 </body>
