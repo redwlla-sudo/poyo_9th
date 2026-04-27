@@ -5,11 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>포요 9주년</title>
 
+<!-- 🎀 Cafe24 폰트 추가 -->
+<style>
+@import url('https://fonts.cafe24.com/css/cafe24ssurround.css');
+</style>
+
 <style>
 body, html {
     margin:0;
     padding:0;
-    font-family:sans-serif;
+    font-family:'Cafe24 Ssurround', sans-serif;
     overflow-x:hidden;
     color:white;
     background: linear-gradient(135deg,#d8c7ff,#b8f2e6);
@@ -201,7 +206,7 @@ body, html {
 </div>
 
 <!-- =========================
-   ⭐ 안정 JS
+   ⭐ JS (기존 유지)
 ========================= -->
 <script>
 
@@ -217,7 +222,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let shown = false;
     let introSoundOn = false;
 
-    /* 🎬 1. 인트로 영상 소리 (첫 클릭 시 ON) */
+    /* 🎬 인트로 영상 소리 */
     window.addEventListener("click", () => {
         if (!introSoundOn) {
             video.muted = false;
@@ -226,7 +231,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }, { once:true });
 
-    /* 🎵 2. BGM (입장 후만 재생) */
+    /* 🎵 BGM은 입장 후만 */
     window.enter = function () {
 
         try {
@@ -238,11 +243,11 @@ window.addEventListener("DOMContentLoaded", () => {
         document.getElementById("main").style.display = "block";
     };
 
-    /* ❌ BGM 초기 완전 차단 */
+    /* ❌ BGM 초기 차단 */
     audio.pause();
     audio.currentTime = 0;
 
-    /* 🎬 1분 43초 = 103초 정확 등장 */
+    /* 🎬 1:43 = 103초 */
     video.addEventListener("timeupdate", () => {
 
         if (shown) return;
