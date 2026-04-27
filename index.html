@@ -16,7 +16,7 @@ body, html {
 }
 
 /* =========================
-   ⭐ 인트로 (기존 유지)
+   ⭐ 인트로
 ========================= */
 #intro{
     position:fixed;
@@ -28,6 +28,7 @@ body, html {
     z-index:9999;
 }
 
+/* 영상 */
 #introVideo{
     position:absolute;
     width:100%;
@@ -37,24 +38,32 @@ body, html {
     z-index:-1;
 }
 
+/* 텍스트 영역 */
 .intro-box{
     text-align:center;
 }
 
+/* ⭐ 문구 (더 크고 굵게) */
 .intro-title{
-    font-size:clamp(3rem,7vw,5rem);
+    font-size:clamp(4rem,8vw,6rem);
+    font-weight:900;
+
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
 
     opacity:0;
     transform:translateY(20px);
-    transition:0.5s ease;
+    transition:0.4s ease;
 }
 
+/* ⭐ 버튼 (더 크고 굵게) */
 #enterBtn{
-    margin-top:20px;
-    padding:15px 40px;
+    margin-top:25px;
+    padding:18px 55px;
+    font-size:1.5rem;
+    font-weight:800;
+
     border:none;
     border-radius:50px;
     cursor:pointer;
@@ -64,16 +73,17 @@ body, html {
 
     opacity:0;
     transform:translateY(20px);
-    transition:0.5s ease;
+    transition:0.4s ease;
 }
 
+/* 등장 */
 .show{
     opacity:1 !important;
     transform:translateY(0) !important;
 }
 
 /* =========================
-   ⭐ 메인 (기존 유지)
+   ⭐ 메인
 ========================= */
 #main{
     display:none;
@@ -144,13 +154,13 @@ body, html {
 
 <body>
 
-<!-- 🎵 음악 -->
-<audio id="audio" loop>
+<!-- 🎵 음악 (처음엔 muted 상태로 자동재생 가능) -->
+<audio id="audio" loop muted>
     <source src="bgm.mp3">
 </audio>
 
 <!-- =========================
-   ⭐ 인트로 (기존 유지)
+   ⭐ 인트로
 ========================= -->
 <div id="intro">
 
@@ -172,7 +182,7 @@ body, html {
 </div>
 
 <!-- =========================
-   ⭐ 메인 (기존 유지)
+   ⭐ 메인
 ========================= -->
 <div id="main">
 
@@ -193,6 +203,7 @@ body, html {
 
     <section class="page">
         <h1 style="font-size:4rem;
+        font-weight:900;
         background:linear-gradient(90deg,#cdb4ff,#7fffd4);
         -webkit-background-clip:text;
         -webkit-text-fill-color:transparent;">
@@ -210,15 +221,6 @@ body, html {
         <img src="img.png" width="200">
     </section>
 
-    <section class="page">
-        <h2>9년의 발자취</h2>
-        <div class="stats-grid">
-            <div class="card">9년</div>
-            <div class="card">3,285일</div>
-            <div class="card">78,840시간</div>
-        </div>
-    </section>
-
 </div>
 
 <script>
@@ -227,24 +229,28 @@ const audio = document.getElementById("audio");
 const title = document.getElementById("title");
 const btn = document.getElementById("enterBtn");
 
-/* ⏱️ 문구 등장 (1분10초 기준 유지) */
+/* 🎬 영상 1:40 (100초)에 등장 */
 setTimeout(()=>{
     title.classList.add("show");
     btn.classList.add("show");
-}, 70000);
+}, 100000);
 
-/* 🎮 핵심 수정: 입장 버튼 = 음악 시작 + 이동 */
-function enter(){
-
-    // 🎵 여기서만 음악 시작 (autoplay 완전 회피)
+/* 🔊 핵심: 첫 클릭 시 소리 활성화 */
+function enableSound(){
+    audio.muted = false;
     audio.volume = 0.5;
     audio.play().catch(()=>{});
+}
 
-    // 🧹 인트로 제거
+/* 페이지 어디 클릭해도 소리 시작 */
+document.body.addEventListener("click", enableSound, { once:true });
+
+/* 🎮 입장 */
+function enter(){
     document.getElementById("intro").style.display="none";
-
-    // 📺 메인 표시
     document.getElementById("main").style.display="block";
+
+    enableSound();
 }
 
 </script>
