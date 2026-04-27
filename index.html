@@ -26,6 +26,7 @@ body, html {
     justify-content:center;
     align-items:center;
     z-index:9999;
+    cursor:pointer;
 }
 
 #introVideo{
@@ -34,16 +35,12 @@ body, html {
     height:100%;
     object-fit:cover;
     z-index:-1;
-
-    /* 🔥 핵심: 무조건 음소거 */
-    muted: true;
 }
 
 .intro-box{
     text-align:center;
 }
 
-/* 텍스트 */
 .intro-title{
     font-size:clamp(4rem,8vw,6rem);
     font-weight:900;
@@ -57,7 +54,6 @@ body, html {
     transition:0.4s ease;
 }
 
-/* 버튼 */
 #enterBtn{
     margin-top:25px;
     padding:18px 55px;
@@ -76,7 +72,6 @@ body, html {
     transition:0.4s ease;
 }
 
-/* 등장 */
 .show{
     opacity:1 !important;
     transform:translateY(0) !important;
@@ -154,11 +149,11 @@ body, html {
 
 <body>
 
-<!-- 🎬 인트로 영상 (무조건 muted) -->
+<!-- 🎬 인트로 -->
 <div id="intro">
 
     <video id="introVideo" autoplay muted playsinline>
-        <source src="video2.mp4" type="video/mp4">
+        <source src="video2.mp4">
     </video>
 
     <div class="intro-box">
@@ -174,7 +169,7 @@ body, html {
     </div>
 </div>
 
-<!-- 🎵 메인 음악 -->
+<!-- 🎵 음악 -->
 <audio id="audio" loop>
     <source src="bgm.mp3">
 </audio>
@@ -206,29 +201,38 @@ body, html {
 
 </div>
 
+<!-- =========================
+   ⭐ 수정된 JS (핵심)
+========================= -->
 <script>
 
-const audio = document.getElementById("audio");
+const video = document.getElementById("introVideo");
 const title = document.getElementById("title");
 const btn = document.getElementById("enterBtn");
+const audio = document.getElementById("audio");
 
-/* ⏱️ 1분40초 (100초) 등장 */
-setTimeout(()=>{
-    title.classList.add("show");
-    btn.classList.add("show");
-}, 100000);
+let shown = false;
 
-/* 🔊 핵심: 입장 버튼 클릭 = 음악 시작 */
+/* 🎮 입장 = 음악 시작 + 화면 전환 */
 function enter(){
-
-    // 🎵 음악 시작 (여기서만 허용)
     audio.volume = 0.5;
     audio.play().catch(()=>{});
 
-    // 화면 전환
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
 }
+
+/* 🎬 핵심 수정: 1분 41초 = 101초 정확 기준 */
+video.addEventListener("timeupdate", () => {
+
+    if (shown) return;
+
+    if (video.currentTime >= 101) {
+        shown = true;
+        title.classList.add("show");
+        btn.classList.add("show");
+    }
+});
 
 </script>
 
