@@ -5,20 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>포요 9주년</title>
 
-<!-- 폰트 -->
-<link href="https://fonts.googleapis.com/css2?family=Pretendard&display=swap" rel="stylesheet">
-
 <style>
 body, html {
     margin:0;
     padding:0;
-    font-family: 'Pretendard', sans-serif;
+    font-family: sans-serif;
     overflow-x:hidden;
     scroll-behavior:smooth;
     color:white;
 }
 
-/* ⭐ 인트로 */
 #intro{
     position:fixed;
     width:100%;
@@ -42,7 +38,7 @@ body, html {
 }
 
 .intro-content h1{
-    font-size:clamp(2.5rem,8vw,5rem);
+    font-size:clamp(3rem,8vw,5rem);
 }
 
 button{
@@ -52,10 +48,8 @@ button{
     cursor:pointer;
 }
 
-/* ⭐ 메인 숨김 */
 #main{display:none;}
 
-/* ⭐ 배경 영상 */
 #bg-video{
     position:fixed;
     width:100%;
@@ -65,7 +59,6 @@ button{
     opacity:0.6;
 }
 
-/* ⭐ 페이지 섹션 */
 .page{
     height:100vh;
     display:flex;
@@ -76,10 +69,9 @@ button{
     padding:20px;
 }
 
-/* ⭐ 페이드 인 */
 .fade{
     opacity:0;
-    transform:translateY(30px);
+    transform:translateY(40px);
     transition:1s;
 }
 .fade.show{
@@ -87,7 +79,6 @@ button{
     transform:translateY(0);
 }
 
-/* ⭐ 점 네비게이션 */
 .dots{
     position:fixed;
     right:20px;
@@ -100,13 +91,12 @@ button{
     border-radius:50%;
     background:white;
     margin:10px 0;
-    opacity:0.4;
+    opacity:0.3;
 }
 .dot.active{
     opacity:1;
 }
 
-/* ⭐ 통계 카드 */
 .stats-grid{
     display:flex;
     gap:20px;
@@ -114,11 +104,11 @@ button{
 }
 .card{
     background:rgba(255,255,255,0.2);
-    padding:20px;
+    padding:25px;
     border-radius:20px;
+    min-width:150px;
 }
 
-/* ⭐ 볼륨 */
 .volume{
     position:fixed;
     top:20px;
@@ -130,10 +120,9 @@ button{
 
 <body>
 
-<!-- ⭐ 인트로 -->
 <div id="intro">
-    <video autoplay muted loop playsinline id="introVideo">
-        <source src="video.mp4">
+    <video autoplay muted loop playsinline>
+        <source src="video2.mp4">
     </video>
 
     <div class="intro-content">
@@ -142,7 +131,6 @@ button{
     </div>
 </div>
 
-<!-- ⭐ 메인 -->
 <div id="main">
 
     <audio id="audio" loop>
@@ -153,6 +141,7 @@ button{
         <source src="video.mp4">
     </video>
 
+    <!-- 볼륨 -->
     <div class="volume">
         <input type="range" min="0" max="1" step="0.01" value="0.5"
         oninput="setVolume(this.value)">
@@ -161,6 +150,7 @@ button{
     <!-- 점 -->
     <div class="dots">
         <div class="dot active"></div>
+        <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
     </div>
@@ -174,8 +164,8 @@ button{
     <!-- 1-2페이지 -->
     <section class="page fade">
         <p style="font-size:1.5rem">
-        치지직의 데뷔한지 3285일째<br>
-        지금까지 약 8만명의 포동이들이 포요님을 팔로우 했네요.
+        치지직 데뷔 3285일째<br>
+        약 8만명의 포동이들이 함께했습니다
         </p>
     </section>
 
@@ -185,8 +175,18 @@ button{
         <div class="stats-grid">
             <div class="card">9년</div>
             <div class="card">3,285일</div>
-            <div class="card">약 78,840시간</div>
+            <div class="card">78,840시간</div>
         </div>
+    </section>
+
+    <section class="page fade">
+        <h2>🎬 우리의 순간들</h2>
+
+        <video controls style="width:80%; max-width:800px; border-radius:20px;">
+            <source src="memory.mp4" type="video/mp4">
+        </video>
+
+        <p style="margin-top:10px;">함께한 소중한 시간들</p>
     </section>
 
 </div>
@@ -197,18 +197,16 @@ function enter(){
     document.getElementById("main").style.display="block";
 
     const audio = document.getElementById("audio");
-    audio.volume=0.5;
-    audio.play();
-
-    document.getElementById("introVideo").play();
+    audio.volume = 0.5;
+    audio.play().catch(()=>{});
 }
 
 function setVolume(v){
-    document.getElementById("audio").volume=v;
+    document.getElementById("audio").volume = v;
 }
 
-/* ⭐ 페이드 효과 */
 const fades = document.querySelectorAll(".fade");
+
 window.addEventListener("scroll", ()=>{
     fades.forEach(el=>{
         const top = el.getBoundingClientRect().top;
