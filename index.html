@@ -8,21 +8,30 @@
 <style>
 @import url('https://fonts.cafe24.com/css/cafe24ssurround.css');
 
-html, body {
+body{
     margin:0;
     padding:0;
     font-family:'Cafe24 Ssurround', sans-serif;
     overflow-x:hidden;
-    scroll-behavior:smooth;
-}
-
-/* 🚨 메인 깜빡임 완전 제거 */
-#main{
-    display:none !important;
+    background:linear-gradient(135deg,#d8c7ff,#b8f2e6);
 }
 
 /* =========================
-   🎬 인트로
+   🚨 메인 (절대 초기 상태 숨김)
+========================= */
+#main{
+    opacity:0;
+    pointer-events:none;
+    transition:0.5s ease;
+}
+
+#main.show{
+    opacity:1;
+    pointer-events:auto;
+}
+
+/* =========================
+   🎬 인트로 (항상 최상단)
 ========================= */
 #intro{
     position:fixed;
@@ -41,9 +50,7 @@ html, body {
     z-index:-1;
 }
 
-/* =========================
-   🔒 인트로 UI 그룹 (고정)
-========================= */
+/* UI 그룹 */
 .intro-group{
     display:flex;
     flex-direction:column;
@@ -51,7 +58,7 @@ html, body {
     gap:20px;
 }
 
-/* 103초 전 절대 숨김 */
+/* 103초 전 숨김 */
 #introText,
 #enterBtn{
     opacity:0;
@@ -66,7 +73,6 @@ html, body {
     pointer-events:auto !important;
 }
 
-/* 타이틀 */
 #introText{
     font-size:4rem;
     font-weight:900;
@@ -75,14 +81,14 @@ html, body {
     -webkit-text-fill-color:transparent;
 }
 
-/* 버튼 */
 #enterBtn{
-    font-size:1.6rem;
+    font-size:1.5rem;
     font-weight:900;
-    padding:18px 60px;
+    padding:16px 50px;
     border:none;
     border-radius:50px;
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
+    cursor:pointer;
 }
 
 /* 스킵 */
@@ -90,15 +96,15 @@ html, body {
     position:absolute;
     top:20px;
     right:20px;
-    padding:10px 18px;
-    border-radius:20px;
+    padding:10px 16px;
     border:none;
+    border-radius:20px;
     background:white;
     font-weight:700;
 }
 
 /* =========================
-   🧭 상단 UI
+   🧭 UI
 ========================= */
 .top-nav{
     position:fixed;
@@ -111,24 +117,14 @@ html, body {
 }
 
 .top-nav div{
-    padding:12px 30px;
+    padding:12px 28px;
     border-radius:50px;
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
     font-weight:800;
 }
 
 /* =========================
-   🔊 볼륨
-========================= */
-.volume{
-    position:fixed;
-    top:20px;
-    right:20px;
-    z-index:1000;
-}
-
-/* =========================
-   🟣 점 네비 (5개 고정)
+   🟣 점 네비
 ========================= */
 .dots{
     position:fixed;
@@ -166,25 +162,7 @@ html, body {
     text-align:center;
 }
 
-/* =========================
-   🏠 메인 문구 (고정 + 그룹)
-========================= */
-.main-title{
-    font-size:5rem;
-    font-weight:900;
-    color:black;
-}
-
-.sub-title{
-    font-size:2.6rem;
-    font-weight:900;
-    color:black;
-    margin-top:20px;
-}
-
-/* =========================
-   🎵 audio
-========================= */
+/* audio */
 audio{display:none;}
 </style>
 </head>
@@ -214,18 +192,12 @@ audio{display:none;}
 
 <!-- 🧭 UI -->
 <div class="top-nav">
-    <div onclick="goTo(0)">홈</div>
-    <div onclick="goTo(1)">통계</div>
-    <div onclick="goTo(2)">게임</div>
+    <div>홈</div>
+    <div>통계</div>
+    <div>게임</div>
 </div>
 
-<!-- 🔊 볼륨 -->
-<div class="volume">
-    <input type="range" min="0" max="1" step="0.01"
-    oninput="document.getElementById('audio').volume=this.value">
-</div>
-
-<!-- 🟣 점 네비 -->
+<!-- 🟣 네비 -->
 <div class="dots">
     <div class="dot active"></div>
     <div class="dot"></div>
@@ -237,26 +209,11 @@ audio{display:none;}
 <!-- ========================= MAIN ========================= -->
 <div id="main">
 
-    <section class="page">
-        <div class="main-title">POYO 9TH ANNIVERSARY</div>
-        <div class="sub-title">
-            포동이들과 함께 걸어온 9년이라는 시간의 발자취
-        </div>
-    </section>
-
-    <section class="page" style="background:#0b3d2e;color:#00ff9d;">
-        <h1>치지직 스타일 페이지</h1>
-    </section>
-
+    <section class="page"><h1>HOME</h1></section>
+    <section class="page"><h1>CHZZK STYLE</h1></section>
     <section class="page"><h1>PAGE 3</h1></section>
     <section class="page"><h1>PAGE 4</h1></section>
-
-    <section class="page">
-        <h1 style="font-size:2.8rem;">
-            자세한 내용과 게임은<br>
-            상단 통계 / 게임 탭을 눌러주세요
-        </h1>
-    </section>
+    <section class="page"><h1>GAME</h1></section>
 
 </div>
 
@@ -269,14 +226,16 @@ window.addEventListener("DOMContentLoaded", () => {
 
     let shown = false;
 
-    /* 🚨 메인 완전 차단 후 해제 */
-    document.getElementById("main").style.display = "none";
-    document.body.style.visibility = "visible";
+    /* 🔊 안정화 (중요) */
+    function unlock(){
+        video.muted = false;
+        video.volume = 0.7;
+        audio.volume = 0.5;
+    }
 
-    /* 🔊 볼륨 70 고정 */
-    video.volume = 0.7;
+    window.addEventListener("click", unlock, {once:true});
 
-    /* 🔥 103초 고정 */
+    /* 🔥 103초 UI */
     function loop(){
         if(!shown && video.currentTime >= 103){
             shown = true;
@@ -287,11 +246,11 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     loop();
 
+    /* ▶ 시작 */
     window.enter = function(){
-        audio.volume = 0.5;
         audio.play().catch(()=>{});
         document.getElementById("intro").style.display="none";
-        document.getElementById("main").style.display="block";
+        document.getElementById("main").classList.add("show");
     };
 
     window.skipIntro = function(){
@@ -299,26 +258,6 @@ window.addEventListener("DOMContentLoaded", () => {
         enter();
     };
 
-});
-
-/* 🧭 스크롤 */
-function goTo(i){
-    window.scrollTo({
-        top:i*window.innerHeight,
-        behavior:"smooth"
-    });
-
-    document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
-    document.querySelectorAll(".dot")[i].classList.add("active");
-}
-
-/* 🧭 동기화 */
-window.addEventListener("scroll", () => {
-    let i = Math.round(window.scrollY / window.innerHeight);
-    document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
-    if(document.querySelectorAll(".dot")[i]){
-        document.querySelectorAll(".dot")[i].classList.add("active");
-    }
 });
 
 </script>
