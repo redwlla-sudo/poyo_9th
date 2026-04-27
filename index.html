@@ -6,170 +6,118 @@
 <title>포요 9주년</title>
 
 <style>
-:root { 
-    --mint: #BFFCC6; 
-    --lavender: #E0BBE4; 
-    --main-bg: linear-gradient(135deg, #E0BBE4, #BFFCC6);
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background: linear-gradient(135deg,#E0BBE4,#BFFCC6);
+    color: white;
 }
 
-body, html { 
-    margin: 0; padding: 0; 
-    font-family: 'Pretendard', sans-serif; 
-    color: white; 
-    background: var(--main-bg);
-    overflow-x: hidden;
-}
-
-#intro-overlay {
+#intro {
     position: fixed;
+    width: 100%;
+    height: 100%;
     top: 0; left: 0;
-    width: 100%; height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10000;
-    transition: all 0.8s ease;
 }
 
-#intro-video {
+#intro video {
     position: absolute;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: -2;
+    z-index: 0; /* 절대 음수 쓰지 마 */
 }
 
-#intro-overlay::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.3);
+#intro::after {
+    display: none;
 }
 
-/* 가운데 컨텐츠 */
-.intro-content {
-    text-align: center;
+.center {
+    position: relative;
     z-index: 2;
+    text-align: center;
 }
 
-.enter-btn {
-    padding: 15px 45px;
-    font-size: 1.2rem;
-    background: white;
-    color: #888;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-}
-
-.volume-box {
+.volume {
     position: absolute;
     top: 20px;
     right: 20px;
     z-index: 3;
 }
 
-.main-content {
-    opacity: 0;
-    transform: scale(1.1);
-    transition: all 1s ease;
+#main {
+    display: none;
 }
 
-.main-content.active {
-    opacity: 1;
-    transform: scale(1);
-}
-
-/* 배경 영상 */
-#bg-video { 
+#bg-video {
     position: fixed;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     z-index: -1;
     opacity: 0.7;
 }
 
-/* nav 숨김 시작 */
 nav {
     display: none;
-}
-
-/* nav 활성화 */
-nav.active {
-    display: flex;
     position: fixed;
     top: 20px;
     width: 100%;
     justify-content: center;
 }
 
-.nav-menu {
+nav.active {
     display: flex;
-    gap: 20px;
-    background: rgba(255,255,255,0.3);
-    padding: 10px 25px;
-    border-radius: 30px;
 }
 
-/* 글씨 크게 */
-h1 {
-    font-size: 4rem;
-}
-
-p {
-    font-size: 1.5rem;
-}
+h1 { font-size: 4rem; }
+p { font-size: 1.4rem; }
 
 section {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    height: 100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 </style>
 </head>
 
 <body>
 
-<div id="intro-overlay">
+<div id="intro">
 
-    <!-- 영상 -->
-    <video autoplay muted loop playsinline id="intro-video">
+    <video autoplay muted loop playsinline>
         <source src="video.mp4" type="video/mp4">
     </video>
 
-    <!-- 볼륨 -->
-    <div class="volume-box">
+    <div class="volume">
         <input type="range" min="0" max="1" step="0.01" value="0.5"
         oninput="setVolume(this.value)">
     </div>
 
-    <!-- 중앙 -->
-    <div class="intro-content">
+    <div class="center">
         <h2>Poyo 9th Anniversary</h2>
-        <button class="enter-btn" onclick="startProject()">입장하기</button>
+        <button onclick="enter()">입장하기</button>
     </div>
 
 </div>
 
-<div class="main-content" id="mainContent">
+<div id="main">
 
-    <audio id="mainAudio" loop>
-        <source src="bgm.mp3" type="audio/mpeg">
+    <audio id="audio" loop>
+        <source src="bgm.mp3">
     </audio>
 
     <video autoplay muted loop playsinline id="bg-video">
-        <source src="video.mp4" type="video/mp4">
+        <source src="video.mp4">
     </video>
 
     <nav id="nav">
-        <div class="nav-menu">
-            <a href="#home">홈</a>
-            <a href="#stats">통계</a>
-        </div>
+        <a href="#home">홈</a>
+        <a href="#stats">통계</a>
     </nav>
 
     <section id="home">
@@ -189,27 +137,19 @@ section {
 </div>
 
 <script>
-function setVolume(value) {
-    document.getElementById("mainAudio").volume = value;
+function setVolume(v){
+    document.getElementById("audio").volume = v;
 }
 
-function startProject() {
-    document.getElementById("mainAudio").play();
+window.addEventListener("click", function firstClick(){
+    document.getElementById("audio").play().catch(()=>{});
+    window.removeEventListener("click", firstClick);
+});
 
-    // 인트로 제거
-    var intro = document.getElementById("intro-overlay");
-    intro.style.opacity = "0";
-
-    setTimeout(function(){
-        intro.style.display = "none";
-
-        // 본문 등장
-        document.getElementById("mainContent").classList.add("active");
-
-        // 메뉴 등장
-        document.getElementById("nav").classList.add("active");
-
-    }, 800);
+function enter(){
+    document.getElementById("intro").style.display="none";
+    document.getElementById("main").style.display="block";
+    document.getElementById("nav").classList.add("active");
 }
 </script>
 
