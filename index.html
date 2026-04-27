@@ -16,13 +16,13 @@ html, body {
     scroll-behavior:smooth;
 }
 
-/* 🌈 기본 배경 */
-body{
-    background:linear-gradient(135deg,#d8c7ff,#b8f2e6);
+/* 🚨 메인 깜빡임 완전 제거 */
+#main{
+    display:none !important;
 }
 
 /* =========================
-   🚨 인트로 (최우선 고정)
+   🎬 인트로
 ========================= */
 #intro{
     position:fixed;
@@ -33,7 +33,6 @@ body{
     z-index:9999;
 }
 
-/* 영상 */
 #introVideo{
     position:absolute;
     width:100%;
@@ -43,7 +42,7 @@ body{
 }
 
 /* =========================
-   🔒 UI 그룹 (완전 고정)
+   🔒 인트로 UI 그룹 (고정)
 ========================= */
 .intro-group{
     display:flex;
@@ -52,16 +51,15 @@ body{
     gap:20px;
 }
 
-/* ❗ 103초 전 절대 표시 금지 */
+/* 103초 전 절대 숨김 */
 #introText,
 #enterBtn{
     opacity:0;
-    transform:translateY(25px);
+    transform:translateY(20px);
     pointer-events:none;
     transition:0.4s ease;
 }
 
-/* 표시 */
 .show{
     opacity:1 !important;
     transform:translateY(0) !important;
@@ -85,10 +83,9 @@ body{
     border:none;
     border-radius:50px;
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
-    cursor:pointer;
 }
 
-/* 스킵 고정 */
+/* 스킵 */
 #skipBtn{
     position:absolute;
     top:20px;
@@ -98,11 +95,10 @@ body{
     border:none;
     background:white;
     font-weight:700;
-    z-index:10000;
 }
 
 /* =========================
-   🧭 상단 UI (고정)
+   🧭 상단 UI
 ========================= */
 .top-nav{
     position:fixed;
@@ -119,7 +115,6 @@ body{
     border-radius:50px;
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
     font-weight:800;
-    cursor:pointer;
 }
 
 /* =========================
@@ -169,6 +164,22 @@ body{
     align-items:center;
     flex-direction:column;
     text-align:center;
+}
+
+/* =========================
+   🏠 메인 문구 (고정 + 그룹)
+========================= */
+.main-title{
+    font-size:5rem;
+    font-weight:900;
+    color:black;
+}
+
+.sub-title{
+    font-size:2.6rem;
+    font-weight:900;
+    color:black;
+    margin-top:20px;
 }
 
 /* =========================
@@ -226,10 +237,15 @@ audio{display:none;}
 <!-- ========================= MAIN ========================= -->
 <div id="main">
 
-    <section class="page"><h1>HOME (고정 문장)</h1></section>
+    <section class="page">
+        <div class="main-title">POYO 9TH ANNIVERSARY</div>
+        <div class="sub-title">
+            포동이들과 함께 걸어온 9년이라는 시간의 발자취
+        </div>
+    </section>
 
     <section class="page" style="background:#0b3d2e;color:#00ff9d;">
-        <h1>치지직 느낌 페이지</h1>
+        <h1>치지직 스타일 페이지</h1>
     </section>
 
     <section class="page"><h1>PAGE 3</h1></section>
@@ -253,17 +269,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
     let shown = false;
 
-    /* 🔥 메인 깜빡임 제거 (인트로 우선) */
+    /* 🚨 메인 완전 차단 후 해제 */
     document.getElementById("main").style.display = "none";
+    document.body.style.visibility = "visible";
 
-    /* 🔊 안정화 */
-    window.addEventListener("click", () => {
-        video.muted = false;
-        video.volume = 1;
-        audio.volume = 0.5;
-    }, {once:true});
+    /* 🔊 볼륨 70 고정 */
+    video.volume = 0.7;
 
-    /* 🔥 1분 43초 (103초) 절대 고정 */
+    /* 🔥 103초 고정 */
     function loop(){
         if(!shown && video.currentTime >= 103){
             shown = true;
@@ -274,8 +287,8 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     loop();
 
-    /* ▶ 입장 */
     window.enter = function(){
+        audio.volume = 0.5;
         audio.play().catch(()=>{});
         document.getElementById("intro").style.display="none";
         document.getElementById("main").style.display="block";
@@ -288,16 +301,25 @@ window.addEventListener("DOMContentLoaded", () => {
 
 });
 
-/* 🧭 이동 */
+/* 🧭 스크롤 */
 function goTo(i){
     window.scrollTo({
-        top: i * window.innerHeight,
+        top:i*window.innerHeight,
         behavior:"smooth"
     });
 
     document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
     document.querySelectorAll(".dot")[i].classList.add("active");
 }
+
+/* 🧭 동기화 */
+window.addEventListener("scroll", () => {
+    let i = Math.round(window.scrollY / window.innerHeight);
+    document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
+    if(document.querySelectorAll(".dot")[i]){
+        document.querySelectorAll(".dot")[i].classList.add("active");
+    }
+});
 
 </script>
 
