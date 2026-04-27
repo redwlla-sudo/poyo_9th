@@ -13,11 +13,9 @@ body, html {
     overflow-x:hidden;
     color:white;
 
-    /* 🎨 확실한 변경 (연보라+민트) */
     background: linear-gradient(135deg,#d8c7ff,#b8f2e6);
 }
 
-/* ================= 인트로 ================= */
 #intro{
     position:fixed;
     width:100%;
@@ -37,12 +35,10 @@ body, html {
     z-index:-1;
 }
 
-/* 인트로 박스 */
 .intro-box{
     text-align:center;
 }
 
-/* ⭐ 확실히 보이게 (중요) */
 .intro-title{
     font-size:clamp(3rem,7vw,5rem);
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
@@ -62,7 +58,6 @@ body, html {
     color:#000;
 }
 
-/* ================= 메인 ================= */
 #main{
     display:none;
 }
@@ -76,7 +71,6 @@ body, html {
     opacity:0.35;
 }
 
-/* 페이지 */
 .page{
     height:100vh;
     display:flex;
@@ -87,12 +81,10 @@ body, html {
     padding:20px;
 }
 
-/* 빠른 등장 */
 .fade{
     opacity:1;
 }
 
-/* 점 */
 .dots{
     position:fixed;
     right:20px;
@@ -109,7 +101,6 @@ body, html {
 }
 .dot.active{opacity:1}
 
-/* 카드 */
 .stats-grid{
     display:flex;
     gap:20px;
@@ -120,7 +111,6 @@ body, html {
     border-radius:20px;
 }
 
-/* TV 느낌 */
 .tv-bg{
     background:repeating-linear-gradient(
         45deg,
@@ -131,7 +121,6 @@ body, html {
     );
 }
 
-/* 볼륨 */
 .volume{
     position:fixed;
     top:20px;
@@ -142,7 +131,6 @@ body, html {
 
 <body>
 
-<!-- 🎵 음악 (무조건 재생 시도) -->
 <audio id="audio" loop>
     <source src="bgm.mp3">
 </audio>
@@ -213,22 +201,18 @@ body, html {
 const audio = document.getElementById("audio");
 const introVideo = document.getElementById("introVideo");
 
-/* 🔥 음악 (무조건 시도) */
 window.addEventListener("click", ()=>{
     audio.play().catch(()=>{});
 }, {once:true});
 
-/* 🔥 안전 fallback (영상 끝 안나와도 버튼 표시) */
 setTimeout(()=>{
     document.getElementById("enterBtn").style.display="inline-block";
 }, 4000);
 
-/* 🔥 영상 끝났을 때 */
 introVideo.addEventListener("ended", ()=>{
     document.getElementById("enterBtn").style.display="inline-block";
 });
 
-/* 🔥 입장 */
 function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
