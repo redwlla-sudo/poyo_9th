@@ -51,10 +51,6 @@ body{
     cursor:pointer;
 }
 
-.intro-box{
-    text-align:center;
-}
-
 .intro-title{
     font-size:clamp(4rem,8vw,6rem);
     font-weight:900;
@@ -66,23 +62,29 @@ body{
     transition:0.4s ease;
 }
 
-.sub-text{
-    font-family:'Great Vibes', cursive;
-    font-size:2.5rem;
-    color:#1b1b1b;
-    margin-top:20px;
+.top-nav{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:15px;
+    z-index:1000;
 }
 
-#enterBtn{
-    margin-top:25px;
-    padding:18px 55px;
-    font-size:1.5rem;
-    font-weight:800;
-    border:none;
+.top-nav div{
+    padding:10px 25px;
     border-radius:50px;
-    cursor:pointer;
     background:linear-gradient(90deg,#cdb4ff,#7fffd4);
-    color:#000;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.volume{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:1000;
 }
 
 .dots{
@@ -117,33 +119,23 @@ body{
     align-items:center;
     flex-direction:column;
     text-align:center;
-    padding:20px;
 }
 
-.tv-page{
-    background:
-    repeating-linear-gradient(
-        0deg,
-        #0b3d2e,
-        #0b3d2e 2px,
-        #062018 4px
-    );
-    color:#00ff9d;
-}
-
-.grad-page{
-    background:linear-gradient(135deg,#d8c7ff,#b8f2e6);
-}
-
-.title-main{
-    font-size:clamp(3rem,6vw,5rem);
+.main-title{
+    font-family:'Great Vibes', cursive;
+    font-size:4rem;
+    color:#2b2b2b;
     font-weight:900;
-    background:linear-gradient(90deg,#cdb4ff,#7fffd4);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
 }
 
-.game-final{
+.sub-title{
+    font-size:2rem;
+    font-weight:800;
+    margin-top:20px;
+    color:#1f1f1f;
+}
+
+.game-box{
     font-size:3rem;
     font-weight:900;
 }
@@ -162,57 +154,52 @@ audio{display:none;}
 
     <button id="skipBtn" onclick="skipIntro()">스킵</button>
 
-    <div class="intro-box">
-
-        <div id="title" class="intro-title">Poyo 9th Anniversary</div>
-        <div class="sub-text">Thank you for 9 years</div>
-
-        <button id="enterBtn" onclick="enter()">입장하기</button>
-
+    <div class="intro-title" id="introText">
+        Poyo 9th Anniversary
     </div>
+
+    <button id="enterBtn" onclick="enter()">입장하기</button>
 </div>
 
-<!-- 🎵 BGM -->
 <audio id="audio" loop>
     <source src="bgm.mp3">
 </audio>
 
-<!-- 🟣 DOT NAV (5개) -->
+<div class="top-nav">
+    <div onclick="goTo(0)">홈</div>
+    <div onclick="goTo(1)">통계</div>
+    <div onclick="goTo(2)">게임</div>
+</div>
+
+<div class="volume">
+    <input type="range" min="0" max="1" step="0.01"
+    oninput="document.getElementById('audio').volume=this.value">
+</div>
+
 <div class="dots">
     <div class="dot active" onclick="goTo(0)"></div>
     <div class="dot" onclick="goTo(1)"></div>
     <div class="dot" onclick="goTo(2)"></div>
-    <div class="dot" onclick="goTo(3)"></div>
-    <div class="dot" onclick="goTo(4)"></div>
 </div>
 
 <div id="main">
 
-    <!-- 1 -->
-    <section class="page grad-page">
-        <div class="title-main">POYO 9TH ANNIVERSARY</div>
+    <!-- HOME -->
+    <section class="page">
+        <div class="main-title">POYO 9TH ANNIVERSARY</div>
+
+        <div class="sub-title">
+            포동이들과 함께 해온 9년이란 시간의 여정
+        </div>
     </section>
 
-    <!-- 2 (치지직 느낌) -->
-    <section class="page tv-page">
-        <h1 style="font-size:3rem;">POYO LIVE STREAM</h1>
-        <p>9년 동안 함께한 순간들</p>
+    <section class="page">
+        <h2>통계 페이지</h2>
     </section>
 
-    <!-- 3 -->
-    <section class="page grad-page">
-        <h2>THANK YOU</h2>
-    </section>
-
-    <!-- 4 -->
-    <section class="page grad-page">
-        <h2>MEMORIES</h2>
-    </section>
-
-    <section class="page grad-page">
-        <div class="game-final">
-            게임을 하고 싶다면<br>
-            통계와 게임 탭을 눌러주세요
+    <section class="page">
+        <div class="game-box">
+            게임 준비중
         </div>
     </section>
 
@@ -223,17 +210,29 @@ audio{display:none;}
 window.addEventListener("DOMContentLoaded", () => {
 
     const video = document.getElementById("introVideo");
+    const introText = document.getElementById("introText");
+    const enterBtn = document.getElementById("enterBtn");
     const audio = document.getElementById("audio");
 
-    function unlockAudio(){
-        video.volume = 1.0;
-        video.muted = false;
-    }
+    let shown = false;
 
-    window.addEventListener("click", unlockAudio, { once:true });
+    window.addEventListener("click", () => {
+        video.volume = 1;
+        video.muted = false;
+    }, {once:true});
+
+    function check(){
+        if(video.currentTime >= 103 && !shown){
+            shown = true;
+            introText.classList.add("show");
+            enterBtn.classList.add("show");
+        }
+        requestAnimationFrame(check);
+    }
+    check();
 
     window.enter = function(){
-        audio.volume = 0.7;
+        audio.volume = 0.6;
         audio.play().catch(()=>{});
         document.getElementById("intro").style.display="none";
         document.getElementById("main").style.display="block";
