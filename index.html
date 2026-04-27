@@ -13,6 +13,7 @@ body {
     color: white;
 }
 
+/* ⭐ 인트로 */
 #intro {
     position: fixed;
     width: 100%;
@@ -23,6 +24,7 @@ body {
     align-items: center;
 }
 
+/* ⭐ 영상 (핵심 수정) */
 #intro video {
     position: absolute;
     width: 100%;
@@ -31,16 +33,19 @@ body {
     z-index: 0; /* 절대 음수 쓰지 마 */
 }
 
+/* ⭐ 어두운 필터 제거 (밝게) */
 #intro::after {
     display: none;
 }
 
+/* 중앙 텍스트 */
 .center {
     position: relative;
     z-index: 2;
     text-align: center;
 }
 
+/* 볼륨 위치 */
 .volume {
     position: absolute;
     top: 20px;
@@ -48,10 +53,12 @@ body {
     z-index: 3;
 }
 
+/* 본문 숨김 */
 #main {
     display: none;
 }
 
+/* 배경 영상 */
 #bg-video {
     position: fixed;
     width: 100%;
@@ -87,6 +94,7 @@ section {
 
 <body>
 
+<!-- ⭐ 인트로 -->
 <div id="intro">
 
     <video autoplay muted loop playsinline>
@@ -105,6 +113,7 @@ section {
 
 </div>
 
+<!-- ⭐ 본문 -->
 <div id="main">
 
     <audio id="audio" loop>
@@ -141,6 +150,7 @@ function setVolume(v){
     document.getElementById("audio").volume = v;
 }
 
+/* ⭐ 인트로 들어가자마자 음악 */
 window.addEventListener("click", function firstClick(){
     document.getElementById("audio").play().catch(()=>{});
     window.removeEventListener("click", firstClick);
