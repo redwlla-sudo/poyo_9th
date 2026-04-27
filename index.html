@@ -13,8 +13,10 @@ body, html {
     overflow-x:hidden;
     scroll-behavior:smooth;
     color:white;
+    background:black; /* ⭐ 흰 화면 방지 */
 }
 
+/* ⭐ 인트로 */
 #intro{
     position:fixed;
     width:100%;
@@ -25,6 +27,7 @@ body, html {
     z-index:9999;
 }
 
+/* ⭐ 인트로 영상 */
 #intro video{
     position:absolute;
     width:100%;
@@ -35,12 +38,14 @@ body, html {
 
 .intro-content{
     text-align:center;
+    z-index:2;
 }
 
 .intro-content h1{
     font-size:clamp(3rem,8vw,5rem);
 }
 
+/* 버튼 */
 button{
     padding:15px 40px;
     border:none;
@@ -48,8 +53,12 @@ button{
     cursor:pointer;
 }
 
-#main{display:none;}
+/* ⭐ 메인 */
+#main{
+    display:none;
+}
 
+/* ⭐ 배경 영상 */
 #bg-video{
     position:fixed;
     width:100%;
@@ -59,6 +68,7 @@ button{
     opacity:0.6;
 }
 
+/* ⭐ 페이지 */
 .page{
     height:100vh;
     display:flex;
@@ -69,6 +79,7 @@ button{
     padding:20px;
 }
 
+/* ⭐ 페이드 */
 .fade{
     opacity:0;
     transform:translateY(40px);
@@ -79,6 +90,7 @@ button{
     transform:translateY(0);
 }
 
+/* ⭐ 점 네비 */
 .dots{
     position:fixed;
     right:20px;
@@ -97,6 +109,7 @@ button{
     opacity:1;
 }
 
+/* ⭐ 통계 */
 .stats-grid{
     display:flex;
     gap:20px;
@@ -109,6 +122,7 @@ button{
     min-width:150px;
 }
 
+/* ⭐ 볼륨 */
 .volume{
     position:fixed;
     top:20px;
@@ -120,9 +134,12 @@ button{
 
 <body>
 
+<!-- ⭐ 인트로 -->
 <div id="intro">
-    <video autoplay muted loop playsinline>
-        <source src="video2.mp4">
+
+    <!-- 🔥 인트로 영상 (video2) -->
+    <video autoplay muted loop playsinline onerror="this.style.display='none'">
+        <source src="video2.mp4" type="video/mp4">
     </video>
 
     <div class="intro-content">
@@ -131,13 +148,15 @@ button{
     </div>
 </div>
 
+<!-- ⭐ 메인 -->
 <div id="main">
 
     <audio id="audio" loop>
         <source src="bgm.mp3">
     </audio>
 
-    <video autoplay muted loop playsinline id="bg-video">
+    <!-- 배경 영상 -->
+    <video autoplay muted loop playsinline id="bg-video" onerror="this.style.display='none'">
         <source src="video.mp4">
     </video>
 
@@ -179,16 +198,6 @@ button{
         </div>
     </section>
 
-    <section class="page fade">
-        <h2>🎬 우리의 순간들</h2>
-
-        <video controls style="width:80%; max-width:800px; border-radius:20px;">
-            <source src="memory.mp4" type="video/mp4">
-        </video>
-
-        <p style="margin-top:10px;">함께한 소중한 시간들</p>
-    </section>
-
 </div>
 
 <script>
@@ -202,13 +211,14 @@ function enter(){
 }
 
 function setVolume(v){
-    document.getElementById("audio").volume = v;
+    const audio = document.getElementById("audio");
+    if(audio) audio.volume = v;
 }
 
-const fades = document.querySelectorAll(".fade");
-
+/* ⭐ 페이드 안전 처리 */
 window.addEventListener("scroll", ()=>{
-    fades.forEach(el=>{
+    document.querySelectorAll(".fade").forEach(el=>{
+        if(!el) return;
         const top = el.getBoundingClientRect().top;
         if(top < window.innerHeight - 100){
             el.classList.add("show");
