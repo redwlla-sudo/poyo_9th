@@ -13,7 +13,9 @@ body, html {
     overflow-x:hidden;
     scroll-behavior:smooth;
     color:white;
-    background:black; /* ⭐ 흰 화면 방지 */
+
+    /* 🔥 핵심: 영상 실패해도 무조건 보이게 */
+    background: linear-gradient(135deg, #1a1a1a, #2c2c2c);
 }
 
 /* ⭐ 인트로 */
@@ -27,15 +29,17 @@ body, html {
     z-index:9999;
 }
 
-/* ⭐ 인트로 영상 */
+/* ⭐ 인트로 영상 (있으면 보여주고 없어도 문제 없음) */
 #intro video{
     position:absolute;
     width:100%;
     height:100%;
     object-fit:cover;
     z-index:-1;
+    opacity:0.7;
 }
 
+/* ⭐ 인트로 텍스트 */
 .intro-content{
     text-align:center;
     z-index:2;
@@ -58,14 +62,14 @@ button{
     display:none;
 }
 
-/* ⭐ 배경 영상 */
+/* ⭐ 배경 영상 (죽어도 영향 없음) */
 #bg-video{
     position:fixed;
     width:100%;
     height:100%;
     object-fit:cover;
     z-index:-1;
-    opacity:0.6;
+    opacity:0.4;
 }
 
 /* ⭐ 페이지 */
@@ -137,7 +141,7 @@ button{
 <!-- ⭐ 인트로 -->
 <div id="intro">
 
-    <!-- 🔥 인트로 영상 (video2) -->
+    <!-- 🔥 video2 (있어도 되고 없어도 됨) -->
     <video autoplay muted loop playsinline onerror="this.style.display='none'">
         <source src="video2.mp4" type="video/mp4">
     </video>
@@ -155,7 +159,7 @@ button{
         <source src="bgm.mp3">
     </audio>
 
-    <!-- 배경 영상 -->
+    <!-- 🔥 배경 영상 (깨져도 영향 없음) -->
     <video autoplay muted loop playsinline id="bg-video" onerror="this.style.display='none'">
         <source src="video.mp4">
     </video>
@@ -215,10 +219,9 @@ function setVolume(v){
     if(audio) audio.volume = v;
 }
 
-/* ⭐ 페이드 안전 처리 */
+/* ⭐ 절대 안 터지는 페이드 */
 window.addEventListener("scroll", ()=>{
     document.querySelectorAll(".fade").forEach(el=>{
-        if(!el) return;
         const top = el.getBoundingClientRect().top;
         if(top < window.innerHeight - 100){
             el.classList.add("show");
