@@ -37,6 +37,7 @@ html, body{
     border:none;
     border-radius:20px;
     background:white;
+    cursor:pointer;
 }
 
 /* ================= 메인 ================= */
@@ -44,7 +45,7 @@ html, body{
     display:none;
 }
 
-/* ================= 5페이지 구조 유지 ================= */
+/* ================= 페이지 ================= */
 .page{
     height:100vh;
     display:flex;
@@ -53,7 +54,6 @@ html, body{
     flex-direction:column;
 }
 
-/* 1 */
 .main-title{
     font-size:5rem;
     font-weight:700;
@@ -77,7 +77,6 @@ html, body{
     background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
-/* 5 */
 .page5-text{
     font-size:4rem;
     font-weight:900;
@@ -107,7 +106,7 @@ html, body{
     cursor:pointer;
 }
 
-/* ================= 오버레이 (슬라이드 핵심) ================= */
+/* ================= OVERLAY ================= */
 .overlay{
     position:fixed;
     inset:0;
@@ -173,7 +172,6 @@ html, body{
     <div class="top-btn" onclick="openChallenge()">도전</div>
 </div>
 
-<!-- 5페이지 유지 -->
 <section class="page">
 <div class="main-title">POYO 9TH ANNIVERSARY</div>
 <div class="sub-title">포동이들과 함께 걸어온 9년이란 발자취</div>
@@ -192,7 +190,7 @@ html, body{
 
 </div>
 
-<!-- ================= 오버레이 ================= -->
+<!-- ================= OVERLAY ================= -->
 <div id="memoryOverlay" class="overlay">
 <button class="closeBtn" onclick="home()">포요</button>
 <h1>추억 페이지</h1>
@@ -208,36 +206,52 @@ html, body{
 const introVideo = document.getElementById("introVideo");
 const introBgm = document.getElementById("introBgm");
 const mainBgm = document.getElementById("mainBgm");
+const skipBtn = document.getElementById("skipBtn");
 
-/* ================= 인트로 제어 ================= */
-window.addEventListener("click",()=>{
+/* ================= 핵심 FIX: 오디오 안정화 ================= */
+let started = false;
+
+function startIntro(){
+    if(started) return;
+    started = true;
+
     introVideo.muted = false;
-    introVideo.play();
-    introBgm.play();
-},{once:true});
+    introVideo.volume = 0.5;
+    introVideo.play().catch(()=>{});
 
-/* 103초 UI */
+    introBgm.volume = 0.5;
+    introBgm.play().catch(()=>{});
+}
+
+window.addEventListener("click", startIntro, {once:true});
+
+/* ================= 103초 UI ================= */
 let shown=false;
+
 function loop(){
-    if(introVideo.currentTime>=103 && !shown){
-        shown=true;
+    if(introVideo && !shown && introVideo.currentTime >= 103){
+        shown = true;
     }
     requestAnimationFrame(loop);
 }
 loop();
 
-/* ================= 시작 ================= */
+/* ================= ENTER (핵심 복구) ================= */
 function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
 
     introBgm.pause();
-    mainBgm.play();
+    introVideo.pause();
+
+    mainBgm.volume = 0.5;
+    mainBgm.play().catch(()=>{});
 }
 
-document.getElementById("skipBtn").onclick = enter;
+/* ================= 버튼 연결 ================= */
+skipBtn.addEventListener("click", enter);
 
-/* ================= 오버레이 ================= */
+/* ================= OVERLAY ================= */
 const memory = document.getElementById("memoryOverlay");
 const challenge = document.getElementById("challengeOverlay");
 
@@ -255,6 +269,7 @@ function home(){
     memory.classList.remove("active");
     challenge.classList.remove("active");
 }
+
 </script>
 
 </body>
