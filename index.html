@@ -44,14 +44,13 @@ html, body{
     display:none;
 }
 
-/* ================= 페이지 ================= */
+/* ================= 5페이지 구조 유지 ================= */
 .page{
     height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
     flex-direction:column;
-    transition:0.6s ease;
 }
 
 /* 1 */
@@ -73,7 +72,7 @@ html, body{
     color:#00ff88;
 }
 
-/* 3~4 */
+/* 3~5 */
 .gradient{
     background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
@@ -83,6 +82,7 @@ html, body{
     font-size:4rem;
     font-weight:900;
     text-align:center;
+    line-height:1.5;
 }
 
 /* ================= UI ================= */
@@ -107,29 +107,7 @@ html, body{
     cursor:pointer;
 }
 
-/* ================= 점 네비 ================= */
-.dots{
-    position:fixed;
-    right:20px;
-    top:50%;
-    transform:translateY(-50%);
-}
-
-.dot{
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background:black;
-    margin:10px 0;
-    opacity:0.3;
-}
-
-.dot.active{
-    opacity:1;
-    transform:scale(1.5);
-}
-
-/* ================= OVERLAY (슬라이드 핵심) ================= */
+/* ================= 오버레이 (슬라이드 핵심) ================= */
 .overlay{
     position:fixed;
     inset:0;
@@ -138,7 +116,7 @@ html, body{
     align-items:center;
     flex-direction:column;
     transform:translateX(100%);
-    transition:0.7s ease;
+    transition:0.8s ease;
     z-index:9998;
 }
 
@@ -186,24 +164,21 @@ html, body{
 <source src="bgm.mp3">
 </audio>
 
-<!-- ================= MAIN ================= -->
+<!-- ================= 메인 ================= -->
 <div id="main">
 
 <div class="top-ui">
-    <div class="top-btn" onclick="goHome()">포요</div>
+    <div class="top-btn" onclick="home()">포요</div>
     <div class="top-btn" onclick="openMemory()">추억</div>
     <div class="top-btn" onclick="openChallenge()">도전</div>
 </div>
 
-<div class="dots">
-<div class="dot active"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-</div>
+<!-- 5페이지 유지 -->
+<section class="page">
+<div class="main-title">POYO 9TH ANNIVERSARY</div>
+<div class="sub-title">포동이들과 함께 걸어온 9년이란 발자취</div>
+</section>
 
-<section class="page"><div class="main-title">POYO 9TH ANNIVERSARY</div><div class="sub-title">포동이들과 함께 걸어온 9년이란 발자취</div></section>
 <section class="page tv-static"><h1>CHZZK SIGNAL</h1></section>
 <section class="page gradient"></section>
 <section class="page gradient"></section>
@@ -217,83 +192,69 @@ html, body{
 
 </div>
 
-<!-- ================= OVERLAY ================= -->
+<!-- ================= 오버레이 ================= -->
 <div id="memoryOverlay" class="overlay">
-<button class="closeBtn" onclick="goHome()">포요</button>
+<button class="closeBtn" onclick="home()">포요</button>
 <h1>추억 페이지</h1>
 </div>
 
 <div id="challengeOverlay" class="overlay">
-<button class="closeBtn" onclick="goHome()">포요</button>
+<button class="closeBtn" onclick="home()">포요</button>
 <h1>도전 페이지</h1>
 </div>
 
 <script>
 
-let state = "main"; // main | memory | challenge
-let pageIndex = 0;
+const introVideo = document.getElementById("introVideo");
+const introBgm = document.getElementById("introBgm");
+const mainBgm = document.getElementById("mainBgm");
 
-const pages = document.querySelectorAll(".page");
-const dots = document.querySelectorAll(".dot");
+/* ================= 인트로 제어 ================= */
+window.addEventListener("click",()=>{
+    introVideo.muted = false;
+    introVideo.play();
+    introBgm.play();
+},{once:true});
 
+/* 103초 UI */
+let shown=false;
+function loop(){
+    if(introVideo.currentTime>=103 && !shown){
+        shown=true;
+    }
+    requestAnimationFrame(loop);
+}
+loop();
+
+/* ================= 시작 ================= */
+function enter(){
+    document.getElementById("intro").style.display="none";
+    document.getElementById("main").style.display="block";
+
+    introBgm.pause();
+    mainBgm.play();
+}
+
+document.getElementById("skipBtn").onclick = enter;
+
+/* ================= 오버레이 ================= */
 const memory = document.getElementById("memoryOverlay");
 const challenge = document.getElementById("challengeOverlay");
 
-/* ================= 페이지 업데이트 ================= */
-function updateMain(){
-    pages.forEach((p,i)=>{
-        p.style.transform = `translateY(${(i - pageIndex) * 100}vh)`;
-    });
-
-    dots.forEach(d=>d.classList.remove("active"));
-    if(dots[pageIndex]) dots[pageIndex].classList.add("active");
-}
-
-/* ================= 휠 (메인에서만) ================= */
-window.addEventListener("wheel",(e)=>{
-    if(state !== "main") return;
-
-    if(e.deltaY > 0) pageIndex++;
-    else pageIndex--;
-
-    if(pageIndex < 0) pageIndex = 0;
-    if(pageIndex > 4) pageIndex = 4;
-
-    updateMain();
-});
-
-/* ================= DOT 클릭 동기화 ================= */
-dots.forEach((dot,i)=>{
-    dot.addEventListener("click",()=>{
-        if(state !== "main") return;
-        pageIndex = i;
-        updateMain();
-    });
-});
-
-/* ================= OVERLAY ================= */
 function openMemory(){
-    state = "memory";
     memory.classList.add("active");
     challenge.classList.remove("active");
 }
 
 function openChallenge(){
-    state = "challenge";
     challenge.classList.add("active");
     memory.classList.remove("active");
 }
 
-/* ================= HOME ================= */
-function goHome(){
-    state = "main";
+function home(){
     memory.classList.remove("active");
     challenge.classList.remove("active");
 }
-
-/* ================= INIT ================= */
-updateMain();
-
 </script>
 
 </body>
