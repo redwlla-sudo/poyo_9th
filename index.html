@@ -27,8 +27,10 @@ html, body{
     width:100%;
     height:100%;
     object-fit:cover;
+    z-index:1;
 }
 
+/* 🔥 스킵 항상 영상 위 */
 #skipBtn{
     position:absolute;
     top:20px;
@@ -38,7 +40,7 @@ html, body{
     border-radius:20px;
     background:white;
     cursor:pointer;
-    z-index:10;
+    z-index:99999;
 }
 
 #introContent{
@@ -47,16 +49,16 @@ html, body{
     left:50%;
     transform:translate(-50%,-50%);
     text-align:center;
+    z-index:5;
 }
 
 #title{
     font-size:5rem;
     font-weight:900;
-    opacity:0; /* 🔥 절대 103초 전 노출 금지 */
-    background:linear-gradient(45deg, #cdb4ff, #b8f2e6);
+    opacity:0;
+    background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
-    transition:0.5s;
 }
 
 #enterBtn{
@@ -66,10 +68,9 @@ html, body{
     font-weight:900;
     border:none;
     border-radius:50px;
-    opacity:0; /* 🔥 절대 103초 전 금지 */
+    opacity:0;
     cursor:pointer;
-    background:linear-gradient(45deg, #cdb4ff, #b8f2e6);
-    transition:0.5s;
+    background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 }
 
 /* ================= 메인 ================= */
@@ -84,7 +85,6 @@ html, body{
     justify-content:center;
     align-items:center;
     flex-direction:column;
-    scroll-snap-align:start;
 }
 
 /* 메인 고정 텍스트 */
@@ -99,14 +99,27 @@ html, body{
     font-weight:600;
 }
 
-/* ================= 색상 규칙 ================= */
-/* 1,2 페이지는 기본 */
-/* 3~5 페이지만 그라데이션 */
+/* ================= 2페이지 치지직 ================= */
+.chzzk{
+    background:radial-gradient(circle at top,#00f0ff33,transparent),
+               radial-gradient(circle at bottom,#ff00ff33,transparent),
+               #050510;
+    color:white;
+}
+
+/* ================= 3~5 ================= */
 .gradient{
     background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
-/* ================= 상단 UI ================= */
+/* ================= 5페이지 문구 ================= */
+.page5-text{
+    font-size:2rem;
+    font-weight:600;
+    text-align:center;
+}
+
+/* ================= UI ================= */
 .top-ui{
     position:fixed;
     top:15px;
@@ -132,7 +145,7 @@ html, body{
     cursor:pointer;
 }
 
-/* ================= 점 네비 ================= */
+/* ================= dots ================= */
 .dots{
     position:fixed;
     right:20px;
@@ -147,7 +160,6 @@ html, body{
     background:black;
     margin:10px 0;
     opacity:0.3;
-    transition:0.3s;
 }
 
 .dot.active{
@@ -161,19 +173,6 @@ html, body{
     top:20px;
     right:20px;
     z-index:999;
-}
-
-/* ================= overlay (구조만 유지) ================= */
-.overlay{
-    position:fixed;
-    inset:0;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    background:rgba(0,0,0,0.5);
-    color:white;
-    font-size:3rem;
-    z-index:9998;
 }
 </style>
 </head>
@@ -201,19 +200,16 @@ html, body{
 <!-- ================= 메인 ================= -->
 <div id="main">
 
-<!-- 상단 UI -->
 <div class="top-ui">
     <div class="top-btn" onclick="goPage(0)">포요</div>
     <div class="top-btn" onclick="goPage(1)">추억</div>
     <div class="top-btn" onclick="goPage(2)">도전</div>
 </div>
 
-<!-- 볼륨 -->
 <div class="volume">
 <input id="volumeCtrl" type="range" min="0" max="1" step="0.01">
 </div>
 
-<!-- 점 네비 (5개 유지) -->
 <div class="dots">
 <div class="dot active"></div>
 <div class="dot"></div>
@@ -222,33 +218,32 @@ html, body{
 <div class="dot"></div>
 </div>
 
-<!-- 1 메인 (절대 고정) -->
+<!-- 1 -->
 <section class="page">
 <div class="main-title">POYO 9TH ANNIVERSARY</div>
-<div class="sub-title">포동이들과 함께 걸어온 9년이라는 시간</div>
+<div class="sub-title">포동이들과 함께 걸어온 9년</div>
 </section>
 
 <!-- 2 -->
-<section class="page">
+<section class="page chzzk">
+<h1>치지직 플랫폼</h1>
 </section>
 
 <!-- 3 -->
-<section class="page gradient">
-</section>
+<section class="page gradient"></section>
 
 <!-- 4 -->
-<section class="page gradient">
-</section>
+<section class="page gradient"></section>
 
 <!-- 5 -->
 <section class="page gradient">
+<div class="page5-text">
+더 많은 추억과 또는 게임이 하고 싶다면<br>
+상단에 추억과 게임을 눌러주세요
+</div>
 </section>
 
 </div>
-
-<!-- ================= overlay 구조 유지 ================= -->
-<div class="overlay" id="overlayBroadcast">방송</div>
-<div class="overlay" id="overlayGame">게임</div>
 
 <script>
 const introVideo = document.getElementById("introVideo");
@@ -256,51 +251,60 @@ const bgm = document.getElementById("bgm");
 const title = document.getElementById("title");
 const enterBtn = document.getElementById("enterBtn");
 
-/* ================= 볼륨 동기화 ================= */
+let globalVolume = 0.5;
+
+/* ================= 볼륨 ================= */
 document.getElementById("volumeCtrl").oninput = (e)=>{
-    bgm.volume = e.target.value;
-    introVideo.volume = e.target.value;
+    globalVolume = e.target.value;
+    bgm.volume = globalVolume;
+    introVideo.volume = globalVolume;
 };
 
-/* ================= 인트로 103초 강제 ================= */
+/* ================= 인트로 클릭 음성 ================= */
+window.addEventListener("click",()=>{
+    introVideo.muted = false;
+    introVideo.volume = globalVolume;
+    introVideo.play().catch(()=>{});
+},{once:true});
+
+/* ================= 103초 UI ================= */
 let shown = false;
 
-function showIntroUI(){
+function showUI(){
     if(shown) return;
     shown = true;
     title.style.opacity = 1;
     enterBtn.style.opacity = 1;
 }
 
-/* 103초 체크 (강제) */
-function checkTime(){
+function check(){
     if(introVideo.currentTime >= 103){
-        showIntroUI();
+        showUI();
     }
-    requestAnimationFrame(checkTime);
+    requestAnimationFrame(check);
 }
-checkTime();
+check();
 
-/* fallback */
-setTimeout(showIntroUI, 105000);
+setTimeout(showUI,105000);
 
-/* ================= 인트로 오디오 ================= */
-window.addEventListener("click",()=>{
-    introVideo.muted = false;
-    introVideo.volume = 0.5;
-    introVideo.play().catch(()=>{});
-},{once:true});
-
-/* ================= 입장 ================= */
+/* ================= 안전 전환 (핵심 수정) ================= */
 function enter(){
+
+    introVideo.pause();
+    introVideo.removeAttribute("src");
+    introVideo.load();
+
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
+
+    bgm.pause();
+    bgm.currentTime = 0;
+    bgm.volume = globalVolume;
     bgm.play().catch(()=>{});
 }
 
 enterBtn.onclick = enter;
 document.getElementById("skipBtn").onclick = ()=>{
-    introVideo.pause();
     enter();
 };
 
