@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>포요 9주년</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
@@ -11,16 +12,13 @@
 body{
     margin:0;
     font-family:'Fredoka', sans-serif;
-    overflow-x:hidden; /* ✅ 수정됨 */
+    overflow-x:hidden;
 }
 
-/* 인트로 */
+/* ================= 인트로 ================= */
 #intro{
     position:fixed;
     inset:0;
-    display:flex;
-    justify-content:center;
-    align-items:center;
     z-index:9999;
 }
 #intro video{
@@ -39,6 +37,16 @@ body{
     border:none;
     border-radius:20px;
     background:white;
+    cursor:pointer;
+    z-index:10;
+}
+
+#introContent{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
 }
 
 #title{
@@ -46,20 +54,24 @@ body{
     font-weight:900;
     opacity:0;
 }
+
 #enterBtn{
-    margin-top:25px;
+    margin-top:20px;
     padding:20px 60px;
     font-size:1.6rem;
     font-weight:900;
+    border:none;
+    border-radius:50px;
     opacity:0;
+    cursor:pointer;
 }
 
-/* 메인 */
+/* ================= 메인 ================= */
 #main{
-    display:none; /* ✅ 유지 */
+    display:none;
 }
 
-/* 🔥 상단 UI (중간 크기 적용) */
+/* 상단 UI */
 .top-ui{
     position:fixed;
     top:15px;
@@ -74,8 +86,8 @@ body{
 }
 
 .top-btn{
-    width:60px; /* ✅ 수정 */
-    height:60px; /* ✅ 수정 */
+    width:60px;
+    height:60px;
     border-radius:50%;
     display:flex;
     justify-content:center;
@@ -102,7 +114,8 @@ body{
     transform:translateY(-50%);
 }
 .dot{
-    width:10px;height:10px;
+    width:10px;
+    height:10px;
     border-radius:50%;
     background:black;
     margin:10px 0;
@@ -138,21 +151,23 @@ body{
 
 <body>
 
-<!-- 인트로 -->
+<!-- ================= 인트로 ================= -->
 <div id="intro">
-    <video id="introVideo" autoplay muted playsinline>
-        <source src="video2.mp4">
-    </video>
 
-    <button id="skipBtn">스킵</button>
+<video id="introVideo" autoplay muted playsinline>
+<source src="video2.mp4">
+</video>
 
-    <div>
-        <div id="title">Poyo 9th Anniversary</div>
-        <button id="enterBtn">입장하기</button>
-    </div>
+<button id="skipBtn">스킵</button>
+
+<div id="introContent">
+    <div id="title">Poyo 9th Anniversary</div>
+    <button id="enterBtn">입장하기</button>
 </div>
 
-<!-- 메인 -->
+</div>
+
+<!-- ================= 메인 ================= -->
 <div id="main">
 
 <div class="top-ui">
@@ -193,16 +208,17 @@ body{
 const video = document.getElementById("introVideo");
 const title = document.getElementById("title");
 const enterBtn = document.getElementById("enterBtn");
+const skipBtn = document.getElementById("skipBtn");
 
 let shown=false;
 
-/* 인트로 소리 */
+/* 클릭 시 소리 */
 window.addEventListener("click",()=>{
     video.muted=false;
     video.volume=0.7;
 },{once:true});
 
-/* 103초 */
+/* 103초 고정 */
 function loop(){
     if(!shown && video.currentTime >= 103){
         shown=true;
@@ -218,9 +234,16 @@ function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
 }
+
 enterBtn.onclick=enter;
 
-/* 스크롤 점 네비 */
+/* 🔥 스킵 버튼 확실히 동작 */
+skipBtn.onclick=()=>{
+    video.pause();
+    enter();
+};
+
+/* 점 네비 */
 window.addEventListener("scroll",()=>{
     let i=Math.round(window.scrollY/window.innerHeight);
     document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
