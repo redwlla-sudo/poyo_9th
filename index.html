@@ -15,7 +15,6 @@ html, body{
     font-family:'Fredoka', sans-serif;
 }
 
-/* 🔒 메인 숨김 유지 */
 #main{ display:none; }
 
 /* ================= 인트로 ================= */
@@ -23,7 +22,6 @@ html, body{
     position:fixed;
     inset:0;
     z-index:9999;
-    background:black;
 }
 
 #intro video{
@@ -33,6 +31,7 @@ html, body{
     object-fit:cover;
 }
 
+/* 스킵 */
 #skipBtn{
     position:absolute;
     top:20px;
@@ -45,6 +44,7 @@ html, body{
     z-index:10;
 }
 
+/* 중앙 */
 #introContent{
     position:absolute;
     top:50%;
@@ -53,17 +53,18 @@ html, body{
     text-align:center;
 }
 
+/* 타이틀 */
 #title{
     font-size:5rem;
     font-weight:900;
     opacity:0;
 
-    /* 🔥 그라데이션 텍스트 */
     background:linear-gradient(45deg, #cdb4ff, #b8f2e6);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
 }
 
+/* 버튼 */
 #enterBtn{
     margin-top:20px;
     padding:20px 60px;
@@ -74,14 +75,11 @@ html, body{
     opacity:0;
     cursor:pointer;
 
-    /* 🔥 동일 그라데이션 */
     background:linear-gradient(45deg, #cdb4ff, #b8f2e6);
     color:black;
 }
 
 /* ================= 메인 ================= */
-
-/* 상단 UI */
 .top-ui{
     position:fixed;
     top:15px;
@@ -134,8 +132,6 @@ html, body{
     font-size:5rem;
     font-weight:700;
     text-align:center;
-
-    /* 🔥 자간 추가 */
     letter-spacing:8px;
 }
 
@@ -143,6 +139,14 @@ html, body{
     font-size:2.2rem;
     font-weight:600;
     text-align:center;
+}
+
+/* 🔥 5페이지 전용 */
+.page5-title{
+    font-size:3.5rem; /* 크기 줄임 */
+    font-weight:700;
+    text-align:center;
+    letter-spacing:0; /* 자간 제거 */
 }
 
 /* 점 네비 */
@@ -197,7 +201,7 @@ html, body{
 
 <!-- ================= 인트로 ================= -->
 <div id="intro">
-<video id="introVideo" autoplay muted playsinline>
+<video id="introVideo" autoplay muted playsinline preload="auto" poster="thumbnail.jpg">
 <source src="video2.mp4">
 </video>
 
@@ -257,7 +261,7 @@ oninput="bgm.volume=this.value">
 
 <!-- 5 -->
 <section class="page gradient">
-<div class="main-title">
+<div class="page5-title">
 더 많은 기록 또는 미니게임이 하고 싶다면<br>
 상단에 있는 방송 또는 게임 탭을 클릭해주세요
 </div>
@@ -285,11 +289,6 @@ const skipBtn = document.getElementById("skipBtn");
 const bgm = document.getElementById("bgm");
 
 let shown=false;
-
-/* 🔥 인트로 즉시 재생 보강 */
-video.addEventListener("loadeddata",()=>{
-    video.play().catch(()=>{});
-});
 
 /* 소리 */
 window.addEventListener("click",()=>{
