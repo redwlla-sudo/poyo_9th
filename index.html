@@ -28,7 +28,7 @@ html, body{
     object-fit:cover;
 }
 
-/* 🔥 추가된 인트로 UI */
+/* ================= 103초 UI (핵심 수정) ================= */
 #introText{
     position:absolute;
     top:50%;
@@ -38,24 +38,38 @@ html, body{
     z-index:10;
 }
 
+/* 🔥 그라데이션 적용 */
 #title{
     font-size:5rem;
     font-weight:900;
+
     opacity:0;
-    transition:0.5s ease;
-    color:white;
+    visibility:hidden;
+
+    background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+
+    transition:0.6s ease;
 }
 
 #enterBtn{
     margin-top:20px;
-    padding:15px 50px;
-    font-size:1.5rem;
-    font-weight:700;
-    border:none;
-    border-radius:30px;
+    padding:18px 60px;
+    font-size:1.6rem;
+    font-weight:800;
+
     opacity:0;
+    visibility:hidden;
+
+    border:none;
+    border-radius:40px;
+
+    background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
+    color:black;
+
     cursor:pointer;
-    transition:0.5s ease;
+    transition:0.6s ease;
 }
 
 /* ================= 스킵 ================= */
@@ -185,7 +199,7 @@ html, body{
 <source src="video2.mp4">
 </video>
 
-<!-- 🔥 103초 UI 복구 -->
+<!-- 103초 UI -->
 <div id="introText">
     <div id="title">POYO 9TH ANNIVERSARY</div>
     <button id="enterBtn">입장하기</button>
@@ -251,7 +265,7 @@ const title = document.getElementById("title");
 const enterBtn = document.getElementById("enterBtn");
 const skipBtn = document.getElementById("skipBtn");
 
-/* ================= 인트로 오디오 안정화 ================= */
+/* ================= 오디오 안정 ================= */
 let started = false;
 
 window.addEventListener("click",()=>{
@@ -265,7 +279,7 @@ window.addEventListener("click",()=>{
     introBgm.play().catch(()=>{});
 },{once:true});
 
-/* ================= 103초 UI 복구 ================= */
+/* ================= 103초 UI 강제 표시 ================= */
 let shown = false;
 
 function loop(){
@@ -273,6 +287,10 @@ function loop(){
 
     if(!shown && introVideo.currentTime >= 103){
         shown = true;
+
+        title.style.visibility = "visible";
+        enterBtn.style.visibility = "visible";
+
         title.style.opacity = "1";
         enterBtn.style.opacity = "1";
     }
@@ -293,7 +311,7 @@ function enter(){
     mainBgm.play().catch(()=>{});
 }
 
-/* ================= 버튼 연결 ================= */
+/* ================= 버튼 ================= */
 skipBtn.onclick = enter;
 enterBtn.onclick = enter;
 
