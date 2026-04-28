@@ -11,7 +11,7 @@
 body{
     margin:0;
     font-family:'Fredoka', sans-serif;
-    overflow:hidden;
+    overflow-x:hidden;
     background:linear-gradient(135deg,#d8c7ff,#b8f2e6);
 }
 
@@ -65,8 +65,6 @@ body{
 /* ================= 메인 ================= */
 #main{
     display:none;
-    height:100vh;
-    overflow:hidden;
 }
 
 /* 상단 UI */
@@ -96,15 +94,6 @@ body{
     cursor:pointer;
 }
 
-/* 화면 전환 */
-.screen{
-    display:none;
-    height:100vh;
-}
-.screen.active{
-    display:block;
-}
-
 /* 페이지 */
 .page{
     height:100vh;
@@ -118,11 +107,9 @@ body{
 /* 텍스트 */
 .main-title{
     font-size:5rem;
-    font-weight:700;
 }
 .sub-title{
     font-size:2.5rem;
-    font-weight:600;
 }
 
 /* 치지직 */
@@ -150,12 +137,37 @@ body{
     top:20px;
     right:20px;
 }
+
+/* ================= 🔥 오버레이 페이지 ================= */
+.overlay{
+    position:fixed;
+    inset:0;
+    background:#111;
+    color:white;
+    display:none;
+    z-index:2000;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+/* 뒤로가기 */
+.back-btn{
+    position:absolute;
+    top:20px;
+    left:20px;
+    padding:10px 15px;
+    background:white;
+    color:black;
+    border-radius:20px;
+    cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
-<!-- ================= 인트로 ================= -->
+<!-- 인트로 -->
 <div id="intro">
     <video id="introVideo" autoplay muted playsinline>
         <source src="video2.mp4">
@@ -173,13 +185,13 @@ body{
     <source src="bgm.mp3">
 </audio>
 
-<!-- ================= 메인 ================= -->
+<!-- 메인 -->
 <div id="main">
 
 <div class="top-ui">
-    <div class="top-btn" onclick="showPage('home')">홈</div>
-    <div class="top-btn" onclick="showPage('broadcast')">방송</div>
-    <div class="top-btn" onclick="showPage('game')">게임</div>
+    <div class="top-btn" onclick="openPage('broadcast')">방송</div>
+    <div class="top-btn" onclick="scrollToTop()">홈</div>
+    <div class="top-btn" onclick="openPage('game')">게임</div>
 </div>
 
 <div class="volume">
@@ -195,32 +207,38 @@ oninput="bgm.volume=this.value">
 <div class="dot"></div>
 </div>
 
-<!-- 홈 -->
-<div id="home" class="screen active">
 <section class="page">
 <div class="main-title">POYO 9TH ANNIVERSARY</div>
 <div class="sub-title">
 포동이들과 함께 걸어온 9년이라는 시간의 발자취
 </div>
 </section>
-</div>
 
-<!-- 방송 -->
-<div id="broadcast" class="screen">
-<section class="page chzzk">
-<h1 style="font-size:3rem;">📺 방송 페이지</h1>
-<p>여기에 영상 넣으면 됨</p>
-</section>
-</div>
+<section class="page chzzk"><h1>치지직 스타일</h1></section>
+<section class="page"><h1>PAGE 3</h1></section>
+<section class="page"><h1>PAGE 4</h1></section>
 
-<!-- 게임 -->
-<div id="game" class="screen">
 <section class="page">
-<h1 style="font-size:3rem;">🎮 게임 페이지</h1>
-<p>미니게임 자리</p>
+<h1 style="font-size:2.5rem;">
+더 많은 기록 또는 미니게임이 하고 싶다면<br>
+상단에 있는 방송 또는 게임 탭을 클릭해주세요
+</h1>
 </section>
+
 </div>
 
+<!-- 🔥 방송 페이지 -->
+<div id="broadcast" class="overlay">
+<div class="back-btn" onclick="closePage()">← 돌아가기</div>
+<h1>📺 방송 페이지</h1>
+<p>여기에 영상 넣으면 됨</p>
+</div>
+
+<!-- 🔥 게임 페이지 -->
+<div id="game" class="overlay">
+<div class="back-btn" onclick="closePage()">← 돌아가기</div>
+<h1>🎮 게임 페이지</h1>
+<p>미니게임 들어갈 자리</p>
 </div>
 
 <script>
@@ -240,7 +258,7 @@ window.addEventListener("click",()=>{
     video.volume=0.7;
 },{once:true});
 
-/* 103초 고정 */
+/* 103초 */
 function loop(){
     if(!shown && video.currentTime >= 103){
         shown = true;
@@ -255,8 +273,6 @@ loop();
 function enter(){
     intro.style.display="none";
     main.style.display="block";
-
-    bgm.volume=0.5;
     bgm.play().catch(()=>{});
 }
 
@@ -266,13 +282,31 @@ skipBtn.onclick = ()=>{
     enter();
 };
 
-/* 페이지 전환 */
-function showPage(name){
-    document.querySelectorAll(".screen").forEach(s=>{
-        s.classList.remove("active");
-    });
-    document.getElementById(name).classList.add("active");
+/* 🔥 오버레이 열기 */
+function openPage(id){
+    document.getElementById(id).style.display="flex";
 }
+
+/* 🔥 닫기 */
+function closePage(){
+    document.querySelectorAll(".overlay").forEach(o=>{
+        o.style.display="none";
+    });
+}
+
+/* 홈 */
+function scrollToTop(){
+    window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* 점 네비 */
+window.addEventListener("scroll",()=>{
+    let i = Math.round(window.scrollY / window.innerHeight);
+    document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
+    if(document.querySelectorAll(".dot")[i]){
+        document.querySelectorAll(".dot")[i].classList.add("active");
+    }
+});
 </script>
 
 </body>
