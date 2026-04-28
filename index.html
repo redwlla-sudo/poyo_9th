@@ -99,6 +99,23 @@ html, body{
     cursor:pointer;
 }
 
+/* 🔥 중앙 동그라미 UI */
+.center-circle{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    font-weight:700;
+    z-index:1000;
+}
+
 /* 볼륨 */
 .volume{
     position:fixed;
@@ -114,6 +131,7 @@ html, body{
     justify-content:center;
     align-items:center;
     flex-direction:column;
+    transition:0.8s;
 }
 
 /* 그라데이션 */
@@ -135,7 +153,7 @@ html, body{
     text-align:center;
 }
 
-/* 🔥 5페이지 (폰트 강제 적용) */
+/* 페이지5 */
 .page5-title{
     font-family:'Fredoka', sans-serif;
     font-size:3.5rem;
@@ -164,14 +182,31 @@ html, body{
     transform:scale(1.5);
     box-shadow:0 0 10px rgba(0,0,0,0.5);
 }
+
+/* 🔥 게임 슬라이드 효과 */
+.slide-right{
+    transform:translateX(0);
+    animation:slide 0.8s ease;
+}
+@keyframes slide{
+    from{ transform:translateX(100%); }
+    to{ transform:translateX(0); }
+}
+
+/* 🔥 숨김 처리 */
+.hide-ui .top-ui,
+.hide-ui .dots,
+.hide-ui .volume{
+    display:none;
+}
 </style>
 </head>
 
 <body>
 
-<!-- ================= 인트로 ================= -->
+<!-- 인트로 -->
 <div id="intro">
-<video id="introVideo" autoplay muted playsinline preload="auto">
+<video id="introVideo" autoplay muted playsinline>
 <source src="video2.mp4">
 </video>
 
@@ -183,18 +218,20 @@ html, body{
 </div>
 </div>
 
-<!-- BGM -->
 <audio id="bgm" loop>
 <source src="bgm.mp3">
 </audio>
 
-<!-- ================= 메인 ================= -->
+<!-- 중앙 동그라미 UI -->
+<div class="center-circle" id="centerUI"></div>
+
+<!-- 메인 -->
 <div id="main">
 
 <div class="top-ui">
-    <div class="top-btn" onclick="scrollToTop()">홈</div>
-    <div class="top-btn" onclick="goToPage(2)">방송</div>
-    <div class="top-btn" onclick="goToPage(3)">게임</div>
+    <div class="top-btn" onclick="goToPage(0)">포요</div>
+    <div class="top-btn" onclick="goToPage(2)">추억</div>
+    <div class="top-btn" onclick="goToPage(3)">도전</div>
 </div>
 
 <div class="volume">
@@ -213,31 +250,29 @@ oninput="bgm.volume=this.value">
 <!-- 1 -->
 <section class="page">
 <div class="main-title">POYO 9TH ANNIVERSARY</div>
-<div class="sub-title">
-포동이들과 함께 걸어온 9년이라는 시간의 발자취
-</div>
+<div class="sub-title">포동이들과 함께 걸어온 9년</div>
 </section>
 
 <!-- 2 -->
-<section class="page" style="background:#0b3d2e; color:#00ff9d;">
-<h1>치지직 스타일 페이지</h1>
+<section class="page">
+<h1>치지직 페이지</h1>
 </section>
 
-<!-- 3 (방송) -->
-<section class="page gradient">
+<!-- 3 방송 -->
+<section class="page gradient" id="broadcast">
 <h1>방송 페이지</h1>
 </section>
 
-<!-- 4 (게임) -->
-<section class="page gradient">
+<!-- 4 게임 -->
+<section class="page gradient" id="game">
 <h1>게임 페이지</h1>
 </section>
 
 <!-- 5 -->
 <section class="page gradient">
 <div class="page5-title">
-더 많은 기록 또는 미니게임이 하고 싶다면<br>
-상단에 있는 방송 또는 게임 탭을 클릭해주세요
+더 많은 기록이 보고 싶다면<br>
+상단 메뉴를 이용해주세요
 </div>
 </section>
 
@@ -247,64 +282,61 @@ oninput="bgm.volume=this.value">
 const video = document.getElementById("introVideo");
 const title = document.getElementById("title");
 const enterBtn = document.getElementById("enterBtn");
-const skipBtn = document.getElementById("skipBtn");
 const bgm = document.getElementById("bgm");
+const centerUI = document.getElementById("centerUI");
 
 let shown=false;
 
-/* 소리 */
+/* fallback */
+setTimeout(()=>{
+    title.style.opacity=1;
+    enterBtn.style.opacity=1;
+},5000);
+
 window.addEventListener("click",()=>{
     video.muted=false;
     video.volume=0.7;
     video.play().catch(()=>{});
 },{once:true});
 
-/* 103초 */
-function loop(){
-    if(!shown && video.currentTime >= 103){
-        shown=true;
-        title.style.opacity=1;
-        enterBtn.style.opacity=1;
-    }
-    requestAnimationFrame(loop);
-}
-loop();
-
-/* 입장 */
 function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
-    bgm.volume=0.5;
     bgm.play().catch(()=>{});
 }
 enterBtn.onclick=enter;
+document.getElementById("skipBtn").onclick=()=>{ video.pause(); enter(); };
 
-/* 스킵 */
-skipBtn.onclick=()=>{
-    video.pause();
-    enter();
-};
-
-/* 점 네비 */
+/* scroll */
 window.addEventListener("scroll",()=>{
     let i=Math.round(window.scrollY/window.innerHeight);
+
     document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
     if(document.querySelectorAll(".dot")[i]){
         document.querySelectorAll(".dot")[i].classList.add("active");
     }
+
+    /* 🔥 중앙 UI 제어 */
+    if(i===2){
+        document.body.classList.add("hide-ui");
+        centerUI.style.display="flex";
+        centerUI.innerText="방송";
+    } 
+    else if(i===3){
+        document.body.classList.add("hide-ui");
+        centerUI.style.display="flex";
+        centerUI.innerText="게임";
+        document.getElementById("game").classList.add("slide-right");
+    } 
+    else{
+        document.body.classList.remove("hide-ui");
+        centerUI.style.display="none";
+    }
 });
 
-/* 🔥 페이지 이동 */
-function goToPage(index){
-    window.scrollTo({
-        top: index * window.innerHeight,
-        behavior:"smooth"
-    });
-}
-
-/* 홈 */
-function scrollToTop(){
-    window.scrollTo({top:0,behavior:"smooth"});
+/* 이동 */
+function goToPage(i){
+    window.scrollTo({top:i*window.innerHeight,behavior:"smooth"});
 }
 </script>
 
