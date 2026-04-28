@@ -28,6 +28,37 @@ html, body{
     object-fit:cover;
 }
 
+/* 🔥 추가된 인트로 UI */
+#introText{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+    z-index:10;
+}
+
+#title{
+    font-size:5rem;
+    font-weight:900;
+    opacity:0;
+    transition:0.5s ease;
+    color:white;
+}
+
+#enterBtn{
+    margin-top:20px;
+    padding:15px 50px;
+    font-size:1.5rem;
+    font-weight:700;
+    border:none;
+    border-radius:30px;
+    opacity:0;
+    cursor:pointer;
+    transition:0.5s ease;
+}
+
+/* ================= 스킵 ================= */
 #skipBtn{
     position:absolute;
     top:20px;
@@ -149,10 +180,19 @@ html, body{
 
 <!-- ================= 인트로 ================= -->
 <div id="intro">
+
 <video id="introVideo" autoplay muted playsinline>
 <source src="video2.mp4">
 </video>
+
+<!-- 🔥 103초 UI 복구 -->
+<div id="introText">
+    <div id="title">POYO 9TH ANNIVERSARY</div>
+    <button id="enterBtn">입장하기</button>
+</div>
+
 <button id="skipBtn">스킵</button>
+
 </div>
 
 <audio id="introBgm" loop>
@@ -206,37 +246,42 @@ html, body{
 const introVideo = document.getElementById("introVideo");
 const introBgm = document.getElementById("introBgm");
 const mainBgm = document.getElementById("mainBgm");
+
+const title = document.getElementById("title");
+const enterBtn = document.getElementById("enterBtn");
 const skipBtn = document.getElementById("skipBtn");
 
-/* ================= 핵심 FIX: 오디오 안정화 ================= */
+/* ================= 인트로 오디오 안정화 ================= */
 let started = false;
 
-function startIntro(){
+window.addEventListener("click",()=>{
     if(started) return;
     started = true;
 
     introVideo.muted = false;
-    introVideo.volume = 0.5;
     introVideo.play().catch(()=>{});
 
     introBgm.volume = 0.5;
     introBgm.play().catch(()=>{});
-}
+},{once:true});
 
-window.addEventListener("click", startIntro, {once:true});
-
-/* ================= 103초 UI ================= */
-let shown=false;
+/* ================= 103초 UI 복구 ================= */
+let shown = false;
 
 function loop(){
-    if(introVideo && !shown && introVideo.currentTime >= 103){
+    if(!introVideo) return;
+
+    if(!shown && introVideo.currentTime >= 103){
         shown = true;
+        title.style.opacity = "1";
+        enterBtn.style.opacity = "1";
     }
+
     requestAnimationFrame(loop);
 }
 loop();
 
-/* ================= ENTER (핵심 복구) ================= */
+/* ================= enter ================= */
 function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
@@ -249,9 +294,10 @@ function enter(){
 }
 
 /* ================= 버튼 연결 ================= */
-skipBtn.addEventListener("click", enter);
+skipBtn.onclick = enter;
+enterBtn.onclick = enter;
 
-/* ================= OVERLAY ================= */
+/* ================= overlay ================= */
 const memory = document.getElementById("memoryOverlay");
 const challenge = document.getElementById("challengeOverlay");
 
