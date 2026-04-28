@@ -1,66 +1,312 @@
-<!-- 기존 코드 그대로 유지 -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>포요 9주년</title>
 
-<!-- 🔥 추가: 슬라이드 페이지 -->
-<div id="slideMemory" class="slide-page">
-    <div class="circle">추억</div>
-</div>
-
-<div id="slideGame" class="slide-page">
-    <div class="circle">도전</div>
-</div>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* 🔥 슬라이드 페이지 */
-.slide-page{
+html, body{
+    margin:0;
+    padding:0;
+    overflow-x:hidden;
+    font-family:'Fredoka', sans-serif;
+}
+
+#main{ display:none; }
+
+/* ================= 인트로 ================= */
+#intro{
     position:fixed;
-    top:0;
-    left:0;
+    inset:0;
+    z-index:9999;
+}
+
+#intro video{
+    position:absolute;
     width:100%;
     height:100%;
-    background:#111;
+    object-fit:cover;
+}
+
+#skipBtn{
+    position:absolute;
+    top:20px;
+    right:20px;
+    padding:10px 18px;
+    border:none;
+    border-radius:20px;
+    background:white;
+    cursor:pointer;
+    z-index:10;
+}
+
+#introContent{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+}
+
+#title{
+    font-size:5rem;
+    font-weight:900;
+    opacity:0;
+    background:linear-gradient(45deg, #cdb4ff, #b8f2e6);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+#enterBtn{
+    margin-top:20px;
+    padding:20px 60px;
+    font-size:1.6rem;
+    font-weight:900;
+    border:none;
+    border-radius:50px;
+    opacity:0;
+    cursor:pointer;
+    background:linear-gradient(45deg, #cdb4ff, #b8f2e6);
+    color:black;
+}
+
+/* ================= 메인 ================= */
+.top-ui{
+    position:fixed;
+    top:15px;
+    left:50%;
+    transform:translateX(-50%);
+    background:white;
+    padding:10px 25px;
+    border-radius:999px;
     display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:1500;
-
-    transform:translateX(100%);
-    transition:0.5s;
+    gap:15px;
+    z-index:999;
 }
 
-.slide-page.active{
-    transform:translateX(0);
-}
-
-/* 🔥 중앙 동그라미 */
-.circle{
-    width:220px;
-    height:220px;
+.top-btn{
+    width:55px;
+    height:55px;
     border-radius:50%;
-    background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
     display:flex;
     justify-content:center;
     align-items:center;
-    font-size:2rem;
+    background:#cdb4ff;
     font-weight:700;
     cursor:pointer;
 }
+
+/* 볼륨 */
+.volume{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:999;
+}
+
+/* 페이지 */
+.page{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+/* 그라데이션 */
+.gradient{
+    background:linear-gradient(135deg, #d9cfff, #b8f2e6);
+}
+
+/* 텍스트 */
+.main-title{
+    font-size:5rem;
+    font-weight:700;
+    text-align:center;
+    letter-spacing:8px;
+}
+
+.sub-title{
+    font-size:2.2rem;
+    font-weight:600;
+    text-align:center;
+}
+
+/* 🔥 5페이지 (폰트 강제 적용) */
+.page5-title{
+    font-family:'Fredoka', sans-serif;
+    font-size:3.5rem;
+    font-weight:700;
+    text-align:center;
+}
+
+/* 점 네비 */
+.dots{
+    position:fixed;
+    right:20px;
+    top:50%;
+    transform:translateY(-50%);
+}
+.dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:black;
+    margin:10px 0;
+    opacity:0.3;
+    transition:0.3s;
+}
+.dot.active{
+    opacity:1;
+    transform:scale(1.5);
+    box-shadow:0 0 10px rgba(0,0,0,0.5);
+}
 </style>
+</head>
+
+<body>
+
+<!-- ================= 인트로 ================= -->
+<div id="intro">
+<video id="introVideo" autoplay muted playsinline preload="auto">
+<source src="video2.mp4">
+</video>
+
+<button id="skipBtn">스킵</button>
+
+<div id="introContent">
+    <div id="title">Poyo 9th Anniversary</div>
+    <button id="enterBtn">입장하기</button>
+</div>
+</div>
+
+<!-- BGM -->
+<audio id="bgm" loop>
+<source src="bgm.mp3">
+</audio>
+
+<!-- ================= 메인 ================= -->
+<div id="main">
+
+<div class="top-ui">
+    <div class="top-btn" onclick="scrollToTop()">홈</div>
+    <div class="top-btn" onclick="goToPage(2)">방송</div>
+    <div class="top-btn" onclick="goToPage(3)">게임</div>
+</div>
+
+<div class="volume">
+<input type="range" min="0" max="1" step="0.01"
+oninput="bgm.volume=this.value">
+</div>
+
+<div class="dots">
+<div class="dot active"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+</div>
+
+<!-- 1 -->
+<section class="page">
+<div class="main-title">POYO 9TH ANNIVERSARY</div>
+<div class="sub-title">
+포동이들과 함께 걸어온 9년이라는 시간의 발자취
+</div>
+</section>
+
+<!-- 2 -->
+<section class="page" style="background:#0b3d2e; color:#00ff9d;">
+<h1>치지직 스타일 페이지</h1>
+</section>
+
+<!-- 3 (방송) -->
+<section class="page gradient">
+<h1>방송 페이지</h1>
+</section>
+
+<!-- 4 (게임) -->
+<section class="page gradient">
+<h1>게임 페이지</h1>
+</section>
+
+<!-- 5 -->
+<section class="page gradient">
+<div class="page5-title">
+더 많은 기록 또는 미니게임이 하고 싶다면<br>
+상단에 있는 방송 또는 게임 탭을 클릭해주세요
+</div>
+</section>
+
+</div>
 
 <script>
-/* 🔥 기존 버튼 연결만 변경 */
-function goMemory(){
-    document.getElementById("slideMemory").classList.add("active");
+const video = document.getElementById("introVideo");
+const title = document.getElementById("title");
+const enterBtn = document.getElementById("enterBtn");
+const skipBtn = document.getElementById("skipBtn");
+const bgm = document.getElementById("bgm");
+
+let shown=false;
+
+/* 소리 */
+window.addEventListener("click",()=>{
+    video.muted=false;
+    video.volume=0.7;
+    video.play().catch(()=>{});
+},{once:true});
+
+/* 103초 */
+function loop(){
+    if(!shown && video.currentTime >= 103){
+        shown=true;
+        title.style.opacity=1;
+        enterBtn.style.opacity=1;
+    }
+    requestAnimationFrame(loop);
 }
-function goGame(){
-    document.getElementById("slideGame").classList.add("active");
+loop();
+
+/* 입장 */
+function enter(){
+    document.getElementById("intro").style.display="none";
+    document.getElementById("main").style.display="block";
+    bgm.volume=0.5;
+    bgm.play().catch(()=>{});
+}
+enterBtn.onclick=enter;
+
+/* 스킵 */
+skipBtn.onclick=()=>{
+    video.pause();
+    enter();
+};
+
+/* 점 네비 */
+window.addEventListener("scroll",()=>{
+    let i=Math.round(window.scrollY/window.innerHeight);
+    document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
+    if(document.querySelectorAll(".dot")[i]){
+        document.querySelectorAll(".dot")[i].classList.add("active");
+    }
+});
+
+/* 🔥 페이지 이동 */
+function goToPage(index){
+    window.scrollTo({
+        top: index * window.innerHeight,
+        behavior:"smooth"
+    });
 }
 
-/* 🔥 닫기 (원 클릭 시 돌아가기) */
-document.querySelectorAll(".circle").forEach(c=>{
-    c.addEventListener("click",()=>{
-        document.querySelectorAll(".slide-page").forEach(p=>{
-            p.classList.remove("active");
-        });
-    });
-});
+/* 홈 */
+function scrollToTop(){
+    window.scrollTo({top:0,behavior:"smooth"});
+}
 </script>
+
+</body>
+</html>
