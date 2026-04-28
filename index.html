@@ -11,7 +11,7 @@
 html, body{
     margin:0;
     padding:0;
-    overflow:hidden; /* 🔥 슬라이드 구조 */
+    overflow:hidden;
     font-family:'Fredoka', sans-serif;
 }
 
@@ -23,7 +23,6 @@ html, body{
 }
 
 #intro video{
-    position:absolute;
     width:100%;
     height:100%;
     object-fit:cover;
@@ -33,62 +32,29 @@ html, body{
     position:absolute;
     top:20px;
     right:20px;
+    z-index:99999;
     padding:10px 18px;
     border:none;
     border-radius:20px;
     background:white;
-    cursor:pointer;
-    z-index:99999;
 }
 
-#introContent{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    text-align:center;
-}
-
-#title{
-    font-size:5rem;
-    font-weight:900;
-    opacity:0;
-    background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-#enterBtn{
-    margin-top:20px;
-    padding:20px 60px;
-    font-size:1.6rem;
-    font-weight:900;
-    border:none;
-    border-radius:50px;
-    opacity:0;
-    cursor:pointer;
-    background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
-}
-
-/* ================= 슬라이드 컨테이너 ================= */
-#slider{
-    display:flex;
-    width:500vw;
-    height:100vh;
-    transition:transform 0.8s ease;
+/* ================= 메인 ================= */
+#main{
+    display:none;
 }
 
 /* ================= 페이지 ================= */
 .page{
-    width:100vw;
     height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
     flex-direction:column;
+    transition:0.6s ease;
 }
 
-/* ================= 1 ================= */
+/* 1 */
 .main-title{
     font-size:5rem;
     font-weight:700;
@@ -96,10 +62,9 @@ html, body{
 
 .sub-title{
     font-size:2.2rem;
-    font-weight:600;
 }
 
-/* ================= 2 ================= */
+/* 2 */
 .tv-static{
     background:
         radial-gradient(circle at 20% 30%, rgba(0,255,120,0.15), transparent 40%),
@@ -108,18 +73,16 @@ html, body{
     color:#00ff88;
 }
 
-/* ================= 3~4 ================= */
+/* 3~4 */
 .gradient{
     background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
-/* ================= 5 ================= */
+/* 5 */
 .page5-text{
-    font-family:'Fredoka', sans-serif;
     font-size:4rem;
     font-weight:900;
     text-align:center;
-    line-height:1.5;
 }
 
 /* ================= UI ================= */
@@ -128,9 +91,6 @@ html, body{
     top:15px;
     left:50%;
     transform:translateX(-50%);
-    background:white;
-    padding:10px 25px;
-    border-radius:999px;
     display:flex;
     gap:15px;
     z-index:999;
@@ -144,8 +104,66 @@ html, body{
     justify-content:center;
     align-items:center;
     background:#cdb4ff;
-    font-weight:700;
     cursor:pointer;
+}
+
+/* ================= 점 네비 ================= */
+.dots{
+    position:fixed;
+    right:20px;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+.dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:black;
+    margin:10px 0;
+    opacity:0.3;
+}
+
+.dot.active{
+    opacity:1;
+    transform:scale(1.5);
+}
+
+/* ================= OVERLAY (슬라이드 핵심) ================= */
+.overlay{
+    position:fixed;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    transform:translateX(100%);
+    transition:0.7s ease;
+    z-index:9998;
+}
+
+.overlay.active{
+    transform:translateX(0);
+}
+
+#memoryOverlay{
+    background:linear-gradient(135deg,#1a1a1a,#003322);
+    color:#00ff88;
+}
+
+#challengeOverlay{
+    background:linear-gradient(135deg,#2a0033,#b8f2e6);
+    color:white;
+}
+
+.closeBtn{
+    position:absolute;
+    top:20px;
+    left:20px;
+    background:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:10px;
 }
 </style>
 </head>
@@ -157,44 +175,39 @@ html, body{
 <video id="introVideo" autoplay muted playsinline>
 <source src="video2.mp4">
 </video>
-
 <button id="skipBtn">스킵</button>
-
-<div id="introContent">
-    <div id="title">Poyo 9th Anniversary</div>
-    <button id="enterBtn">입장하기</button>
-</div>
 </div>
 
-<audio id="bgm" loop>
+<audio id="introBgm" loop>
+<source src="intro.mp3">
+</audio>
+
+<audio id="mainBgm" loop>
 <source src="bgm.mp3">
 </audio>
 
-<!-- ================= 슬라이더 ================= -->
-<div id="slider">
+<!-- ================= MAIN ================= -->
+<div id="main">
 
-<!-- 1 -->
-<section class="page">
-<div class="main-title">POYO 9TH ANNIVERSARY</div>
-<div class="sub-title">포동이들과 함께 걸어온 9년이란 발자취</div>
-</section>
+<div class="top-ui">
+    <div class="top-btn" onclick="goHome()">포요</div>
+    <div class="top-btn" onclick="openMemory()">추억</div>
+    <div class="top-btn" onclick="openChallenge()">도전</div>
+</div>
 
-<!-- 2 -->
-<section class="page tv-static">
-<h1>CHZZK SIGNAL</h1>
-</section>
+<div class="dots">
+<div class="dot active"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+</div>
 
-<!-- 3 -->
-<section class="page gradient">
-<h1>추억 페이지</h1>
-</section>
+<section class="page"><div class="main-title">POYO 9TH ANNIVERSARY</div><div class="sub-title">포동이들과 함께 걸어온 9년이란 발자취</div></section>
+<section class="page tv-static"><h1>CHZZK SIGNAL</h1></section>
+<section class="page gradient"></section>
+<section class="page gradient"></section>
 
-<!-- 4 -->
-<section class="page gradient">
-<h1>도전 페이지</h1>
-</section>
-
-<!-- 5 -->
 <section class="page gradient">
 <div class="page5-text">
 더 많은 추억과 또는 게임이 하고 싶다면<br>
@@ -204,84 +217,83 @@ html, body{
 
 </div>
 
-<!-- ================= JS ================= -->
+<!-- ================= OVERLAY ================= -->
+<div id="memoryOverlay" class="overlay">
+<button class="closeBtn" onclick="goHome()">포요</button>
+<h1>추억 페이지</h1>
+</div>
+
+<div id="challengeOverlay" class="overlay">
+<button class="closeBtn" onclick="goHome()">포요</button>
+<h1>도전 페이지</h1>
+</div>
+
 <script>
-const introVideo = document.getElementById("introVideo");
-const bgm = document.getElementById("bgm");
-const enterBtn = document.getElementById("enterBtn");
-const title = document.getElementById("title");
 
-let volume = 0.5;
+let state = "main"; // main | memory | challenge
+let pageIndex = 0;
 
-/* 인트로 클릭 활성화 */
-window.addEventListener("click",()=>{
-    introVideo.muted = false;
-    introVideo.volume = volume;
-    introVideo.play().catch(()=>{});
-},{once:true});
+const pages = document.querySelectorAll(".page");
+const dots = document.querySelectorAll(".dot");
 
-/* 103초 UI */
-let shown = false;
-function check(){
-    if(introVideo.currentTime >= 103 && !shown){
-        shown = true;
-        title.style.opacity = 1;
-        enterBtn.style.opacity = 1;
-    }
-    requestAnimationFrame(check);
-}
-check();
+const memory = document.getElementById("memoryOverlay");
+const challenge = document.getElementById("challengeOverlay");
 
-/* ================= 오디오 분리 ================= */
-function enter(){
+/* ================= 페이지 업데이트 ================= */
+function updateMain(){
+    pages.forEach((p,i)=>{
+        p.style.transform = `translateY(${(i - pageIndex) * 100}vh)`;
+    });
 
-    introVideo.pause();
-    introVideo.muted = true;
-    introVideo.currentTime = 0;
-
-    document.getElementById("intro").style.display="none";
-
-    bgm.pause();
-    bgm.currentTime = 0;
-    bgm.volume = volume;
-    bgm.play().catch(()=>{});
+    dots.forEach(d=>d.classList.remove("active"));
+    if(dots[pageIndex]) dots[pageIndex].classList.add("active");
 }
 
-enterBtn.onclick = enter;
-document.getElementById("skipBtn").onclick = enter;
-
-/* ================= 슬라이드 시스템 ================= */
-const slider = document.getElementById("slider");
-let index = 0;
-
-/* 이동 */
-function move(){
-    slider.style.transform = `translateX(-${index * 100}vw)`;
-}
-
-/* 버튼 이동 */
-function goPage(i){
-    index = i;
-    move();
-}
-
-/* 휠 이동 (부드럽게 제한) */
-let lock = false;
-
+/* ================= 휠 (메인에서만) ================= */
 window.addEventListener("wheel",(e)=>{
-    if(lock) return;
-    lock = true;
+    if(state !== "main") return;
 
-    if(e.deltaY > 0) index++;
-    else index--;
+    if(e.deltaY > 0) pageIndex++;
+    else pageIndex--;
 
-    if(index < 0) index = 0;
-    if(index > 4) index = 4;
+    if(pageIndex < 0) pageIndex = 0;
+    if(pageIndex > 4) pageIndex = 4;
 
-    move();
-
-    setTimeout(()=> lock = false, 800);
+    updateMain();
 });
+
+/* ================= DOT 클릭 동기화 ================= */
+dots.forEach((dot,i)=>{
+    dot.addEventListener("click",()=>{
+        if(state !== "main") return;
+        pageIndex = i;
+        updateMain();
+    });
+});
+
+/* ================= OVERLAY ================= */
+function openMemory(){
+    state = "memory";
+    memory.classList.add("active");
+    challenge.classList.remove("active");
+}
+
+function openChallenge(){
+    state = "challenge";
+    challenge.classList.add("active");
+    memory.classList.remove("active");
+}
+
+/* ================= HOME ================= */
+function goHome(){
+    state = "main";
+    memory.classList.remove("active");
+    challenge.classList.remove("active");
+}
+
+/* ================= INIT ================= */
+updateMain();
+
 </script>
 
 </body>
