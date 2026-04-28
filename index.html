@@ -28,7 +28,7 @@ html, body{
     object-fit:cover;
 }
 
-/* ================= 103초 UI (핵심 수정) ================= */
+/* 103초 UI */
 #introText{
     position:absolute;
     top:50%;
@@ -38,19 +38,14 @@ html, body{
     z-index:10;
 }
 
-/* 🔥 그라데이션 적용 */
 #title{
     font-size:5rem;
     font-weight:900;
-
     opacity:0;
     visibility:hidden;
-
     background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
-
-    transition:0.6s ease;
 }
 
 #enterBtn{
@@ -58,18 +53,12 @@ html, body{
     padding:18px 60px;
     font-size:1.6rem;
     font-weight:800;
-
-    opacity:0;
-    visibility:hidden;
-
     border:none;
     border-radius:40px;
-
+    opacity:0;
+    visibility:hidden;
     background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
-    color:black;
-
     cursor:pointer;
-    transition:0.6s ease;
 }
 
 /* ================= 스킵 ================= */
@@ -99,6 +88,7 @@ html, body{
     flex-direction:column;
 }
 
+/* 1 페이지 */
 .main-title{
     font-size:5rem;
     font-weight:700;
@@ -108,7 +98,7 @@ html, body{
     font-size:2.2rem;
 }
 
-/* 2 */
+/* 2 페이지 (치지직 느낌) */
 .tv-static{
     background:
         radial-gradient(circle at 20% 30%, rgba(0,255,120,0.15), transparent 40%),
@@ -117,16 +107,19 @@ html, body{
     color:#00ff88;
 }
 
-/* 3~5 */
+/* 3~5 페이지 */
 .gradient{
     background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
+/* ================= 5페이지 수정 ================= */
 .page5-text{
-    font-size:4rem;
+    font-family:'Fredoka', sans-serif;
+    font-size:3rem;
     font-weight:900;
     text-align:center;
-    line-height:1.5;
+    line-height:1.6;
+    padding:0 40px;
 }
 
 /* ================= UI ================= */
@@ -136,19 +129,33 @@ html, body{
     left:50%;
     transform:translateX(-50%);
     display:flex;
-    gap:15px;
+    gap:20px;
     z-index:999;
+    scale:1.2;
 }
 
 .top-btn{
-    width:55px;
-    height:55px;
+    width:65px;
+    height:65px;
     border-radius:50%;
     display:flex;
     justify-content:center;
     align-items:center;
     background:#cdb4ff;
     cursor:pointer;
+    font-size:1.1rem;
+}
+
+/* ================= 볼륨 버튼 (복구) ================= */
+.volume{
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:9999;
+}
+
+.volume input{
+    width:120px;
 }
 
 /* ================= OVERLAY ================= */
@@ -199,7 +206,6 @@ html, body{
 <source src="video2.mp4">
 </video>
 
-<!-- 103초 UI -->
 <div id="introText">
     <div id="title">POYO 9TH ANNIVERSARY</div>
     <button id="enterBtn">입장하기</button>
@@ -226,6 +232,12 @@ html, body{
     <div class="top-btn" onclick="openChallenge()">도전</div>
 </div>
 
+<!-- 볼륨 -->
+<div class="volume">
+    <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
+</div>
+
+<!-- 5페이지 유지 -->
 <section class="page">
 <div class="main-title">POYO 9TH ANNIVERSARY</div>
 <div class="sub-title">포동이들과 함께 걸어온 9년이란 발자취</div>
@@ -237,8 +249,8 @@ html, body{
 
 <section class="page gradient">
 <div class="page5-text">
-더 많은 추억과 또는 게임이 하고 싶다면<br>
-상단에 추억과 게임을 눌러주세요
+더 많은 추억 또는 게임을 하고 싶으면<br>
+상단 중앙에 있는 원하는 탭을 눌러주세요
 </div>
 </section>
 
@@ -265,36 +277,31 @@ const title = document.getElementById("title");
 const enterBtn = document.getElementById("enterBtn");
 const skipBtn = document.getElementById("skipBtn");
 
-/* ================= 오디오 안정 ================= */
-let started = false;
+/* ================= 인트로 오디오 ================= */
+let started=false;
 
 window.addEventListener("click",()=>{
     if(started) return;
-    started = true;
+    started=true;
 
-    introVideo.muted = false;
+    introVideo.muted=false;
     introVideo.play().catch(()=>{});
 
-    introBgm.volume = 0.5;
+    introBgm.volume=0.5;
     introBgm.play().catch(()=>{});
 },{once:true});
 
-/* ================= 103초 UI 강제 표시 ================= */
-let shown = false;
+/* ================= 103초 UI ================= */
+let shown=false;
 
 function loop(){
-    if(!introVideo) return;
-
-    if(!shown && introVideo.currentTime >= 103){
-        shown = true;
-
-        title.style.visibility = "visible";
-        enterBtn.style.visibility = "visible";
-
-        title.style.opacity = "1";
-        enterBtn.style.opacity = "1";
+    if(!shown && introVideo.currentTime>=103){
+        shown=true;
+        title.style.visibility="visible";
+        enterBtn.style.visibility="visible";
+        title.style.opacity="1";
+        enterBtn.style.opacity="1";
     }
-
     requestAnimationFrame(loop);
 }
 loop();
@@ -307,17 +314,16 @@ function enter(){
     introBgm.pause();
     introVideo.pause();
 
-    mainBgm.volume = 0.5;
+    mainBgm.volume=0.5;
     mainBgm.play().catch(()=>{});
 }
 
-/* ================= 버튼 ================= */
-skipBtn.onclick = enter;
-enterBtn.onclick = enter;
+skipBtn.onclick=enter;
+enterBtn.onclick=enter;
 
 /* ================= overlay ================= */
-const memory = document.getElementById("memoryOverlay");
-const challenge = document.getElementById("challengeOverlay");
+const memory=document.getElementById("memoryOverlay");
+const challenge=document.getElementById("challengeOverlay");
 
 function openMemory(){
     memory.classList.add("active");
