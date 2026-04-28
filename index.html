@@ -11,11 +11,9 @@
 html, body{
     margin:0;
     padding:0;
-    overflow-x:hidden;
+    overflow:hidden;
     font-family:'Fredoka', sans-serif;
 }
-
-#main{ display:none; }
 
 /* ================= 인트로 ================= */
 #intro{
@@ -70,10 +68,46 @@ html, body{
     opacity:0;
     cursor:pointer;
     background:linear-gradient(45deg, #cdb4ff, #b8f2e6);
-    color:black;
 }
 
-/* ================= 메인 ================= */
+/* ================= 슬라이드 시스템 ================= */
+#slider{
+    position:absolute;
+    top:0;
+    left:0;
+    width:500vw;
+    height:100vh;
+    display:flex;
+    transition:0.8s ease;
+}
+
+/* 페이지 */
+.page{
+    width:100vw;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+}
+
+/* 메인 페이지 (절대 수정 금지) */
+.main-title{
+    font-size:5rem;
+    font-weight:700;
+    letter-spacing:8px;
+}
+.sub-title{
+    font-size:2.2rem;
+    font-weight:600;
+}
+
+/* 2~5 페이지 기본 배경 */
+.page:nth-child(n+2){
+    background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+}
+
+/* ================= 상단 UI ================= */
 .top-ui{
     position:fixed;
     top:15px;
@@ -99,7 +133,7 @@ html, body{
     cursor:pointer;
 }
 
-/* 🔥 중앙 동그라미 UI */
+/* ================= 중앙 동그라미 UI ================= */
 .center-circle{
     position:fixed;
     top:50%;
@@ -116,88 +150,12 @@ html, body{
     z-index:1000;
 }
 
-/* 볼륨 */
+/* ================= 볼륨 ================= */
 .volume{
     position:fixed;
     top:20px;
     right:20px;
     z-index:999;
-}
-
-/* 페이지 */
-.page{
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    transition:0.8s;
-}
-
-/* 그라데이션 */
-.gradient{
-    background:linear-gradient(135deg, #d9cfff, #b8f2e6);
-}
-
-/* 텍스트 */
-.main-title{
-    font-size:5rem;
-    font-weight:700;
-    text-align:center;
-    letter-spacing:8px;
-}
-
-.sub-title{
-    font-size:2.2rem;
-    font-weight:600;
-    text-align:center;
-}
-
-/* 페이지5 */
-.page5-title{
-    font-family:'Fredoka', sans-serif;
-    font-size:3.5rem;
-    font-weight:700;
-    text-align:center;
-}
-
-/* 점 네비 */
-.dots{
-    position:fixed;
-    right:20px;
-    top:50%;
-    transform:translateY(-50%);
-}
-.dot{
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background:black;
-    margin:10px 0;
-    opacity:0.3;
-    transition:0.3s;
-}
-.dot.active{
-    opacity:1;
-    transform:scale(1.5);
-    box-shadow:0 0 10px rgba(0,0,0,0.5);
-}
-
-/* 🔥 게임 슬라이드 효과 */
-.slide-right{
-    transform:translateX(0);
-    animation:slide 0.8s ease;
-}
-@keyframes slide{
-    from{ transform:translateX(100%); }
-    to{ transform:translateX(0); }
-}
-
-/* 🔥 숨김 처리 */
-.hide-ui .top-ui,
-.hide-ui .dots,
-.hide-ui .volume{
-    display:none;
 }
 </style>
 </head>
@@ -222,76 +180,58 @@ html, body{
 <source src="bgm.mp3">
 </audio>
 
-<!-- 중앙 동그라미 UI -->
+<!-- 중앙 UI -->
 <div class="center-circle" id="centerUI"></div>
 
-<!-- 메인 -->
-<div id="main">
-
+<!-- 상단 UI -->
 <div class="top-ui">
-    <div class="top-btn" onclick="goToPage(0)">포요</div>
-    <div class="top-btn" onclick="goToPage(2)">추억</div>
-    <div class="top-btn" onclick="goToPage(3)">도전</div>
+    <div class="top-btn" onclick="goPage(0)">포요</div>
+    <div class="top-btn" onclick="goPage(1)">추억</div>
+    <div class="top-btn" onclick="goPage(2)">도전</div>
 </div>
 
 <div class="volume">
-<input type="range" min="0" max="1" step="0.01"
-oninput="bgm.volume=this.value">
+<input type="range" min="0" max="1" step="0.01" oninput="bgm.volume=this.value">
 </div>
 
-<div class="dots">
-<div class="dot active"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-</div>
+<!-- 슬라이더 -->
+<div id="slider">
 
-<!-- 1 -->
+<!-- 1 메인 (절대 수정 금지) -->
 <section class="page">
 <div class="main-title">POYO 9TH ANNIVERSARY</div>
 <div class="sub-title">포동이들과 함께 걸어온 9년</div>
 </section>
 
-<!-- 2 -->
+<!-- 2 추억 -->
 <section class="page">
-<h1>치지직 페이지</h1>
+<h1>추억 페이지</h1>
 </section>
 
-<!-- 3 방송 -->
-<section class="page gradient" id="broadcast">
-<h1>방송 페이지</h1>
+<!-- 3 도전 -->
+<section class="page">
+<h1>도전 페이지</h1>
 </section>
 
-<!-- 4 게임 -->
-<section class="page gradient" id="game">
-<h1>게임 페이지</h1>
-</section>
+<!-- 4 (유지용 빈 페이지) -->
+<section class="page"></section>
 
 <!-- 5 -->
-<section class="page gradient">
-<div class="page5-title">
-더 많은 기록이 보고 싶다면<br>
-상단 메뉴를 이용해주세요
-</div>
+<section class="page">
+<h1>기록 페이지</h1>
 </section>
 
 </div>
 
 <script>
+const slider = document.getElementById("slider");
+const centerUI = document.getElementById("centerUI");
+const bgm = document.getElementById("bgm");
+
+/* 인트로 */
 const video = document.getElementById("introVideo");
 const title = document.getElementById("title");
 const enterBtn = document.getElementById("enterBtn");
-const bgm = document.getElementById("bgm");
-const centerUI = document.getElementById("centerUI");
-
-let shown=false;
-
-/* fallback */
-setTimeout(()=>{
-    title.style.opacity=1;
-    enterBtn.style.opacity=1;
-},5000);
 
 window.addEventListener("click",()=>{
     video.muted=false;
@@ -301,42 +241,30 @@ window.addEventListener("click",()=>{
 
 function enter(){
     document.getElementById("intro").style.display="none";
-    document.getElementById("main").style.display="block";
     bgm.play().catch(()=>{});
 }
 enterBtn.onclick=enter;
 document.getElementById("skipBtn").onclick=()=>{ video.pause(); enter(); };
 
-/* scroll */
-window.addEventListener("scroll",()=>{
-    let i=Math.round(window.scrollY/window.innerHeight);
+/* 슬라이드 전환 */
+let currentPage=0;
 
-    document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
-    if(document.querySelectorAll(".dot")[i]){
-        document.querySelectorAll(".dot")[i].classList.add("active");
+function goPage(i){
+    currentPage=i;
+    slider.style.transform=`translateX(-${i*100}vw)`;
+
+    /* 중앙 UI 제어 */
+    if(i===1){
+        centerUI.style.display="flex";
+        centerUI.innerText="추억";
     }
-
-    /* 🔥 중앙 UI 제어 */
-    if(i===2){
-        document.body.classList.add("hide-ui");
+    else if(i===2){
         centerUI.style.display="flex";
-        centerUI.innerText="방송";
-    } 
-    else if(i===3){
-        document.body.classList.add("hide-ui");
-        centerUI.style.display="flex";
-        centerUI.innerText="게임";
-        document.getElementById("game").classList.add("slide-right");
-    } 
+        centerUI.innerText="도전";
+    }
     else{
-        document.body.classList.remove("hide-ui");
         centerUI.style.display="none";
     }
-});
-
-/* 이동 */
-function goToPage(i){
-    window.scrollTo({top:i*window.innerHeight,behavior:"smooth"});
 }
 </script>
 
