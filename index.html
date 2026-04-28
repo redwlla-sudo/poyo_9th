@@ -11,11 +11,10 @@
 body{
     margin:0;
     font-family:'Fredoka', sans-serif;
-    overflow-x:hidden;
-    background:linear-gradient(135deg,#d8c7ff,#b8f2e6);
+    overflow-x:hidden; /* ✅ 수정됨 */
 }
 
-/* ================= 인트로 ================= */
+/* 인트로 */
 #intro{
     position:fixed;
     inset:0;
@@ -45,51 +44,43 @@ body{
 #title{
     font-size:5rem;
     font-weight:900;
-    background:linear-gradient(90deg,#cdb4ff,#7fffd4);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
     opacity:0;
 }
-
 #enterBtn{
     margin-top:25px;
     padding:20px 60px;
     font-size:1.6rem;
     font-weight:900;
-    border:none;
-    border-radius:50px;
-    background:linear-gradient(90deg,#cdb4ff,#7fffd4);
     opacity:0;
 }
 
-/* ================= 메인 ================= */
+/* 메인 */
 #main{
-    display:none;
+    display:none; /* ✅ 유지 */
 }
 
-/* 상단 UI */
+/* 🔥 상단 UI (중간 크기 적용) */
 .top-ui{
     position:fixed;
-    top:12px;
+    top:15px;
     left:50%;
     transform:translateX(-50%);
-    background:rgba(255,255,255,0.85);
-    padding:6px 14px;
+    background:white;
+    padding:10px 20px;
     border-radius:999px;
     display:flex;
-    gap:12px;
+    gap:18px;
     z-index:999;
 }
 
 .top-btn{
-    width:48px;
-    height:48px;
+    width:60px; /* ✅ 수정 */
+    height:60px; /* ✅ 수정 */
     border-radius:50%;
-    background:linear-gradient(90deg,#cdb4ff,#7fffd4);
     display:flex;
     justify-content:center;
     align-items:center;
-    font-size:0.8rem;
+    background:#cdb4ff;
     font-weight:700;
     cursor:pointer;
 }
@@ -101,21 +92,6 @@ body{
     justify-content:center;
     align-items:center;
     flex-direction:column;
-    text-align:center;
-}
-
-/* 텍스트 */
-.main-title{
-    font-size:5rem;
-}
-.sub-title{
-    font-size:2.5rem;
-}
-
-/* 치지직 */
-.chzzk{
-    background:#0b3d2e;
-    color:#00ff9d;
 }
 
 /* 점 네비 */
@@ -126,23 +102,19 @@ body{
     transform:translateY(-50%);
 }
 .dot{
-    width:10px;height:10px;border-radius:50%;
-    background:white;margin:10px 0;opacity:0.3;
+    width:10px;height:10px;
+    border-radius:50%;
+    background:black;
+    margin:10px 0;
+    opacity:0.3;
 }
 .dot.active{opacity:1}
 
-/* 볼륨 */
-.volume{
-    position:fixed;
-    top:20px;
-    right:20px;
-}
-
-/* ================= 🔥 오버레이 페이지 ================= */
+/* overlay */
 .overlay{
     position:fixed;
     inset:0;
-    background:#111;
+    background:black;
     color:white;
     display:none;
     z-index:2000;
@@ -151,14 +123,13 @@ body{
     flex-direction:column;
 }
 
-/* 뒤로가기 */
-.back-btn{
+.back{
     position:absolute;
     top:20px;
     left:20px;
-    padding:10px 15px;
     background:white;
     color:black;
+    padding:10px;
     border-radius:20px;
     cursor:pointer;
 }
@@ -175,28 +146,19 @@ body{
 
     <button id="skipBtn">스킵</button>
 
-    <div style="text-align:center;">
+    <div>
         <div id="title">Poyo 9th Anniversary</div>
         <button id="enterBtn">입장하기</button>
     </div>
 </div>
 
-<audio id="bgm" loop>
-    <source src="bgm.mp3">
-</audio>
-
 <!-- 메인 -->
 <div id="main">
 
 <div class="top-ui">
-    <div class="top-btn" onclick="openPage('broadcast')">방송</div>
     <div class="top-btn" onclick="scrollToTop()">홈</div>
+    <div class="top-btn" onclick="openPage('broadcast')">방송</div>
     <div class="top-btn" onclick="openPage('game')">게임</div>
-</div>
-
-<div class="volume">
-<input type="range" min="0" max="1" step="0.01"
-oninput="bgm.volume=this.value">
 </div>
 
 <div class="dots">
@@ -207,50 +169,32 @@ oninput="bgm.volume=this.value">
 <div class="dot"></div>
 </div>
 
-<section class="page">
-<div class="main-title">POYO 9TH ANNIVERSARY</div>
-<div class="sub-title">
-포동이들과 함께 걸어온 9년이라는 시간의 발자취
-</div>
-</section>
-
-<section class="page chzzk"><h1>치지직 스타일</h1></section>
-<section class="page"><h1>PAGE 3</h1></section>
-<section class="page"><h1>PAGE 4</h1></section>
-
-<section class="page">
-<h1 style="font-size:2.5rem;">
-더 많은 기록 또는 미니게임이 하고 싶다면<br>
-상단에 있는 방송 또는 게임 탭을 클릭해주세요
-</h1>
-</section>
+<section class="page"><h1>1</h1></section>
+<section class="page"><h1>2</h1></section>
+<section class="page"><h1>3</h1></section>
+<section class="page"><h1>4</h1></section>
+<section class="page"><h1>5</h1></section>
 
 </div>
 
-<!-- 🔥 방송 페이지 -->
+<!-- 방송 -->
 <div id="broadcast" class="overlay">
-<div class="back-btn" onclick="closePage()">← 돌아가기</div>
-<h1>📺 방송 페이지</h1>
-<p>여기에 영상 넣으면 됨</p>
+<div class="back" onclick="closePage()">뒤로</div>
+<h1>방송 페이지</h1>
 </div>
 
-<!-- 🔥 게임 페이지 -->
+<!-- 게임 -->
 <div id="game" class="overlay">
-<div class="back-btn" onclick="closePage()">← 돌아가기</div>
-<h1>🎮 게임 페이지</h1>
-<p>미니게임 들어갈 자리</p>
+<div class="back" onclick="closePage()">뒤로</div>
+<h1>게임 페이지</h1>
 </div>
 
 <script>
 const video = document.getElementById("introVideo");
 const title = document.getElementById("title");
 const enterBtn = document.getElementById("enterBtn");
-const skipBtn = document.getElementById("skipBtn");
-const intro = document.getElementById("intro");
-const main = document.getElementById("main");
-const bgm = document.getElementById("bgm");
 
-let shown = false;
+let shown=false;
 
 /* 인트로 소리 */
 window.addEventListener("click",()=>{
@@ -261,9 +205,9 @@ window.addEventListener("click",()=>{
 /* 103초 */
 function loop(){
     if(!shown && video.currentTime >= 103){
-        shown = true;
-        title.style.opacity = 1;
-        enterBtn.style.opacity = 1;
+        shown=true;
+        title.style.opacity=1;
+        enterBtn.style.opacity=1;
     }
     requestAnimationFrame(loop);
 }
@@ -271,42 +215,32 @@ loop();
 
 /* 입장 */
 function enter(){
-    intro.style.display="none";
-    main.style.display="block";
-    bgm.play().catch(()=>{});
+    document.getElementById("intro").style.display="none";
+    document.getElementById("main").style.display="block";
 }
+enterBtn.onclick=enter;
 
-enterBtn.onclick = enter;
-skipBtn.onclick = ()=>{
-    video.pause();
-    enter();
-};
+/* 스크롤 점 네비 */
+window.addEventListener("scroll",()=>{
+    let i=Math.round(window.scrollY/window.innerHeight);
+    document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
+    if(document.querySelectorAll(".dot")[i]){
+        document.querySelectorAll(".dot")[i].classList.add("active");
+    }
+});
 
-/* 🔥 오버레이 열기 */
+/* overlay */
 function openPage(id){
     document.getElementById(id).style.display="flex";
 }
-
-/* 🔥 닫기 */
 function closePage(){
-    document.querySelectorAll(".overlay").forEach(o=>{
-        o.style.display="none";
-    });
+    document.querySelectorAll(".overlay").forEach(o=>o.style.display="none");
 }
 
 /* 홈 */
 function scrollToTop(){
     window.scrollTo({top:0,behavior:"smooth"});
 }
-
-/* 점 네비 */
-window.addEventListener("scroll",()=>{
-    let i = Math.round(window.scrollY / window.innerHeight);
-    document.querySelectorAll(".dot").forEach(d=>d.classList.remove("active"));
-    if(document.querySelectorAll(".dot")[i]){
-        document.querySelectorAll(".dot")[i].classList.add("active");
-    }
-});
 </script>
 
 </body>
