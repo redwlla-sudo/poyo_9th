@@ -15,10 +15,8 @@ html, body{
     font-family:'Fredoka', sans-serif;
 }
 
-/* 🔒 메인 깜빡임 완전 차단 */
-#main{
-    display:none;
-}
+/* 🔒 메인 깜빡임 차단 */
+#main{ display:none; }
 
 /* ================= 인트로 ================= */
 #intro{
@@ -72,22 +70,25 @@ html, body{
 }
 
 /* ================= 메인 ================= */
+
+/* 🔥 상단 UI (긴 타원) */
 .top-ui{
     position:fixed;
     top:15px;
     left:50%;
     transform:translateX(-50%);
     background:white;
-    padding:10px 20px;
+    padding:10px 25px;
     border-radius:999px;
     display:flex;
-    gap:18px;
+    gap:15px;
     z-index:999;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
 .top-btn{
-    width:60px;
-    height:60px;
+    width:55px;
+    height:55px;
     border-radius:50%;
     display:flex;
     justify-content:center;
@@ -114,17 +115,24 @@ html, body{
     flex-direction:column;
 }
 
+/* 🔥 3~5페이지 그라데이션 */
+.gradient{
+    background:linear-gradient(135deg, #d9cfff, #b8f2e6);
+}
+
 /* 텍스트 */
 .main-title{
     font-size:5rem;
     font-weight:700;
+    text-align:center;
 }
 .sub-title{
     font-size:2.2rem;
     font-weight:600;
+    text-align:center;
 }
 
-/* 점 네비 */
+/* 🔥 점 네비 */
 .dots{
     position:fixed;
     right:20px;
@@ -138,8 +146,13 @@ html, body{
     background:black;
     margin:10px 0;
     opacity:0.3;
+    transition:0.3s;
 }
-.dot.active{opacity:1}
+.dot.active{
+    opacity:1;
+    transform:scale(1.5);
+    box-shadow:0 0 10px rgba(0,0,0,0.5);
+}
 
 /* overlay */
 .overlay{
@@ -183,7 +196,7 @@ html, body{
 </div>
 </div>
 
-<!-- 🔊 메인 BGM -->
+<!-- 🔊 BGM -->
 <audio id="bgm" loop>
 <source src="bgm.mp3">
 </audio>
@@ -224,17 +237,17 @@ oninput="bgm.volume=this.value">
 </section>
 
 <!-- 3 -->
-<section class="page"><h1>PAGE 3</h1></section>
+<section class="page gradient"><h1>PAGE 3</h1></section>
 
 <!-- 4 -->
-<section class="page"><h1>PAGE 4</h1></section>
+<section class="page gradient"><h1>PAGE 4</h1></section>
 
 <!-- 5 -->
-<section class="page">
-<h1 style="font-size:2.5rem;">
+<section class="page gradient">
+<div class="main-title">
 더 많은 기록 또는 미니게임이 하고 싶다면<br>
 상단에 있는 방송 또는 게임 탭을 클릭해주세요
-</h1>
+</div>
 </section>
 
 </div>
@@ -260,7 +273,7 @@ const bgm = document.getElementById("bgm");
 
 let shown=false;
 
-/* 🔊 인트로 소리 안정 */
+/* 🔊 인트로 소리 */
 function enableSound(){
     video.muted=false;
     video.volume=0.7;
@@ -268,7 +281,7 @@ function enableSound(){
 }
 window.addEventListener("click", enableSound, {once:true});
 
-/* 103초 고정 */
+/* 103초 */
 function loop(){
     if(!shown && video.currentTime >= 103){
         shown=true;
@@ -283,7 +296,6 @@ loop();
 function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
-
     bgm.volume=0.5;
     bgm.play().catch(()=>{});
 }
