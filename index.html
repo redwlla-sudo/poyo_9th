@@ -8,12 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* ✅ 여기어때 잘난체 (직접 적용) */
 @font-face {
     font-family: 'YeogiOttaeJalnan';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
     font-display: swap;
 }
 
@@ -101,18 +98,8 @@ html, body{
 .tv-static{
     background:
         linear-gradient(180deg,#002a18,#000),
-        repeating-linear-gradient(
-            0deg,
-            rgba(255,255,255,0.12) 0px,
-            rgba(0,0,0,0.25) 2px,
-            transparent 4px
-        ),
-        repeating-linear-gradient(
-            90deg,
-            rgba(0,255,120,0.45) 0px,
-            rgba(0,255,120,0.3) 2px,
-            transparent 5px
-        ),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.12) 0px, rgba(0,0,0,0.25) 2px, transparent 4px),
+        repeating-linear-gradient(90deg, rgba(0,255,120,0.45) 0px, rgba(0,255,120,0.3) 2px, transparent 5px),
         radial-gradient(circle at 30% 40%, rgba(0,255,120,0.35), transparent 60%),
         radial-gradient(circle at 70% 60%, rgba(0,255,120,0.3), transparent 60%);
     color:#00ff88;
@@ -129,21 +116,15 @@ html, body{
 .main-title{
     font-size:5rem;
     font-weight:900;
-    font-family:'Fredoka', sans-serif;
 }
 
 .anniv{
     letter-spacing:8px;
 }
 
-/* ✅ 1번 페이지 한글 */
-.page:nth-of-type(1) .sub-title{
-    font-family:'YeogiOttaeJalnan' !important;
-}
-
-/* ✅ 5번 페이지 한글 */
+.page:nth-of-type(1) .sub-title,
 .page:nth-of-type(5) .page5-text{
-    font-family:'YeogiOttaeJalnan' !important;
+    font-family:'YeogiOttaeJalnan';
 }
 
 .sub-title{
@@ -170,20 +151,23 @@ html, body{
     backdrop-filter:blur(12px);
     border-radius:999px;
     z-index:999;
+    align-items:center;
 }
 
 .top-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
     padding:10px 18px;
     border-radius:999px;
     cursor:pointer;
     font-weight:800;
-    transition:0.25s;
 }
 
-.top-btn.active{
-    background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
-    transform:scale(1.1);
-    box-shadow:0 0 10px rgba(184,242,230,0.8);
+.top-btn img{
+    width:24px;
+    height:24px;
+    border-radius:50%;
 }
 
 /* ================= DOT ================= */
@@ -215,6 +199,13 @@ html, body{
     position:fixed;
     top:20px;
     right:20px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.volume-icon{
+    font-size:18px;
 }
 </style>
 </head>
@@ -240,12 +231,17 @@ html, body{
 <div id="main">
 
 <div class="top-ui">
-    <div class="top-btn active">🏠 포요</div>
+    <!-- ✅ 포요 아이콘 적용 -->
+    <div class="top-btn active">
+        <img src="poyo.png"> 포요
+    </div>
     <div class="top-btn">⭐ 추억</div>
     <div class="top-btn">🎮 게임</div>
 </div>
 
+<!-- ✅ 스피커 아이콘 추가 -->
 <div class="volume">
+<span class="volume-icon">🔊</span>
 <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
 </div>
 
@@ -333,23 +329,6 @@ function enter(){
 
 enterBtn.onclick=enter;
 skipBtn.onclick=enter;
-
-const dots=document.querySelectorAll(".dot");
-const topBtns=document.querySelectorAll(".top-btn");
-
-window.addEventListener("scroll",()=>{
-    let h=window.innerHeight;
-    let current=Math.round(window.scrollY/h);
-
-    dots.forEach(d=>d.classList.remove("active"));
-    if(dots[current]) dots[current].classList.add("active");
-
-    topBtns.forEach(b=>b.classList.remove("active"));
-
-    if(current === 0) topBtns[0].classList.add("active");
-    else if(current === 2 || current === 3) topBtns[1].classList.add("active");
-    else if(current === 4) topBtns[2].classList.add("active");
-});
 </script>
 
 </body>
