@@ -5,30 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>포요 9주년</title>
 
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
-
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
 
+<!-- ✅ 잘난체 추가 -->
+<link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/Jalnan.css" rel="stylesheet">
+
 <style>
-
-/* 🔥 Cafe24 강제 로딩 */
-@font-face {
-    font-family: 'Cafe24Ssurround';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.0/Cafe24Ssurround.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
 html, body{
     margin:0;
     padding:0;
+    font-family:'Fredoka', sans-serif;
     scroll-behavior:smooth;
     overflow-x:hidden;
-}
-
-/* 기본 폰트 */
-body{
-    font-family:'Fredoka','Cafe24Ssurround',sans-serif;
 }
 
 /* ================= INTRO ================= */
@@ -142,10 +130,14 @@ body{
     letter-spacing:8px;
 }
 
-/* 🔥 한글 강제 적용 */
-.sub-title,
-.page5-text{
-    font-family:'Cafe24Ssurround', sans-serif !important;
+/* ✅ 1번 페이지 한글 */
+.page:nth-of-type(1) .sub-title{
+    font-family:'Jalnan', sans-serif;
+}
+
+/* ✅ 5번 페이지 한글 */
+.page:nth-of-type(5) .page5-text{
+    font-family:'Jalnan', sans-serif;
 }
 
 .sub-title{
