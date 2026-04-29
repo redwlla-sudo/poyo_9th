@@ -40,6 +40,7 @@ html, body{
     left:50%;
     transform:translate(-50%,-50%);
     text-align:center;
+    z-index:10000;
 }
 
 #title{
@@ -47,6 +48,7 @@ html, body{
     font-weight:900;
     opacity:0;
     visibility:hidden;
+    transition:0.5s ease;
     background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
@@ -61,6 +63,8 @@ html, body{
     border-radius:40px;
     opacity:0;
     visibility:hidden;
+    transition:0.5s ease;
+    cursor:pointer;
     background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 }
 
@@ -143,7 +147,7 @@ html, body{
     font-family:'YeogiOttaeJalnan';
 }
 
-/* ================= TOP UI (FIXED) ================= */
+/* ================= TOP UI (RESTORED) ================= */
 .top-ui{
     position:fixed;
     top:15px;
@@ -156,14 +160,24 @@ html, body{
     backdrop-filter:blur(12px);
     border-radius:999px;
     z-index:99999;
+    align-items:center;
 }
 
 .top-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
     padding:10px 18px;
     border-radius:999px;
     cursor:pointer;
     font-weight:800;
     background:rgba(255,255,255,0.3);
+}
+
+.top-btn img{
+    width:22px;
+    height:22px;
+    border-radius:50%;
 }
 
 /* ================= DOTS ================= */
@@ -199,13 +213,8 @@ html, body{
     font-size:3rem;
 }
 
-#memoryScene{
-    background:linear-gradient(135deg,#cdb4ff,#b8f2e6);
-}
-
-#gameScene{
-    background:linear-gradient(135deg,#b8f2e6,#cdb4ff);
-}
+#memoryScene{background:linear-gradient(135deg,#cdb4ff,#b8f2e6);}
+#gameScene{background:linear-gradient(135deg,#b8f2e6,#cdb4ff);}
 
 .backBtn{
     margin-top:20px;
@@ -215,12 +224,23 @@ html, body{
     cursor:pointer;
 }
 
-/* ================= VOLUME ================= */
+/* ================= VOLUME RESTORED ================= */
 .volume{
     position:fixed;
     top:20px;
     right:20px;
-    z-index:1000;
+    z-index:10000;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.volume-icon{
+    font-size:18px;
+}
+
+input[type=range]{
+    accent-color:#b8f2e6;
 }
 </style>
 </head>
@@ -246,10 +266,19 @@ html, body{
 <!-- APP -->
 <div id="app">
 
+<!-- TOP UI (UNCHANGED STYLE FIXED) -->
 <div class="top-ui">
-    <div class="top-btn" onclick="goScene(0)">포요</div>
-    <div class="top-btn" onclick="goScene(1)">추억</div>
-    <div class="top-btn" onclick="goScene(2)">게임</div>
+    <div class="top-btn" onclick="goScene(0)">
+        <img src="poyo.png"> 포요
+    </div>
+    <div class="top-btn" onclick="goScene(1)">⭐ 추억</div>
+    <div class="top-btn" onclick="goScene(2)">🎮 게임</div>
+</div>
+
+<!-- VOLUME UI RESTORED -->
+<div class="volume">
+    <span class="volume-icon">🔊</span>
+    <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
 </div>
 
 <div id="sceneWrapper">
@@ -335,7 +364,7 @@ function goScene(i){
 sceneWrapper.style.transform=`translateX(-${i*100}vw)`;
 }
 
-/* MAIN SCROLL */
+/* DOT + SCROLL */
 let index=0;
 const pages=document.getElementById("pages");
 const dots=document.querySelector(".dots");
