@@ -54,6 +54,18 @@ html, body{
     border-radius:40px;
     opacity:0;
     background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
+    cursor:pointer;
+}
+
+#skipBtn{
+    position:absolute;
+    top:20px;
+    right:20px;
+    z-index:10000;
+    padding:10px 18px;
+    border:none;
+    border-radius:20px;
+    background:white;
 }
 
 /* ================= 메인 ================= */
@@ -62,13 +74,13 @@ html, body{
     height:100vh;
 }
 
-/* ================= 슬라이더 ================= */
+/* 슬라이더 */
 #slider{
     height:100vh;
     transition:transform 0.8s ease;
 }
 
-/* ================= 페이지 ================= */
+/* 페이지 */
 .page{
     height:100vh;
     display:flex;
@@ -86,7 +98,7 @@ html, body{
     font-size:2.2rem;
 }
 
-/* 2 치지직 */
+/* 2 */
 .tv-static{
     background:
         radial-gradient(circle at 20% 30%, rgba(0,255,120,0.15), transparent 40%),
@@ -105,10 +117,9 @@ html, body{
     font-size:3rem;
     font-weight:900;
     text-align:center;
-    line-height:1.6;
 }
 
-/* ================= UI ================= */
+/* UI */
 .top-ui{
     position:fixed;
     top:15px;
@@ -157,7 +168,7 @@ html, body{
 
 <body>
 
-<!-- ================= 인트로 ================= -->
+<!-- ================= INTRO ================= -->
 <div id="intro">
 <video id="introVideo" autoplay muted playsinline>
 <source src="video2.mp4">
@@ -178,19 +189,19 @@ html, body{
 <div id="main">
 
 <div class="top-ui">
-    <div class="top-btn" onclick="goTo(0)">포요</div>
-    <div class="top-btn" onclick="goTo(1)">2</div>
-    <div class="top-btn" onclick="goTo(2)">3</div>
-    <div class="top-btn" onclick="goTo(3)">4</div>
-    <div class="top-btn" onclick="goTo(4)">5</div>
+    <div class="top-btn" onclick="setPage(0)">포요</div>
+    <div class="top-btn" onclick="setPage(1)">2</div>
+    <div class="top-btn" onclick="setPage(2)">3</div>
+    <div class="top-btn" onclick="setPage(3)">4</div>
+    <div class="top-btn" onclick="setPage(4)">5</div>
 </div>
 
 <div class="dots">
-    <div class="dot active" onclick="goTo(0)"></div>
-    <div class="dot" onclick="goTo(1)"></div>
-    <div class="dot" onclick="goTo(2)"></div>
-    <div class="dot" onclick="goTo(3)"></div>
-    <div class="dot" onclick="goTo(4)"></div>
+    <div class="dot active" onclick="setPage(0)"></div>
+    <div class="dot" onclick="setPage(1)"></div>
+    <div class="dot" onclick="setPage(2)"></div>
+    <div class="dot" onclick="setPage(3)"></div>
+    <div class="dot" onclick="setPage(4)"></div>
 </div>
 
 <div id="slider">
@@ -206,7 +217,7 @@ html, body{
 
 <section class="page gradient">
 <div class="page5-text">
-더 많은 추억 또는 게임이 하고 싶으면<br>
+더 많은 추억 또는 게임을 하고 싶으면<br>
 상단 중앙에 있는 원하는 탭을 눌러주세요
 </div>
 </section>
@@ -217,51 +228,77 @@ html, body{
 
 <script>
 
+/* ================= STATE SYSTEM (핵심) ================= */
+const state = {
+    page: 0,
+    lock: false,
+    introStarted: false,
+    mainStarted: false
+};
+
 const slider = document.getElementById("slider");
 const dots = document.querySelectorAll(".dot");
+const introVideo = document.getElementById("introVideo");
+const introBgm = document.getElementById("introBgm");
+const mainBgm = document.getElementById("mainBgm");
 
-let index = 0;
-let lock = false;
+/* ================= PAGE CONTROL ================= */
+function setPage(i){
+    state.page = i;
 
-/* ================= 슬라이드 이동 ================= */
-function goTo(i){
-    index = i;
     slider.style.transform = `translateY(-${i * 100}vh)`;
-    updateDots();
-}
 
-/* ================= dots ================= */
-function updateDots(){
     dots.forEach(d=>d.classList.remove("active"));
-    if(dots[index]) dots[index].classList.add("active");
+    if(dots[i]) dots[i].classList.add("active");
 }
 
-/* ================= wheel 복구 ================= */
+/* ================= WHEEL (통제) ================= */
 window.addEventListener("wheel",(e)=>{
-    if(lock) return;
-    lock = true;
+    if(state.lock || !state.mainStarted) return;
+
+    state.lock = true;
 
     if(e.deltaY > 0){
-        index = Math.min(index+1,4);
+        state.page = Math.min(state.page + 1, 4);
     }else{
-        index = Math.max(index-1,0);
+        state.page = Math.max(state.page - 1, 0);
     }
 
-    goTo(index);
+    setPage(state.page);
 
-    setTimeout(()=>lock=false,700);
+    setTimeout(()=>state.lock=false,700);
 });
 
-/* ================= enter ================= */
-document.getElementById("enterBtn").onclick=()=>{
-    document.getElementById("intro").style.display="none";
-    document.getElementById("main").style.display="block";
-};
+/* ================= INTRO AUDIO FIX ================= */
+window.addEventListener("click",()=>{
+    if(state.introStarted) return;
+    state.introStarted = true;
 
-document.getElementById("skipBtn").onclick=()=>{
+    introVideo.muted = false;
+    introVideo.play().catch(()=>{});
+
+    introBgm.volume = 0.5;
+    introBgm.play().catch(()=>{});
+},{once:true});
+
+/* ================= ENTER ================= */
+function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
-};
+
+    state.mainStarted = true;
+
+    introBgm.pause();
+    introVideo.pause();
+
+    mainBgm.volume = 0.5;
+    mainBgm.play().catch(()=>{});
+
+    setPage(0);
+}
+
+document.getElementById("enterBtn").onclick = enter;
+document.getElementById("skipBtn").onclick = enter;
 
 </script>
 
