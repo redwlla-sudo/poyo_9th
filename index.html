@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>포요 9주년</title>
 
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/Cafe24Ssurround.css" rel="stylesheet">
 
@@ -12,9 +14,13 @@
 html, body{
     margin:0;
     padding:0;
-    font-family:'Fredoka', sans-serif;
     scroll-behavior:smooth;
     overflow-x:hidden;
+}
+
+/* 🔥 기본 폰트 구조 */
+body{
+    font-family:'Fredoka','Cafe24Ssurround',sans-serif;
 }
 
 /* ================= INTRO ================= */
@@ -78,7 +84,6 @@ html, body{
 /* ================= MAIN ================= */
 #main{
     display:none;
-    font-family:'Cafe24Ssurround', sans-serif;
 }
 
 /* ================= PAGE ================= */
@@ -90,7 +95,7 @@ html, body{
     flex-direction:column;
 }
 
-/* ================= 2번 페이지 ================= */
+/* ================= 2번 페이지 (초록 강화) ================= */
 .tv-static{
     background:
         linear-gradient(180deg,#002a18,#000),
@@ -102,12 +107,12 @@ html, body{
         ),
         repeating-linear-gradient(
             90deg,
-            rgba(0,255,120,0.35) 0px,
+            rgba(0,255,120,0.4) 0px,
             rgba(0,255,120,0.25) 2px,
             transparent 5px
         ),
-        radial-gradient(circle at 30% 40%, rgba(0,255,120,0.25), transparent 60%),
-        radial-gradient(circle at 70% 60%, rgba(0,255,120,0.2), transparent 60%);
+        radial-gradient(circle at 30% 40%, rgba(0,255,120,0.3), transparent 60%),
+        radial-gradient(circle at 70% 60%, rgba(0,255,120,0.25), transparent 60%);
     color:#00ff88;
 }
 
@@ -122,26 +127,28 @@ html, body{
 .main-title{
     font-size:5rem;
     font-weight:900;
-    font-family:'Fredoka', sans-serif; /* 영어 */
+    font-family:'Fredoka', sans-serif;
 }
 
 .anniv{
     letter-spacing:8px;
 }
 
-/* 한글 */
-.sub-title{
-    font-size:2.2rem;
-    font-family:'Cafe24Ssurround', sans-serif;
+/* 🔥 한글 강제 적용 */
+.sub-title,
+.page5-text{
+    font-family:'Cafe24Ssurround', sans-serif !important;
 }
 
-/* 5번 페이지 */
+.sub-title{
+    font-size:2.2rem;
+}
+
 .page5-text{
     font-size:3.8rem;
     font-weight:900;
     text-align:center;
     line-height:1.5;
-    font-family:'Cafe24Ssurround', sans-serif;
 }
 
 /* ================= TOP UI ================= */
