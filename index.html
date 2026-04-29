@@ -216,13 +216,7 @@ html, body{
 #memoryScene{background:linear-gradient(135deg,#cdb4ff,#b8f2e6);}
 #gameScene{background:linear-gradient(135deg,#b8f2e6,#cdb4ff);}
 
-.backBtn{
-    margin-top:20px;
-    padding:12px 24px;
-    border:none;
-    border-radius:12px;
-    cursor:pointer;
-}
+/* ❌ removed internal back buttons (NOW ONLY TOP UI CONTROL) */
 
 /* ================= VOLUME ================= */
 .volume{
@@ -241,7 +235,6 @@ input[type=range]{accent-color:#b8f2e6;}
 </head>
 <body>
 
-<!-- INTRO -->
 <div id="intro">
 <video id="introVideo" autoplay muted playsinline>
 <source src="video2.mp4">
@@ -258,7 +251,6 @@ input[type=range]{accent-color:#b8f2e6;}
 <audio id="introBgm" loop></audio>
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
-<!-- APP -->
 <div id="app">
 
 <div class="top-ui">
@@ -293,8 +285,8 @@ input[type=range]{accent-color:#b8f2e6;}
 </div>
 </div>
 
-<div class="scene" id="memoryScene">추억 페이지<button class="backBtn" onclick="goScene(0)">포요</button></div>
-<div class="scene" id="gameScene">게임 페이지<button class="backBtn" onclick="goScene(0)">포요</button></div>
+<div class="scene" id="memoryScene">추억 페이지</div>
+<div class="scene" id="gameScene">게임 페이지</div>
 
 </div>
 </div>
@@ -318,7 +310,6 @@ introVideo.play();
 introBgm.play();
 },{once:true});
 
-/* FIX: 정확히 103초 타이밍 */
 introVideo.addEventListener("timeupdate",()=>{
 if(!shown && introVideo.currentTime>=103){
 shown=true;
@@ -341,12 +332,10 @@ init();
 enterBtn.onclick=enter;
 skipBtn.onclick=enter;
 
-/* SCENE */
 function goScene(i){
 sceneWrapper.style.transform=`translateX(-${i*100}vw)`;
 }
 
-/* SMOOTH SCROLL FIX */
 let index=0;
 let wheelLock=false;
 const pages=document.getElementById("pages");
@@ -377,13 +366,10 @@ d.classList.toggle("active",i===index);
 window.addEventListener("wheel",(e)=>{
 if(wheelLock) return;
 if(app.style.display!=="block" || sceneWrapper.style.transform!="translateX(0vw)") return;
-
 wheelLock=true;
-
 if(e.deltaY>0 && index<4) index++;
 if(e.deltaY<0 && index>0) index--;
 move(index);
-
 setTimeout(()=>wheelLock=false,600);
 });
 </script>
