@@ -15,7 +15,7 @@ html, body{
     scroll-behavior:smooth;
 }
 
-/* ================= 인트로 ================= */
+/* ================= INTRO ================= */
 #intro{
     position:fixed;
     inset:0;
@@ -70,12 +70,12 @@ html, body{
     background:white;
 }
 
-/* ================= 메인 ================= */
+/* ================= MAIN ================= */
 #main{
     display:none;
 }
 
-/* ================= 5페이지 스크롤 구조 ================= */
+/* ================= 5 PAGE ================= */
 .page{
     height:100vh;
     display:flex;
@@ -84,7 +84,6 @@ html, body{
     flex-direction:column;
 }
 
-/* 1 */
 .main-title{
     font-size:5rem;
     font-weight:700;
@@ -94,7 +93,6 @@ html, body{
     font-size:2.2rem;
 }
 
-/* 2 치지직 */
 .tv-static{
     background:
         radial-gradient(circle at 20% 30%, rgba(0,255,120,0.15), transparent 40%),
@@ -103,43 +101,41 @@ html, body{
     color:#00ff88;
 }
 
-/* 3~5 */
 .gradient{
     background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
-/* 5 */
 .page5-text{
     font-size:3rem;
     font-weight:900;
     text-align:center;
     line-height:1.6;
-    padding:0 40px;
 }
 
-/* ================= UI ================= */
+/* ================= UI (3개로 축소) ================= */
 .top-ui{
     position:fixed;
     top:15px;
     left:50%;
     transform:translateX(-50%);
     display:flex;
-    gap:20px;
+    gap:25px;
     z-index:999;
 }
 
 .top-btn{
-    width:65px;
-    height:65px;
+    width:70px;
+    height:70px;
     border-radius:50%;
     display:flex;
     justify-content:center;
     align-items:center;
     background:#cdb4ff;
     cursor:pointer;
+    font-weight:700;
 }
 
-/* 점 네비 */
+/* ================= DOT ================= */
 .dots{
     position:fixed;
     right:20px;
@@ -155,7 +151,6 @@ html, body{
     border-radius:50%;
     background:black;
     opacity:0.3;
-    transition:0.3s;
 }
 
 .dot.active{
@@ -163,9 +158,12 @@ html, body{
     transform:scale(1.4);
 }
 
-/* 섹션 스냅 */
-section{
-    scroll-snap-align:start;
+/* ================= VOLUME ================= */
+.volume{
+    position:fixed;
+    top:20px;
+    right:90px;
+    z-index:9999;
 }
 </style>
 </head>
@@ -174,6 +172,7 @@ section{
 
 <!-- ================= INTRO ================= -->
 <div id="intro">
+
 <video id="introVideo" autoplay muted playsinline>
 <source src="video2.mp4">
 </video>
@@ -192,12 +191,16 @@ section{
 <!-- ================= MAIN ================= -->
 <div id="main">
 
+<!-- 3개로 축소 -->
 <div class="top-ui">
     <div class="top-btn" onclick="go(0)">포요</div>
-    <div class="top-btn" onclick="go(1)">방송</div>
-    <div class="top-btn" onclick="go(2)">추억</div>
-    <div class="top-btn" onclick="go(3)">도전</div>
-    <div class="top-btn" onclick="go(4)">기록</div>
+    <div class="top-btn" onclick="go(1)">추억</div>
+    <div class="top-btn" onclick="go(2)">도전</div>
+</div>
+
+<!-- 볼륨 복구 -->
+<div class="volume">
+<input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
 </div>
 
 <div class="dots">
@@ -208,15 +211,12 @@ section{
     <div class="dot" onclick="go(4)"></div>
 </div>
 
-<!-- 5페이지 스크롤 구조 -->
 <section class="page">
 <div class="main-title">POYO 9TH ANNIVERSARY</div>
 <div class="sub-title">포동이들과 함께 걸어온 9년이란 발자취</div>
 </section>
 
-<section class="page tv-static">
-<h1>CHZZK SIGNAL</h1>
-</section>
+<section class="page tv-static"><h1>CHZZK SIGNAL</h1></section>
 
 <section class="page gradient"></section>
 <section class="page gradient"></section>
@@ -232,48 +232,21 @@ section{
 
 <script>
 
-/* ================= STATE ================= */
-const dots = document.querySelectorAll(".dot");
-const pages = document.querySelectorAll(".page");
-
-let current = 0;
-
-/* ================= DOT SYNC ================= */
-function updateDots(){
-    dots.forEach(d=>d.classList.remove("active"));
-    if(dots[current]) dots[current].classList.add("active");
-}
-
-/* ================= GO PAGE ================= */
-function go(i){
-    current = i;
-    pages[i].scrollIntoView({behavior:"smooth"});
-    updateDots();
-}
-
-/* ================= SCROLL SYNC ================= */
-window.addEventListener("scroll",()=>{
-    let scrollPos = window.scrollY;
-    let h = window.innerHeight;
-
-    current = Math.round(scrollPos / h);
-    updateDots();
-});
-
-/* ================= INTRO CONTROL ================= */
+/* ================= INTRO ================= */
 const introVideo = document.getElementById("introVideo");
 const introBgm = document.getElementById("introBgm");
 const mainBgm = document.getElementById("mainBgm");
 
-let started = false;
+let started=false;
 
 window.addEventListener("click",()=>{
     if(started) return;
-    started = true;
+    started=true;
 
-    introVideo.muted = false;
+    introVideo.muted=false;
     introVideo.play().catch(()=>{});
 
+    introBgm.volume=0.5;
     introBgm.play().catch(()=>{});
 },{once:true});
 
@@ -282,8 +255,9 @@ const title = document.getElementById("title");
 const enterBtn = document.getElementById("enterBtn");
 
 let shown=false;
+
 function loop(){
-    if(!shown && introVideo.currentTime >= 103){
+    if(!shown && introVideo.currentTime>=103){
         shown=true;
         title.style.visibility="visible";
         enterBtn.style.visibility="visible";
@@ -302,11 +276,34 @@ function enter(){
     introBgm.pause();
     introVideo.pause();
 
+    mainBgm.volume=0.5;
     mainBgm.play().catch(()=>{});
 }
 
-enterBtn.onclick = enter;
-skipBtn.onclick = enter;
+enterBtn.onclick=enter;
+skipBtn.onclick=enter;
+
+/* ================= SCROLL ================= */
+const dots=document.querySelectorAll(".dot");
+const pages=document.querySelectorAll(".page");
+let current=0;
+
+function go(i){
+    current=i;
+    pages[i].scrollIntoView({behavior:"smooth"});
+    updateDots();
+}
+
+function updateDots(){
+    dots.forEach(d=>d.classList.remove("active"));
+    if(dots[current]) dots[current].classList.add("active");
+}
+
+window.addEventListener("scroll",()=>{
+    let h=window.innerHeight;
+    current=Math.round(window.scrollY/h);
+    updateDots();
+});
 
 </script>
 
