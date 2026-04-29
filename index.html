@@ -88,28 +88,24 @@ html, body{
     flex-direction:column;
 }
 
-/* ================= 2페이지 (지지직 느낌 - 배경색 기반) ================= */
+/* ================= 2번 페이지 (지지직 배경 확실 적용) ================= */
 .tv-static{
     background:
-        linear-gradient(180deg,#0a0f10,#050809),
+        linear-gradient(180deg,#020404,#000),
         repeating-linear-gradient(
             0deg,
-            rgba(255,255,255,0.04) 0px,
-            rgba(0,0,0,0.06) 2px,
+            rgba(255,255,255,0.12) 0px,
+            rgba(0,0,0,0.15) 2px,
             transparent 4px
-        ),
-        repeating-linear-gradient(
-            90deg,
-            rgba(0,255,120,0.05),
-            rgba(0,0,0,0.05) 3px,
-            transparent 6px
-        );
+        ) !important;
 
     color:#00ff88;
 }
 
-/* ================= 3~5 페이지 ================= */
-.page:nth-child(n+3){
+/* ================= 3~5 페이지 (정확한 지정) ================= */
+.page:nth-of-type(3),
+.page:nth-of-type(4),
+.page:nth-of-type(5){
     background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
@@ -128,16 +124,12 @@ html, body{
 }
 
 /* ================= 5페이지 폰트 강제 적용 ================= */
-.page5-text,
-.page5-text *{
-    font-family:'Fredoka', sans-serif !important;
-    font-weight:900 !important;
-    font-style:normal !important;
-}
-
 .page5-text{
+    font-family:'Fredoka', sans-serif !important;
     font-size:3.8rem;
+    font-weight:900;
     text-align:center;
+    line-height:1.4;
 }
 
 /* ================= UI ================= */
@@ -243,7 +235,7 @@ POYO 9TH <span class="anniv">ANNIVERSARY</span>
 <section class="page"></section>
 
 <section class="page">
-<div class="page5-text">
+<div class="page5-text" style="font-family:'Fredoka', sans-serif;">
 아직 끝이 아니에요 ✨<br>
 더 많은 추억과 즐거움이 기다리고 있어요<br>
 상단에서 계속 이어가 보세요
