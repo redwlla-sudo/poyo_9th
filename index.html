@@ -36,7 +36,6 @@ transform:translate(-50%,-50%);
 text-align:center;
 }
 
-/* 🔥 INTRO TEXT FIX (절대 유지) */
 #title{
 font-size:5rem;
 font-weight:900;
@@ -50,12 +49,24 @@ background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 #enterBtn{
 margin-top:20px;
 padding:18px 60px;
-border-radius:40px;
 font-size:1.6rem;
 font-weight:800;
+border-radius:40px;
 opacity:0;
 visibility:hidden;
 background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
+}
+
+/* 🔥 103초 최종 UI */
+#introFinal{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+display:none;
+z-index:10000;
+color:white;
 }
 
 /* ================= SKIP ================= */
@@ -63,31 +74,36 @@ background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 position:fixed;
 top:20px;
 right:20px;
-z-index:100000;
+z-index:99999;
+padding:10px 18px;
+border:none;
+border-radius:20px;
+cursor:pointer;
 }
 
 /* ================= MAIN ================= */
 #main{
+display:none;
 position:fixed;
 inset:0;
-display:none;
 }
 
-/* ================= UI (절대 고정 레이어) ================= */
+/* ================= UI ================= */
 #uiLayer{
 position:fixed;
 inset:0;
-z-index:9999999;
+z-index:999999;
 pointer-events:none;
 }
 
+/* 상단 UI */
 .top-ui{
 position:fixed;
 top:15px;
 left:50%;
 transform:translateX(-50%);
 display:flex;
-gap:18px;
+gap:15px;
 padding:14px 22px;
 background:rgba(255,255,255,0.15);
 backdrop-filter:blur(12px);
@@ -96,11 +112,11 @@ pointer-events:auto;
 }
 
 .top-btn{
-padding:10px 18px;
 font-weight:800;
 cursor:pointer;
 }
 
+/* 볼륨 */
 .volume{
 position:fixed;
 top:20px;
@@ -108,6 +124,7 @@ right:20px;
 pointer-events:auto;
 }
 
+/* dots */
 .dots{
 position:fixed;
 right:20px;
@@ -122,7 +139,7 @@ height:10px;
 margin:10px 0;
 border-radius:50%;
 background:#000;
-opacity:.3;
+opacity:0.3;
 }
 
 .dot.active{
@@ -133,7 +150,6 @@ opacity:1;
 /* ================= PAGES ================= */
 #pages{
 height:100vh;
-position:relative;
 }
 
 .page{
@@ -145,43 +161,33 @@ flex-direction:column;
 transition:transform .7s ease;
 }
 
-/* background */
 .page:nth-child(3),
 .page:nth-child(4),
 .page:nth-child(5){
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
-.tv-static{
+.tv{
 background:linear-gradient(180deg,#002a18,#000);
 color:#00ff88;
 }
 
-.main-title{font-size:5rem;font-weight:900;}
-.anniv{letter-spacing:8px;}
-.sub-title{font-size:2.2rem;}
+.main-title{
+font-size:5rem;
+font-weight:900;
+}
 
-/* 🔥 5페이지 문구 (완전 고정) */
+.sub-title{
+font-size:2rem;
+}
+
+/* 🔥 5페이지 문구 고정 */
 .page5-text{
-font-size:3.5rem;
+font-size:3.2rem;
 font-weight:900;
 text-align:center;
 line-height:1.5;
-position:relative;
-z-index:9999;
 }
-
-/* ================= INTRO UI FIX ================= */
-#introFinal{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-text-align:center;
-display:none;
-z-index:99999;
-}
-
 </style>
 </head>
 
@@ -199,14 +205,16 @@ z-index:99999;
 <button id="enterBtn">입장하기</button>
 </div>
 
-<!-- 🔥 103초 UI 전용 (절대 삭제 안됨) -->
+<!-- 🔥 103초 확정 UI -->
 <div id="introFinal">
 <h1>포요 9주년 축하합니다 🎉</h1>
 <button onclick="enter()">입장하기</button>
 </div>
 
-<button id="skipBtn">스킵</button>
 </div>
+
+<!-- SKIP -->
+<button id="skipBtn">스킵</button>
 
 <audio id="introBgm" loop></audio>
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
@@ -217,7 +225,7 @@ z-index:99999;
 <div id="uiLayer">
 
 <div class="top-ui">
-<div class="top-btn">포요</div>
+<div class="top-btn">🐶 포요</div>
 <div class="top-btn">추억</div>
 <div class="top-btn">게임</div>
 </div>
@@ -234,16 +242,16 @@ oninput="mainBgm.volume=this.value">
 <div id="pages">
 
 <div class="page">
-<div class="main-title">POYO 9TH <span class="anniv">ANNIVERSARY</span></div>
+<div class="main-title">POYO 9TH ANNIVERSARY</div>
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
 
-<div class="page tv-static"><h1>CHZZK SIGNAL</h1></div>
+<div class="page tv">CHZZK SIGNAL</div>
 
 <div class="page"></div>
 <div class="page"></div>
 
-<!-- 🔥 5페이지 문구 복구 (절대 유지) -->
+<!-- 🔥 5페이지 복구 -->
 <div class="page">
 <div class="page5-text">
 아직 끝이 아니에요 ✨<br>
@@ -257,7 +265,6 @@ oninput="mainBgm.volume=this.value">
 
 <script>
 
-/* ================= AUDIO ================= */
 const introVideo=document.getElementById("introVideo");
 const introBgm=document.getElementById("introBgm");
 const mainBgm=document.getElementById("mainBgm");
@@ -267,21 +274,18 @@ let started=false;
 window.addEventListener("click",()=>{
 if(started) return;
 started=true;
-
-introVideo.muted=false;
 introVideo.play();
 introBgm.play();
 },{once:true});
 
-/* ================= 103s FIX (안 깨지는 방식) ================= */
+/* 🔥 103초 안정 고정 */
 introVideo.addEventListener("timeupdate",()=>{
-if(introVideo.currentTime>=103 && !window.done){
-window.done=true;
+if(introVideo.currentTime>=103){
 document.getElementById("introFinal").style.display="block";
 }
 });
 
-/* ================= ENTER ================= */
+/* ENTER */
 function enter(){
 document.getElementById("intro").style.display="none";
 document.getElementById("main").style.display="block";
@@ -293,10 +297,8 @@ mainBgm.play();
 
 skipBtn.onclick=enter;
 
-/* ================= SCROLL ================= */
+/* PAGE SYSTEM */
 let index=0;
-let lock=false;
-
 const pages=document.querySelectorAll(".page");
 const dots=document.getElementById("dots");
 
@@ -309,7 +311,6 @@ dots.appendChild(d);
 
 function move(i){
 index=i;
-
 pages.forEach((p,idx)=>{
 p.style.transform=`translateY(${(idx-index)*100}vh)`;
 });
@@ -320,15 +321,9 @@ d.classList.toggle("active",i===index);
 }
 
 window.addEventListener("wheel",(e)=>{
-if(lock) return;
-lock=true;
-
 if(e.deltaY>0 && index<4) index++;
 if(e.deltaY<0 && index>0) index--;
-
 move(index);
-
-setTimeout(()=>lock=false,650);
 });
 
 </script>
