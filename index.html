@@ -17,7 +17,8 @@ html,body{
     margin:0;
     padding:0;
     font-family:'Fredoka',sans-serif;
-    overflow:hidden;
+    scroll-behavior:smooth;
+    overflow-x:hidden;
 }
 
 /* ================= INTRO ================= */
@@ -26,7 +27,12 @@ html,body{
     inset:0;
     z-index:9999;
 }
-#intro video{width:100%;height:100%;object-fit:cover;}
+
+#intro video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
 
 #introText{
     position:absolute;
@@ -58,66 +64,80 @@ html,body{
     background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 }
 
+/* ================= SKIP ================= */
 #skipBtn{
     position:fixed;
     top:20px;
     right:20px;
     z-index:10000;
+    padding:10px 18px;
+    border:none;
+    border-radius:20px;
+    font-weight:700;
+    cursor:pointer;
+    background:rgba(255,255,255,0.4);
+    backdrop-filter:blur(10px);
 }
 
 /* ================= MAIN ================= */
-#app{
-    position:fixed;
-    inset:0;
+#main{
     display:none;
 }
 
-/* 🔥 메인 페이지 절대 고정 유지 */
-#pages{
-    height:100vh;
-    position:relative;
-}
-
-/* page */
+/* ================= PAGE ================= */
 .page{
     height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
     flex-direction:column;
-    transition:transform .7s cubic-bezier(0.22,1,0.36,1);
 }
 
-.page:nth-child(3),
-.page:nth-child(4),
-.page:nth-child(5){
-    background:linear-gradient(135deg,#d9cfff,#b8f2e6);
-}
-
+/* ================= 2번 페이지 ================= */
 .tv-static{
-    background:linear-gradient(180deg,#002a18,#000);
+    background:
+        linear-gradient(180deg,#002a18,#000),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.12) 0px, rgba(0,0,0,0.25) 2px, transparent 4px),
+        repeating-linear-gradient(90deg, rgba(0,255,120,0.45) 0px, rgba(0,255,120,0.3) 2px, transparent 5px),
+        radial-gradient(circle at 30% 40%, rgba(0,255,120,0.35), transparent 60%),
+        radial-gradient(circle at 70% 60%, rgba(0,255,120,0.3), transparent 60%);
     color:#00ff88;
 }
 
-.main-title{font-size:5rem;font-weight:900;}
-.anniv{letter-spacing:8px;}
-.sub-title{font-size:2.2rem;}
+/* ================= 3~5 페이지 ================= */
+.page:nth-of-type(3),
+.page:nth-of-type(4),
+.page:nth-of-type(5){
+    background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+}
+
+/* ================= TITLE ================= */
+.main-title{
+    font-size:5rem;
+    font-weight:900;
+}
+
+.anniv{
+    letter-spacing:8px;
+}
+
+.page:nth-of-type(1) .sub-title,
+.page:nth-of-type(5) .page5-text{
+    font-family:'YeogiOttaeJalnan';
+}
+
+.sub-title{
+    font-size:2.2rem;
+}
 
 .page5-text{
-    font-size:3.5rem;
+    font-size:3.8rem;
     font-weight:900;
     text-align:center;
     line-height:1.5;
 }
 
-/* ================= UI FIX (핵심 수정) ================= */
-#uiLayer{
-    position:fixed;
-    inset:0;
-    z-index:999999;
-    pointer-events:none;
-}
-
+/* ================= TOP UI ================= */
 .top-ui{
     position:fixed;
     top:15px;
@@ -129,38 +149,63 @@ html,body{
     background:rgba(255,255,255,0.15);
     backdrop-filter:blur(12px);
     border-radius:999px;
-    pointer-events:auto;
+    z-index:999;
+    align-items:center;
 }
 
 .top-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
     padding:10px 18px;
-    font-weight:800;
+    border-radius:999px;
     cursor:pointer;
+    font-weight:800;
 }
 
-.volume{
-    position:fixed;
-    top:20px;
-    right:20px;
-    pointer-events:auto;
+.top-btn img{
+    width:24px;
+    height:24px;
+    border-radius:50%;
 }
 
+/* ================= DOT ================= */
 .dots{
     position:fixed;
     right:20px;
     top:50%;
     transform:translateY(-50%);
-    pointer-events:auto;
 }
 
 .dot{
-    width:10px;height:10px;
+    width:10px;
+    height:10px;
     margin:10px 0;
     border-radius:50%;
-    background:#000;
-    opacity:.3;
+    background:black;
+    opacity:0.3;
 }
-.dot.active{background:#b8f2e6;opacity:1;}
+
+.dot.active{
+    opacity:1;
+    transform:scale(1.4);
+    background:#b8f2e6;
+    box-shadow:0 0 12px #b8f2e6;
+}
+
+/* ================= VOLUME ================= */
+.volume{
+    position:fixed;
+    top:20px;
+    right:20px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.volume-icon{
+    font-size:18px;
+}
 </style>
 </head>
 
@@ -173,8 +218,8 @@ html,body{
 </video>
 
 <div id="introText">
-<div id="title">POYO 9TH ANNIVERSARY</div>
-<button id="enterBtn">입장하기</button>
+    <div id="title">POYO 9TH ANNIVERSARY</div>
+    <button id="enterBtn">입장하기</button>
 </div>
 
 <button id="skipBtn">스킵</button>
@@ -184,113 +229,87 @@ html,body{
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
 <!-- MAIN -->
-<div id="app">
-
-<!-- 🔥 UI LAYER FIX -->
-<div id="uiLayer">
+<div id="main">
 
 <div class="top-ui">
-<div class="top-btn" onclick="movePage(0)">포요</div>
-<div class="top-btn" onclick="openOverlay('memory')">추억</div>
-<div class="top-btn" onclick="openOverlay('game')">게임</div>
+    <div class="top-btn">⭐ 추억</div>
+    <div class="top-btn">🎮 게임</div>
 </div>
 
 <div class="volume">
-🔊 <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
+<span class="volume-icon">🔊</span>
+<input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
 </div>
 
-<div class="dots" id="dots"></div>
-
+<div class="dots">
+<div class="dot active"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
 </div>
 
-<div id="pages">
-
-<div class="page">
-<div class="main-title">POYO 9TH <span class="anniv">ANNIVERSARY</span></div>
+<section class="page">
+<div class="main-title">
+POYO 9TH <span class="anniv">ANNIVERSARY</span>
+</div>
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
-</div>
+</section>
 
-<div class="page tv-static"><h1>CHZZK SIGNAL</h1></div>
-<div class="page"></div>
-<div class="page"></div>
+<section class="page tv-static"><h1>CHZZK SIGNAL</h1></section>
 
-<div class="page">
+<section class="page"></section>
+<section class="page"></section>
+
+<section class="page">
 <div class="page5-text">
 아직 끝이 아니에요 ✨<br>
 더 많은 추억과 즐거움이 기다리고 있어요<br>
 상단에서 계속 이어가 보세요
 </div>
-</div>
+</section>
 
 </div>
-</div>
-
-<!-- OVERLAY -->
-<div id="memory" class="overlay">추억</div>
-<div id="game" class="overlay">게임</div>
-
-<style>
-.overlay{
-    position:fixed;
-    inset:0;
-    display:none;
-    z-index:99999;
-    justify-content:center;
-    align-items:center;
-    font-size:3rem;
-}
-</style>
 
 <script>
-const pages=document.querySelectorAll(".page");
-const dots=document.getElementById("dots");
+const introVideo=document.getElementById("introVideo");
+const introBgm=document.getElementById("introBgm");
+const mainBgm=document.getElementById("mainBgm");
+const title=document.getElementById("title");
+const enterBtn=document.getElementById("enterBtn");
 
-let index=0;
-let lock=false;
+let started=false;
+let shown=false;
 
-/* 🔥 FIX: smooth scroll (속도 안정화) */
-function movePage(i){
-index=i;
-pages.forEach((p,idx)=>{
-p.style.transform=`translateY(${(idx-index)*100}vh)`;
-});
-updateDots();
+window.addEventListener("click",()=>{
+if(started) return;
+started=true;
+
+introVideo.muted=false;
+introVideo.play();
+introBgm.play();
+},{once:true});
+
+/* 103초 UI */
+function loop(){
+if(!shown && introVideo.currentTime>=103){
+shown=true;
+title.style.visibility="visible";
+enterBtn.style.visibility="visible";
+}
+requestAnimationFrame(loop);
+}
+loop();
+
+function enter(){
+document.getElementById("intro").style.display="none";
+document.getElementById("main").style.display="block";
+introBgm.pause();
+mainBgm.play();
 }
 
-function updateDots(){
-document.querySelectorAll(".dot").forEach((d,i)=>{
-d.classList.toggle("active",i===index);
-});
-}
-
-/* dots init */
-for(let i=0;i<5;i++){
-let d=document.createElement("div");
-d.className="dot";
-d.onclick=()=>movePage(i);
-dots.appendChild(d);
-}
-
-/* 🔥 FIX: scroll speed 안정화 */
-window.addEventListener("wheel",(e)=>{
-if(lock) return;
-lock=true;
-
-if(e.deltaY>0 && index<4) index++;
-if(e.deltaY<0 && index>0) index--;
-
-movePage(index);
-
-setTimeout(()=>lock=false,800); // 속도 고정
-});
-
-/* overlay */
-function openOverlay(id){
-document.getElementById(id).style.display="flex";
-}
-document.querySelectorAll(".overlay").forEach(o=>{
-o.onclick=()=>o.style.display="none";
-});
+enterBtn.onclick=enter;
+skipBtn.onclick=enter;
 </script>
 
 </body>
