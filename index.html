@@ -11,7 +11,6 @@
 @font-face {
     font-family: 'YeogiOttaeJalnan';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
-    font-display: swap;
 }
 
 html, body{
@@ -48,7 +47,7 @@ html, body{
     font-weight:900;
     opacity:0;
     visibility:hidden;
-    transition:0.5s ease;
+    transition:0.4s ease;
     background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
@@ -63,7 +62,7 @@ html, body{
     border-radius:40px;
     opacity:0;
     visibility:hidden;
-    transition:0.5s ease;
+    transition:0.4s ease;
     cursor:pointer;
     background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 }
@@ -82,7 +81,7 @@ html, body{
     backdrop-filter:blur(10px);
 }
 
-/* ================= APP ================= */
+/* ================= APP WRAPPER ================= */
 #app{
     position:fixed;
     inset:0;
@@ -90,25 +89,26 @@ html, body{
     overflow:hidden;
 }
 
+/* ================= SCENE ENGINE (overlay only) ================= */
 #sceneWrapper{
     display:flex;
     width:300vw;
     height:100vh;
-    transition:transform 0.8s ease;
+    transition:transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .scene{
     width:100vw;
     height:100vh;
-    position:relative;
+    flex-shrink:0;
 }
 
-/* ================= MAIN ================= */
+/* ================= MAIN ENGINE (scroll only) ================= */
 #pages{
     position:absolute;
     width:100%;
     height:100%;
-    transition:transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    transition:transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .page{
@@ -121,8 +121,7 @@ html, body{
 
 .tv-static{
     background:
-        linear-gradient(180deg,#002a18,#000),
-        repeating-linear-gradient(0deg, rgba(255,255,255,0.12) 0px, rgba(0,0,0,0.25) 2px, transparent 4px);
+        linear-gradient(180deg,#002a18,#000);
     color:#00ff88;
 }
 
@@ -147,7 +146,7 @@ html, body{
     font-family:'YeogiOttaeJalnan';
 }
 
-/* ================= TOP UI ================= */
+/* ================= TOP UI (fixed, unchanged behavior) ================= */
 .top-ui{
     position:fixed;
     top:15px;
@@ -160,7 +159,6 @@ html, body{
     backdrop-filter:blur(12px);
     border-radius:999px;
     z-index:99999;
-    align-items:center;
 }
 
 .top-btn{
@@ -171,7 +169,7 @@ html, body{
     border-radius:999px;
     cursor:pointer;
     font-weight:800;
-    background:rgba(255,255,255,0.3);
+    background:rgba(255,255,255,0.25);
 }
 
 .top-btn img{
@@ -180,7 +178,7 @@ html, body{
     border-radius:50%;
 }
 
-/* ================= DOTS ================= */
+/* ================= DOT NAV ================= */
 .dots{
     position:fixed;
     right:20px;
@@ -207,16 +205,13 @@ html, body{
 /* ================= SCENES ================= */
 #memoryScene,#gameScene{
     display:flex;
-    align-items:center;
     justify-content:center;
-    flex-direction:column;
+    align-items:center;
     font-size:3rem;
 }
 
 #memoryScene{background:linear-gradient(135deg,#cdb4ff,#b8f2e6);}
 #gameScene{background:linear-gradient(135deg,#b8f2e6,#cdb4ff);}
-
-/* ❌ removed internal back buttons (NOW ONLY TOP UI CONTROL) */
 
 /* ================= VOLUME ================= */
 .volume{
@@ -225,12 +220,9 @@ html, body{
     right:20px;
     z-index:10000;
     display:flex;
-    align-items:center;
     gap:8px;
+    align-items:center;
 }
-
-.volume-icon{font-size:18px;}
-input[type=range]{accent-color:#b8f2e6;}
 </style>
 </head>
 <body>
@@ -260,45 +252,40 @@ input[type=range]{accent-color:#b8f2e6;}
 </div>
 
 <div class="volume">
-    <span class="volume-icon">🔊</span>
-    <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
+    🔊 <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
 </div>
 
 <div id="sceneWrapper">
+    <div class="scene" id="mainScene">
+        <div class="dots"></div>
+        <div id="pages">
+            <section class="page">
+                <div class="main-title">POYO 9TH <span class="anniv">ANNIVERSARY</span></div>
+                <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
+            </section>
+            <section class="page tv-static"><h1>CHZZK SIGNAL</h1></section>
+            <section class="page"></section>
+            <section class="page"></section>
+            <section class="page">
+                <div class="page5-text">아직 끝이 아니에요 ✨<br>더 많은 추억과 즐거움이 기다리고 있어요<br>상단에서 계속 이어가 보세요</div>
+            </section>
+        </div>
+    </div>
 
-<div class="scene" id="mainScene">
-<div class="dots"></div>
-
-<div id="pages">
-<section class="page">
-<div class="main-title">POYO 9TH <span class="anniv">ANNIVERSARY</span></div>
-<div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
-</section>
-
-<section class="page tv-static"><h1>CHZZK SIGNAL</h1></section>
-<section class="page"></section>
-<section class="page"></section>
-
-<section class="page">
-<div class="page5-text">아직 끝이 아니에요 ✨<br>더 많은 추억과 즐거움이 기다리고 있어요<br>상단에서 계속 이어가 보세요</div>
-</section>
-</div>
-</div>
-
-<div class="scene" id="memoryScene">추억 페이지</div>
-<div class="scene" id="gameScene">게임 페이지</div>
-
+    <div class="scene" id="memoryScene">추억 페이지</div>
+    <div class="scene" id="gameScene">게임 페이지</div>
 </div>
 </div>
 
 <script>
 const introVideo=document.getElementById("introVideo");
-const enterBtn=document.getElementById("enterBtn");
-const title=document.getElementById("title");
 const introBgm=document.getElementById("introBgm");
 const mainBgm=document.getElementById("mainBgm");
+const enterBtn=document.getElementById("enterBtn");
+const title=document.getElementById("title");
 const app=document.getElementById("app");
 const sceneWrapper=document.getElementById("sceneWrapper");
+const skipBtn=document.getElementById("skipBtn");
 
 let started=false, shown=false;
 
@@ -323,8 +310,8 @@ enterBtn.style.opacity="1";
 function enter(){
 document.getElementById("intro").style.display="none";
 app.style.display="block";
-introBgm.pause();
 introVideo.pause();
+introBgm.pause();
 mainBgm.play();
 init();
 }
@@ -332,21 +319,23 @@ init();
 enterBtn.onclick=enter;
 skipBtn.onclick=enter;
 
+/* ================= SCENE ENGINE (independent) ================= */
 function goScene(i){
 sceneWrapper.style.transform=`translateX(-${i*100}vw)`;
 }
 
+/* ================= MAIN SCROLL ENGINE (independent) ================= */
 let index=0;
-let wheelLock=false;
+let lock=false;
 const pages=document.getElementById("pages");
-const dots=document.querySelector(".dots");
+const dotsContainer=document.querySelector(".dots");
 
 function init(){
 for(let i=0;i<5;i++){
 let d=document.createElement("div");
 d.className="dot";
 d.onclick=()=>move(i);
-dots.appendChild(d);
+dotsContainer.appendChild(d);
 }
 update();
 }
@@ -358,19 +347,18 @@ update();
 }
 
 function update(){
-document.querySelectorAll(".dot").forEach((d,i)=>{
-d.classList.toggle("active",i===index);
-});
+document.querySelectorAll(".dot").forEach((d,i)=>d.classList.toggle("active",i===index));
 }
 
 window.addEventListener("wheel",(e)=>{
-if(wheelLock) return;
-if(app.style.display!=="block" || sceneWrapper.style.transform!="translateX(0vw)") return;
-wheelLock=true;
+if(lock || app.style.display!=="block") return;
+lock=true;
+
 if(e.deltaY>0 && index<4) index++;
 if(e.deltaY<0 && index>0) index--;
+
 move(index);
-setTimeout(()=>wheelLock=false,600);
+setTimeout(()=>lock=false,600);
 });
 </script>
 
