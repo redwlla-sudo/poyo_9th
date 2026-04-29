@@ -108,7 +108,7 @@ html, body{
     position:absolute;
     width:100%;
     height:100%;
-    transition:transform 0.8s ease;
+    transition:transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .page{
@@ -147,7 +147,7 @@ html, body{
     font-family:'YeogiOttaeJalnan';
 }
 
-/* ================= TOP UI (RESTORED) ================= */
+/* ================= TOP UI ================= */
 .top-ui{
     position:fixed;
     top:15px;
@@ -224,7 +224,7 @@ html, body{
     cursor:pointer;
 }
 
-/* ================= VOLUME RESTORED ================= */
+/* ================= VOLUME ================= */
 .volume{
     position:fixed;
     top:20px;
@@ -235,13 +235,8 @@ html, body{
     gap:8px;
 }
 
-.volume-icon{
-    font-size:18px;
-}
-
-input[type=range]{
-    accent-color:#b8f2e6;
-}
+.volume-icon{font-size:18px;}
+input[type=range]{accent-color:#b8f2e6;}
 </style>
 </head>
 <body>
@@ -266,16 +261,12 @@ input[type=range]{
 <!-- APP -->
 <div id="app">
 
-<!-- TOP UI (UNCHANGED STYLE FIXED) -->
 <div class="top-ui">
-    <div class="top-btn" onclick="goScene(0)">
-        <img src="poyo.png"> 포요
-    </div>
+    <div class="top-btn" onclick="goScene(0)"><img src="poyo.png"> 포요</div>
     <div class="top-btn" onclick="goScene(1)">⭐ 추억</div>
     <div class="top-btn" onclick="goScene(2)">🎮 게임</div>
 </div>
 
-<!-- VOLUME UI RESTORED -->
 <div class="volume">
     <span class="volume-icon">🔊</span>
     <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
@@ -283,7 +274,6 @@ input[type=range]{
 
 <div id="sceneWrapper">
 
-<!-- MAIN -->
 <div class="scene" id="mainScene">
 <div class="dots"></div>
 
@@ -303,27 +293,18 @@ input[type=range]{
 </div>
 </div>
 
-<!-- MEMORY -->
-<div class="scene" id="memoryScene">
-추억 페이지
-<button class="backBtn" onclick="goScene(0)">포요</button>
-</div>
-
-<!-- GAME -->
-<div class="scene" id="gameScene">
-게임 페이지
-<button class="backBtn" onclick="goScene(0)">포요</button>
-</div>
+<div class="scene" id="memoryScene">추억 페이지<button class="backBtn" onclick="goScene(0)">포요</button></div>
+<div class="scene" id="gameScene">게임 페이지<button class="backBtn" onclick="goScene(0)">포요</button></div>
 
 </div>
 </div>
 
 <script>
 const introVideo=document.getElementById("introVideo");
+const enterBtn=document.getElementById("enterBtn");
+const title=document.getElementById("title");
 const introBgm=document.getElementById("introBgm");
 const mainBgm=document.getElementById("mainBgm");
-const enterBtn=document.getElementById("enterBtn");
-const skipBtn=document.getElementById("skipBtn");
 const app=document.getElementById("app");
 const sceneWrapper=document.getElementById("sceneWrapper");
 
@@ -333,39 +314,41 @@ window.addEventListener("click",()=>{
 if(started) return;
 started=true;
 introVideo.muted=false;
-introVideo.play().catch(()=>{});
-introBgm.play().catch(()=>{});
+introVideo.play();
+introBgm.play();
 },{once:true});
 
-function loop(){
+/* FIX: 정확히 103초 타이밍 */
+introVideo.addEventListener("timeupdate",()=>{
 if(!shown && introVideo.currentTime>=103){
 shown=true;
-document.getElementById("title").style.visibility="visible";
+title.style.visibility="visible";
 enterBtn.style.visibility="visible";
+title.style.opacity="1";
+enterBtn.style.opacity="1";
 }
-requestAnimationFrame(loop);
-}
-loop();
+});
 
 function enter(){
 document.getElementById("intro").style.display="none";
 app.style.display="block";
 introBgm.pause();
 introVideo.pause();
-mainBgm.play().catch(()=>{});
+mainBgm.play();
 init();
 }
 
 enterBtn.onclick=enter;
 skipBtn.onclick=enter;
 
-/* SCENES */
+/* SCENE */
 function goScene(i){
 sceneWrapper.style.transform=`translateX(-${i*100}vw)`;
 }
 
-/* DOT + SCROLL */
+/* SMOOTH SCROLL FIX */
 let index=0;
+let wheelLock=false;
 const pages=document.getElementById("pages");
 const dots=document.querySelector(".dots");
 
@@ -392,10 +375,16 @@ d.classList.toggle("active",i===index);
 }
 
 window.addEventListener("wheel",(e)=>{
+if(wheelLock) return;
 if(app.style.display!=="block" || sceneWrapper.style.transform!="translateX(0vw)") return;
+
+wheelLock=true;
+
 if(e.deltaY>0 && index<4) index++;
 if(e.deltaY<0 && index>0) index--;
 move(index);
+
+setTimeout(()=>wheelLock=false,600);
 });
 </script>
 
