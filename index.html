@@ -56,9 +56,9 @@ html, body{
     opacity:0;
     visibility:hidden;
     background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
+    cursor:pointer;
 }
 
-/* 스킵 */
 #skipBtn{
     position:absolute;
     top:20px;
@@ -75,7 +75,7 @@ html, body{
     display:none;
 }
 
-/* 5 PAGE */
+/* ================= 5 PAGE ================= */
 .page{
     height:100vh;
     display:flex;
@@ -105,13 +105,16 @@ html, body{
     background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
+/* ================= 🔥 5페이지 문장 (수정) ================= */
 .page5-text{
-    font-size:3rem;
-    font-weight:900;
+    font-family:'Fredoka', sans-serif;
+    font-size:3.8rem;   /* ⬆️ 기존보다 확대 */
+    font-weight:900;    /* ⬆️ 더 굵게 */
     text-align:center;
+    line-height:1.6;
 }
 
-/* UI */
+/* ================= UI (수정) ================= */
 .top-ui{
     position:fixed;
     top:15px;
@@ -129,10 +132,17 @@ html, body{
     display:flex;
     justify-content:center;
     align-items:center;
+
+    /* 🔥 수정: 더 굵게 + Fredoka */
+    font-family:'Fredoka', sans-serif;
+    font-weight:800;
+    font-size:1rem;
+
     background:#cdb4ff;
+    cursor:pointer;
 }
 
-/* DOT */
+/* ================= DOT ================= */
 .dots{
     position:fixed;
     right:20px;
@@ -154,7 +164,7 @@ html, body{
     transform:scale(1.4);
 }
 
-/* VOLUME */
+/* ================= VOLUME ================= */
 .volume{
     position:fixed;
     top:20px;
@@ -181,7 +191,6 @@ html, body{
 <button id="skipBtn">스킵</button>
 </div>
 
-<!-- 🔥 오디오 (핵심 복구) -->
 <audio id="introBgm" loop></audio>
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
@@ -228,10 +237,9 @@ oninput="mainBgm.volume=this.value">
 
 <script>
 
-/* ================= INTRO ================= */
-const introVideo = document.getElementById("introVideo");
-const introBgm = document.getElementById("introBgm");
-const mainBgm = document.getElementById("mainBgm");
+const introVideo=document.getElementById("introVideo");
+const introBgm=document.getElementById("introBgm");
+const mainBgm=document.getElementById("mainBgm");
 
 let started=false;
 
@@ -246,7 +254,6 @@ window.addEventListener("click",()=>{
     introBgm.play().catch(()=>{});
 },{once:true});
 
-/* ================= 103s UI ================= */
 const title=document.getElementById("title");
 const enterBtn=document.getElementById("enterBtn");
 
@@ -264,7 +271,6 @@ function loop(){
 }
 loop();
 
-/* ================= ENTER ================= */
 function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
@@ -272,7 +278,6 @@ function enter(){
     introBgm.pause();
     introVideo.pause();
 
-    /* 🔥 핵심 복구 */
     mainBgm.volume=0.5;
     mainBgm.play().catch(()=>{});
 }
@@ -280,7 +285,6 @@ function enter(){
 enterBtn.onclick=enter;
 skipBtn.onclick=enter;
 
-/* ================= SCROLL ================= */
 const pages=document.querySelectorAll(".page");
 const dots=document.querySelectorAll(".dot");
 
