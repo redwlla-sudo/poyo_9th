@@ -6,6 +6,7 @@
 <title>포요 9주년</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/Cafe24Ssurround.css" rel="stylesheet">
 
 <style>
 html, body{
@@ -59,7 +60,7 @@ html, body{
     background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 }
 
-/* ✅ 스킵 버튼 복구 */
+/* ================= SKIP ================= */
 #skipBtn{
     position:fixed;
     top:20px;
@@ -77,6 +78,7 @@ html, body{
 /* ================= MAIN ================= */
 #main{
     display:none;
+    font-family:'Cafe24Ssurround', sans-serif;
 }
 
 /* ================= PAGE ================= */
@@ -88,19 +90,16 @@ html, body{
     flex-direction:column;
 }
 
-/* ================= 2번 페이지 (강화된 초록선) ================= */
+/* ================= 2번 페이지 ================= */
 .tv-static{
     background:
         linear-gradient(180deg,#020404,#000),
-
         repeating-linear-gradient(
             0deg,
             rgba(255,255,255,0.12) 0px,
             rgba(0,0,0,0.15) 2px,
             transparent 4px
         ),
-
-        /* 🔥 초록선 강화 */
         repeating-linear-gradient(
             90deg,
             rgba(0,255,120,0.18) 0px,
@@ -121,7 +120,7 @@ html, body{
 /* ================= TITLE ================= */
 .main-title{
     font-size:5rem;
-    font-weight:900; /* 🔥 복구 */
+    font-weight:900;
 }
 
 .anniv{
@@ -130,25 +129,17 @@ html, body{
 
 .sub-title{
     font-size:2.2rem;
-    font-weight:600;
 }
 
-/* ================= 5페이지 (🔥 최종 해결) ================= */
+/* ✅ 5번 페이지 (Fredoka 제거 → Cafe24 상속) */
 .page5-text{
-    font-family:'Fredoka', sans-serif !important;
     font-size:3.8rem;
     font-weight:900;
     text-align:center;
     line-height:1.5;
-    letter-spacing:0.5px;
 }
 
-/* 🔥 텍스트 자체 강제 */
-.page5-text{
-    white-space:pre-line;
-}
-
-/* ================= UI ================= */
+/* ================= TOP UI ================= */
 .top-ui{
     position:fixed;
     top:15px;
@@ -161,6 +152,20 @@ html, body{
     backdrop-filter:blur(12px);
     border-radius:999px;
     z-index:999;
+}
+
+.top-btn{
+    padding:10px 18px;
+    border-radius:999px;
+    cursor:pointer;
+    font-weight:800;
+    transition:0.25s;
+}
+
+.top-btn.active{
+    background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
+    transform:scale(1.1);
+    box-shadow:0 0 10px rgba(184,242,230,0.8);
 }
 
 /* ================= DOT ================= */
@@ -217,9 +222,9 @@ html, body{
 <div id="main">
 
 <div class="top-ui">
-    <div>🏠 포요</div>
-    <div>⭐ 추억</div>
-    <div>🎮 게임</div>
+    <div class="top-btn active">🏠 포요</div>
+    <div class="top-btn">⭐ 추억</div>
+    <div class="top-btn">🎮 게임</div>
 </div>
 
 <div class="volume">
@@ -246,12 +251,10 @@ POYO 9TH <span class="anniv">ANNIVERSARY</span>
 <section class="page"></section>
 <section class="page"></section>
 
-<!-- 🔥 5번 페이지 -->
 <section class="page">
 <div class="page5-text">
-아직 끝이 아니에요 ✨
-더 많은 추억과 즐거움이 기다리고 있어요
-상단에서 계속 이어가 보세요
+더 많은 추억 또는 게임이 하고 싶다면<br>
+상단에 있는 추억과 게임을 눌러주세요
 </div>
 </section>
 
@@ -313,6 +316,7 @@ enterBtn.onclick=enter;
 skipBtn.onclick=enter;
 
 const dots=document.querySelectorAll(".dot");
+const topBtns=document.querySelectorAll(".top-btn");
 
 window.addEventListener("scroll",()=>{
     let h=window.innerHeight;
@@ -320,6 +324,12 @@ window.addEventListener("scroll",()=>{
 
     dots.forEach(d=>d.classList.remove("active"));
     if(dots[current]) dots[current].classList.add("active");
+
+    topBtns.forEach(b=>b.classList.remove("active"));
+
+    if(current === 0) topBtns[0].classList.add("active");
+    else if(current === 2 || current === 3) topBtns[1].classList.add("active");
+    else if(current === 4) topBtns[2].classList.add("active");
 });
 </script>
 
