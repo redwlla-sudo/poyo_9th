@@ -65,13 +65,6 @@ html, body{
     top:20px;
     right:20px;
     z-index:10000;
-    padding:10px 18px;
-    border:none;
-    border-radius:20px;
-    font-weight:700;
-    cursor:pointer;
-    background:rgba(255,255,255,0.4);
-    backdrop-filter:blur(10px);
 }
 
 /* ================= MAIN ================= */
@@ -88,21 +81,31 @@ html, body{
     flex-direction:column;
 }
 
-/* ================= 2번 페이지 (지지직 배경 확실 적용) ================= */
+/* ================= 2번 페이지 (초록 줄무늬 추가) ================= */
 .tv-static{
     background:
         linear-gradient(180deg,#020404,#000),
+        
+        /* 기존 흑백 노이즈 */
         repeating-linear-gradient(
             0deg,
             rgba(255,255,255,0.12) 0px,
             rgba(0,0,0,0.15) 2px,
             transparent 4px
-        ) !important;
+        ),
+
+        /* 🔥 추가된 초록 줄무늬 */
+        repeating-linear-gradient(
+            90deg,
+            rgba(0,255,120,0.08) 0px,
+            rgba(0,255,120,0.04) 2px,
+            transparent 4px
+        );
 
     color:#00ff88;
 }
 
-/* ================= 3~5 페이지 (정확한 지정) ================= */
+/* ================= 3~5 페이지 ================= */
 .page:nth-of-type(3),
 .page:nth-of-type(4),
 .page:nth-of-type(5){
@@ -112,7 +115,6 @@ html, body{
 /* ================= TITLE ================= */
 .main-title{
     font-size:5rem;
-    font-weight:700;
 }
 
 .anniv{
@@ -123,13 +125,13 @@ html, body{
     font-size:2.2rem;
 }
 
-/* ================= 5페이지 폰트 강제 적용 ================= */
-.page5-text{
+/* ================= 5페이지 (🔥 완전 강제 적용) ================= */
+.page5-text span{
     font-family:'Fredoka', sans-serif !important;
     font-size:3.8rem;
     font-weight:900;
+    display:block;
     text-align:center;
-    line-height:1.4;
 }
 
 /* ================= UI ================= */
@@ -182,9 +184,7 @@ html, body{
 
 <body>
 
-<!-- INTRO -->
 <div id="intro">
-
 <video id="introVideo" autoplay muted playsinline>
 <source src="video2.mp4">
 </video>
@@ -195,13 +195,11 @@ html, body{
 </div>
 
 <button id="skipBtn">스킵</button>
-
 </div>
 
 <audio id="introBgm" loop></audio>
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
-<!-- MAIN -->
 <div id="main">
 
 <div class="top-ui">
@@ -234,11 +232,12 @@ POYO 9TH <span class="anniv">ANNIVERSARY</span>
 <section class="page"></section>
 <section class="page"></section>
 
+<!-- 🔥 5번 페이지 (구조 변경 없음, span만 추가) -->
 <section class="page">
-<div class="page5-text" style="font-family:'Fredoka', sans-serif;">
-아직 끝이 아니에요 ✨<br>
-더 많은 추억과 즐거움이 기다리고 있어요<br>
-상단에서 계속 이어가 보세요
+<div class="page5-text">
+<span>아직 끝이 아니에요 ✨</span>
+<span>더 많은 추억과 즐거움이 기다리고 있어요</span>
+<span>상단에서 계속 이어가 보세요</span>
 </div>
 </section>
 
