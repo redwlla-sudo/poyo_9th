@@ -8,14 +8,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-
 html, body{
     margin:0;
     padding:0;
     font-family:'Fredoka', sans-serif;
     scroll-behavior:smooth;
-
-    /* ✅ 스크롤 흔들림 방지 핵심 */
     overflow-x:hidden;
 }
 
@@ -91,26 +88,25 @@ html, body{
     flex-direction:column;
 }
 
-/* ================= 2번 페이지 (이미지 느낌 적용) ================= */
+/* 2페이지 */
 .tv-static{
-    position:relative;
-
-    /* 👉 네가 준 이미지 느낌 */
     background:
-        linear-gradient(180deg,#0a0f10 0%, #070b0c 50%, #050809 100%),
+        linear-gradient(180deg,#0a0f10,#050809),
         repeating-linear-gradient(
             0deg,
-            rgba(255,255,255,0.03) 0px,
-            rgba(0,0,0,0.03) 1px,
-            transparent 2px,
+            rgba(255,255,255,0.03),
+            rgba(0,0,0,0.03) 2px,
             transparent 4px
         );
-
     color:#00ff88;
-    overflow:hidden;
 }
 
-/* ================= MAIN TITLE ================= */
+/* 3~5 페이지 */
+.page:nth-child(n+3){
+    background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+}
+
+/* 타이틀 */
 .main-title{
     font-size:5rem;
     font-weight:700;
@@ -124,12 +120,7 @@ html, body{
     font-size:2.2rem;
 }
 
-/* ================= PAGE BACKGROUND ================= */
-.page:nth-child(n+3){
-    background:linear-gradient(135deg,#d9cfff,#b8f2e6);
-}
-
-/* ================= 5페이지 ================= */
+/* 5페이지 */
 .page5-text{
     font-family:'Fredoka', sans-serif !important;
     font-size:3.8rem;
@@ -137,7 +128,7 @@ html, body{
     text-align:center;
 }
 
-/* ================= TOP UI ================= */
+/* UI */
 .top-ui{
     position:fixed;
     top:15px;
@@ -148,12 +139,11 @@ html, body{
     padding:14px 22px;
     background:rgba(255,255,255,0.15);
     backdrop-filter:blur(12px);
-    border:1px solid rgba(255,255,255,0.3);
     border-radius:999px;
     z-index:999;
 }
 
-/* ================= DOT ================= */
+/* dots */
 .dots{
     position:fixed;
     right:20px;
@@ -168,30 +158,28 @@ html, body{
     border-radius:50%;
     background:black;
     opacity:0.3;
-    transition:0.3s ease;
 }
 
 .dot.active{
     opacity:1;
     transform:scale(1.4);
     background:#b8f2e6;
-    box-shadow:0 0 12px #b8f2e6, 0 0 20px #cdb4ff;
+    box-shadow:0 0 12px #b8f2e6;
 }
 
-/* ================= VOLUME ================= */
 .volume{
     position:fixed;
     top:20px;
     right:20px;
-    z-index:9999;
 }
-
 </style>
 </head>
 
 <body>
 
+<!-- INTRO -->
 <div id="intro">
+
 <video id="introVideo" autoplay muted playsinline>
 <source src="video2.mp4">
 </video>
@@ -202,17 +190,19 @@ html, body{
 </div>
 
 <button id="skipBtn">스킵</button>
+
 </div>
 
 <audio id="introBgm" loop></audio>
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
+<!-- MAIN -->
 <div id="main">
 
 <div class="top-ui">
-    <div class="top-btn">🏠 포요</div>
-    <div class="top-btn">⭐ 추억</div>
-    <div class="top-btn">🎮 게임</div>
+    <div>🏠 포요</div>
+    <div>⭐ 추억</div>
+    <div>🎮 게임</div>
 </div>
 
 <div class="volume">
@@ -220,11 +210,11 @@ html, body{
 </div>
 
 <div class="dots">
-    <div class="dot active"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
+<div class="dot active"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
 </div>
 
 <section class="page">
@@ -241,8 +231,9 @@ POYO 9TH <span class="anniv">ANNIVERSARY</span>
 
 <section class="page">
 <div class="page5-text">
-더 많은 게 보고 싶으면<br>
-추억의 페이지와 게임 페이지를 확인해주세요
+아직 끝이 아니에요 ✨<br>
+더 많은 추억과 즐거움이 기다리고 있어요<br>
+상단에서 계속 이어가 보세요
 </div>
 </section>
 
@@ -253,9 +244,13 @@ POYO 9TH <span class="anniv">ANNIVERSARY</span>
 const introVideo=document.getElementById("introVideo");
 const introBgm=document.getElementById("introBgm");
 const mainBgm=document.getElementById("mainBgm");
+const title=document.getElementById("title");
+const enterBtn=document.getElementById("enterBtn");
 
 let started=false;
+let shown=false;
 
+/* 클릭 시 사운드 */
 window.addEventListener("click",()=>{
     if(started) return;
     started=true;
@@ -267,6 +262,30 @@ window.addEventListener("click",()=>{
     introBgm.play().catch(()=>{});
 },{once:true});
 
+/* 표시 함수 */
+function showIntroUI(){
+    if(shown) return;
+    shown=true;
+
+    title.style.visibility="visible";
+    enterBtn.style.visibility="visible";
+    title.style.opacity="1";
+    enterBtn.style.opacity="1";
+}
+
+/* 103초 */
+function loop(){
+    if(!shown && introVideo.currentTime >= 103){
+        showIntroUI();
+    }
+    requestAnimationFrame(loop);
+}
+loop();
+
+/* 🔥 영상 끝나면 무조건 표시 */
+introVideo.addEventListener("ended", showIntroUI);
+
+/* 입장 */
 function enter(){
     document.getElementById("intro").style.display="none";
     document.getElementById("main").style.display="block";
@@ -281,6 +300,7 @@ function enter(){
 enterBtn.onclick=enter;
 skipBtn.onclick=enter;
 
+/* dots */
 const dots=document.querySelectorAll(".dot");
 
 window.addEventListener("scroll",()=>{
