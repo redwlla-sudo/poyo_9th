@@ -8,11 +8,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+
 html, body{
     margin:0;
     padding:0;
     font-family:'Fredoka', sans-serif;
     scroll-behavior:smooth;
+
+    /* ✅ 스크롤 흔들림 방지 핵심 */
+    overflow-x:hidden;
 }
 
 /* ================= INTRO ================= */
@@ -87,79 +91,26 @@ html, body{
     flex-direction:column;
 }
 
-/* ================= 2번 페이지 (CRT 지지직 업그레이드) ================= */
+/* ================= 2번 페이지 (이미지 느낌 적용) ================= */
 .tv-static{
     position:relative;
-    background:linear-gradient(135deg,#000,#001a10);
+
+    /* 👉 네가 준 이미지 느낌 */
+    background:
+        linear-gradient(180deg,#0a0f10 0%, #070b0c 50%, #050809 100%),
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,0.03) 0px,
+            rgba(0,0,0,0.03) 1px,
+            transparent 2px,
+            transparent 4px
+        );
+
     color:#00ff88;
     overflow:hidden;
 }
 
-/* 노이즈 */
-.tv-static::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:
-        repeating-radial-gradient(circle at 50% 50%,
-            rgba(255,255,255,0.05) 0px,
-            rgba(0,0,0,0.05) 2px,
-            transparent 4px
-        );
-    opacity:0.25;
-    animation:noiseFlicker 0.15s infinite;
-    pointer-events:none;
-}
-
-/* 스캔라인 */
-.tv-static::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:repeating-linear-gradient(
-        0deg,
-        rgba(255,255,255,0.04),
-        rgba(0,0,0,0.08) 2px,
-        transparent 4px
-    );
-    opacity:0.25;
-    animation:scanMove 2.5s linear infinite;
-    pointer-events:none;
-}
-
-/* CRT 흔들림 */
-.tv-static{
-    animation:screenShake 0.12s infinite;
-}
-
-/* ================= 애니메이션 ================= */
-@keyframes noiseFlicker{
-    0%{ transform:translate(0,0); opacity:0.2; }
-    25%{ transform:translate(-1px,1px); opacity:0.3; }
-    50%{ transform:translate(1px,-1px); opacity:0.25; }
-    75%{ transform:translate(-1px,-1px); opacity:0.35; }
-    100%{ transform:translate(0,0); opacity:0.2; }
-}
-
-@keyframes scanMove{
-    0%{ transform:translateY(0); }
-    100%{ transform:translateY(20px); }
-}
-
-@keyframes screenShake{
-    0%{ transform:translate(0,0); }
-    25%{ transform:translate(0.5px,-0.5px); }
-    50%{ transform:translate(-0.5px,0.5px); }
-    75%{ transform:translate(0.5px,0.5px); }
-    100%{ transform:translate(0,0); }
-}
-
-/* ================= PAGE BACKGROUND ================= */
-.page:nth-child(n+3){
-    background:linear-gradient(135deg,#d9cfff,#b8f2e6);
-}
-
-/* ================= TITLE ================= */
+/* ================= MAIN TITLE ================= */
 .main-title{
     font-size:5rem;
     font-weight:700;
@@ -171,6 +122,11 @@ html, body{
 
 .sub-title{
     font-size:2.2rem;
+}
+
+/* ================= PAGE BACKGROUND ================= */
+.page:nth-child(n+3){
+    background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
 /* ================= 5페이지 ================= */
@@ -197,18 +153,6 @@ html, body{
     z-index:999;
 }
 
-.top-btn{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    padding:12px 22px;
-    border-radius:999px;
-    font-weight:800;
-    font-size:1.05rem;
-    cursor:pointer;
-}
-
 /* ================= DOT ================= */
 .dots{
     position:fixed;
@@ -224,6 +168,7 @@ html, body{
     border-radius:50%;
     background:black;
     opacity:0.3;
+    transition:0.3s ease;
 }
 
 .dot.active{
@@ -240,6 +185,7 @@ html, body{
     right:20px;
     z-index:9999;
 }
+
 </style>
 </head>
 
