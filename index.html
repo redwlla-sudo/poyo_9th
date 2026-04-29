@@ -90,23 +90,24 @@ html, body{
     flex-direction:column;
 }
 
-/* ================= 2번 페이지 ================= */
+/* ================= 2번 페이지 (강화된 TV 고장 느낌) ================= */
 .tv-static{
     background:
-        linear-gradient(180deg,#020404,#000),
+        linear-gradient(180deg,#001a10,#000),
         repeating-linear-gradient(
             0deg,
             rgba(255,255,255,0.12) 0px,
-            rgba(0,0,0,0.15) 2px,
+            rgba(0,0,0,0.2) 2px,
             transparent 4px
         ),
         repeating-linear-gradient(
             90deg,
-            rgba(0,255,120,0.18) 0px,
-            rgba(0,255,120,0.10) 2px,
-            transparent 4px
-        );
-
+            rgba(0,255,120,0.25) 0px,
+            rgba(0,255,120,0.15) 2px,
+            transparent 6px
+        ),
+        radial-gradient(circle at 30% 40%, rgba(0,255,120,0.15), transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(0,255,120,0.1), transparent 50%);
     color:#00ff88;
 }
 
@@ -127,16 +128,19 @@ html, body{
     letter-spacing:8px;
 }
 
+/* ✅ 1번 페이지 한글 Cafe24 적용 */
 .sub-title{
     font-size:2.2rem;
+    font-family:'Cafe24Ssurround', sans-serif;
 }
 
-/* ✅ 5번 페이지 (Fredoka 제거 → Cafe24 상속) */
+/* ✅ 5번 페이지 Cafe24 적용 */
 .page5-text{
     font-size:3.8rem;
     font-weight:900;
     text-align:center;
     line-height:1.5;
+    font-family:'Cafe24Ssurround', sans-serif;
 }
 
 /* ================= TOP UI ================= */
@@ -253,8 +257,9 @@ POYO 9TH <span class="anniv">ANNIVERSARY</span>
 
 <section class="page">
 <div class="page5-text">
-더 많은 추억 또는 게임이 하고 싶다면<br>
-상단에 있는 추억과 게임을 눌러주세요
+아직 끝이 아니에요 ✨<br>
+더 많은 추억과 즐거움이 기다리고 있어요<br>
+상단에서 계속 이어가 보세요
 </div>
 </section>
 
