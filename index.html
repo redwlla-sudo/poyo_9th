@@ -36,7 +36,7 @@ transform:translate(-50%,-50%);
 text-align:center;
 }
 
-/* 🔥 FIX: intro text always safe */
+/* 🔥 INTRO TEXT FIX (절대 유지) */
 #title{
 font-size:5rem;
 font-weight:900;
@@ -63,9 +63,7 @@ background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 position:fixed;
 top:20px;
 right:20px;
-z-index:999999;
-padding:10px 18px;
-border-radius:20px;
+z-index:100000;
 }
 
 /* ================= MAIN ================= */
@@ -75,7 +73,7 @@ inset:0;
 display:none;
 }
 
-/* ================= UI ================= */
+/* ================= UI (절대 고정 레이어) ================= */
 #uiLayer{
 position:fixed;
 inset:0;
@@ -83,7 +81,6 @@ z-index:9999999;
 pointer-events:none;
 }
 
-/* 🔥 TOP UI RESTORE */
 .top-ui{
 position:fixed;
 top:15px;
@@ -98,23 +95,12 @@ border-radius:999px;
 pointer-events:auto;
 }
 
-/* 🔥 FIX: POYO BUTTON RESTORED */
 .top-btn{
 padding:10px 18px;
 font-weight:800;
 cursor:pointer;
-display:flex;
-align-items:center;
-gap:6px;
 }
 
-.top-btn img{
-width:22px;
-height:22px;
-border-radius:50%;
-}
-
-/* volume */
 .volume{
 position:fixed;
 top:20px;
@@ -122,7 +108,6 @@ right:20px;
 pointer-events:auto;
 }
 
-/* dots */
 .dots{
 position:fixed;
 right:20px;
@@ -157,7 +142,7 @@ display:flex;
 justify-content:center;
 align-items:center;
 flex-direction:column;
-transition:transform .7s cubic-bezier(0.22,1,0.36,1);
+transition:transform .7s ease;
 }
 
 /* background */
@@ -167,33 +152,36 @@ transition:transform .7s cubic-bezier(0.22,1,0.36,1);
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
-/* 2 page */
 .tv-static{
 background:linear-gradient(180deg,#002a18,#000);
 color:#00ff88;
 }
 
-/* text */
 .main-title{font-size:5rem;font-weight:900;}
 .anniv{letter-spacing:8px;}
 .sub-title{font-size:2.2rem;}
 
-/* 🔥 FIX 5 PAGE TEXT */
+/* 🔥 5페이지 문구 (완전 고정) */
 .page5-text{
 font-size:3.5rem;
 font-weight:900;
 text-align:center;
 line-height:1.5;
-z-index:999;
+position:relative;
+z-index:9999;
 }
 
-/* ================= OVERLAY ================= */
-.overlay{
-position:fixed;
-inset:0;
+/* ================= INTRO UI FIX ================= */
+#introFinal{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
 display:none;
 z-index:99999;
 }
+
 </style>
 </head>
 
@@ -201,6 +189,7 @@ z-index:99999;
 
 <!-- INTRO -->
 <div id="intro">
+
 <video id="introVideo" autoplay muted playsinline>
 <source src="video2.mp4">
 </video>
@@ -208,6 +197,12 @@ z-index:99999;
 <div id="introText">
 <div id="title">POYO 9TH ANNIVERSARY</div>
 <button id="enterBtn">입장하기</button>
+</div>
+
+<!-- 🔥 103초 UI 전용 (절대 삭제 안됨) -->
+<div id="introFinal">
+<h1>포요 9주년 축하합니다 🎉</h1>
+<button onclick="enter()">입장하기</button>
 </div>
 
 <button id="skipBtn">스킵</button>
@@ -221,11 +216,8 @@ z-index:99999;
 
 <div id="uiLayer">
 
-<!-- 🔥 FIX: POYO BUTTON RESTORED -->
 <div class="top-ui">
-<div class="top-btn">
-<img src="poyo.png"> 포요
-</div>
+<div class="top-btn">포요</div>
 <div class="top-btn">추억</div>
 <div class="top-btn">게임</div>
 </div>
@@ -251,7 +243,7 @@ oninput="mainBgm.volume=this.value">
 <div class="page"></div>
 <div class="page"></div>
 
-<!-- 🔥 FIX: 5 PAGE RESTORED -->
+<!-- 🔥 5페이지 문구 복구 (절대 유지) -->
 <div class="page">
 <div class="page5-text">
 아직 끝이 아니에요 ✨<br>
@@ -262,10 +254,6 @@ oninput="mainBgm.volume=this.value">
 
 </div>
 </div>
-
-<!-- OVERLAY -->
-<div id="memory" class="overlay"></div>
-<div id="game" class="overlay"></div>
 
 <script>
 
@@ -285,15 +273,13 @@ introVideo.play();
 introBgm.play();
 },{once:true});
 
-/* ================= 103s FIX ================= */
-function checkIntro(){
-if(introVideo.currentTime>=103){
-document.getElementById("title").style.visibility="visible";
-document.getElementById("enterBtn").style.visibility="visible";
+/* ================= 103s FIX (안 깨지는 방식) ================= */
+introVideo.addEventListener("timeupdate",()=>{
+if(introVideo.currentTime>=103 && !window.done){
+window.done=true;
+document.getElementById("introFinal").style.display="block";
 }
-requestAnimationFrame(checkIntro);
-}
-checkIntro();
+});
 
 /* ================= ENTER ================= */
 function enter(){
@@ -305,7 +291,6 @@ introBgm.pause();
 mainBgm.play();
 }
 
-enterBtn.onclick=enter;
 skipBtn.onclick=enter;
 
 /* ================= SCROLL ================= */
@@ -324,9 +309,11 @@ dots.appendChild(d);
 
 function move(i){
 index=i;
+
 pages.forEach((p,idx)=>{
 p.style.transform=`translateY(${(idx-index)*100}vh)`;
 });
+
 document.querySelectorAll(".dot").forEach((d,i)=>{
 d.classList.toggle("active",i===index);
 });
@@ -341,7 +328,7 @@ if(e.deltaY<0 && index>0) index--;
 
 move(index);
 
-setTimeout(()=>lock=false,700);
+setTimeout(()=>lock=false,650);
 });
 
 </script>
