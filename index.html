@@ -8,11 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-@font-face {
-  font-family:'YeogiOttaeJalnan';
-  src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
-}
-
 html,body{
   margin:0;
   padding:0;
@@ -54,20 +49,23 @@ html,body{
 #enterBtn{
   margin-top:20px;
   padding:18px 60px;
+  border-radius:40px;
   font-size:1.6rem;
   font-weight:800;
-  border:none;
-  border-radius:40px;
   opacity:0;
   visibility:hidden;
   background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 }
 
+/* ================= SKIP FIX (IMPORTANT) ================= */
 #skipBtn{
   position:fixed;
   top:20px;
   right:20px;
-  z-index:10000;
+  z-index:100000; /* 🔥 절대 고정 */
+  padding:10px 18px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.5);
 }
 
 /* ================= MAIN ================= */
@@ -77,26 +75,28 @@ html,body{
   display:none;
 }
 
-/* ================= UI FIX (IMPORTANT) ================= */
+/* ================= UI FIX ================= */
 #uiLayer{
   position:fixed;
   inset:0;
-  z-index:9999999;
+  z-index:999999;
   pointer-events:none;
 }
 
+/* 🔥 TOP UI 3 BUTTON FIX */
 .top-ui{
   position:fixed;
   top:15px;
   left:50%;
   transform:translateX(-50%);
   display:flex;
-  gap:20px;
+  gap:18px;
   padding:14px 22px;
   background:rgba(255,255,255,0.15);
   backdrop-filter:blur(12px);
   border-radius:999px;
   pointer-events:auto;
+  z-index:9999999;
 }
 
 .top-btn{
@@ -105,19 +105,23 @@ html,body{
   cursor:pointer;
 }
 
+/* volume */
 .volume{
   position:fixed;
   top:20px;
   right:20px;
   pointer-events:auto;
+  z-index:9999999;
 }
 
+/* dots */
 .dots{
   position:fixed;
   right:20px;
   top:50%;
   transform:translateY(-50%);
   pointer-events:auto;
+  z-index:9999999;
 }
 
 .dot{
@@ -149,26 +153,31 @@ html,body{
   transition:transform .7s cubic-bezier(0.22,1,0.36,1);
 }
 
+/* background */
 .page:nth-child(3),
 .page:nth-child(4),
 .page:nth-child(5){
   background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
+/* 2 page */
 .tv-static{
   background:linear-gradient(180deg,#002a18,#000);
   color:#00ff88;
 }
 
+/* text */
 .main-title{font-size:5rem;font-weight:900;}
 .anniv{letter-spacing:8px;}
 .sub-title{font-size:2.2rem;}
 
+/* 🔥 5 PAGE FIX */
 .page5-text{
   font-size:3.5rem;
   font-weight:900;
   text-align:center;
   line-height:1.5;
+  z-index:10;
 }
 
 /* ================= OVERLAY ================= */
@@ -177,9 +186,6 @@ html,body{
   inset:0;
   display:none;
   z-index:99999;
-  justify-content:center;
-  align-items:center;
-  font-size:3rem;
 }
 </style>
 </head>
@@ -193,8 +199,8 @@ html,body{
 </video>
 
 <div id="introText">
-  <div id="title">POYO 9TH ANNIVERSARY</div>
-  <button id="enterBtn">입장하기</button>
+<div id="title">POYO 9TH ANNIVERSARY</div>
+<button id="enterBtn">입장하기</button>
 </div>
 
 <button id="skipBtn">스킵</button>
@@ -206,12 +212,13 @@ html,body{
 <!-- MAIN -->
 <div id="main">
 
-<!-- UI LAYER -->
 <div id="uiLayer">
 
+<!-- 🔥 FIX: 3 BUTTON ALWAYS -->
 <div class="top-ui">
-<div class="top-btn">⭐ 추억</div>
-<div class="top-btn">🎮 게임</div>
+<div class="top-btn">포요</div>
+<div class="top-btn">추억</div>
+<div class="top-btn">게임</div>
 </div>
 
 <div class="volume">
@@ -223,7 +230,6 @@ oninput="mainBgm.volume=this.value">
 
 </div>
 
-<!-- PAGES -->
 <div id="pages">
 
 <div class="page">
@@ -236,6 +242,7 @@ oninput="mainBgm.volume=this.value">
 <div class="page"></div>
 <div class="page"></div>
 
+<!-- 🔥 FIX: 5 PAGE TEXT RESTORED -->
 <div class="page">
 <div class="page5-text">
 아직 끝이 아니에요 ✨<br>
@@ -248,12 +255,12 @@ oninput="mainBgm.volume=this.value">
 </div>
 
 <!-- OVERLAY -->
-<div id="memory" class="overlay">추억</div>
-<div id="game" class="overlay">게임</div>
+<div id="memory" class="overlay"></div>
+<div id="game" class="overlay"></div>
 
 <script>
 
-/* ================= AUDIO FIX ================= */
+/* ================= AUDIO ================= */
 const introVideo=document.getElementById("introVideo");
 const introBgm=document.getElementById("introBgm");
 const mainBgm=document.getElementById("mainBgm");
@@ -269,9 +276,8 @@ introVideo.play();
 introBgm.play();
 },{once:true});
 
-/* ================= 103s UI ================= */
+/* 103s */
 let shown=false;
-
 function loop(){
 if(!shown && introVideo.currentTime>=103){
 shown=true;
@@ -282,7 +288,7 @@ requestAnimationFrame(loop);
 }
 loop();
 
-/* ================= ENTER ================= */
+/* ENTER */
 function enter(){
 document.getElementById("intro").style.display="none";
 document.getElementById("main").style.display="block";
@@ -295,7 +301,7 @@ mainBgm.play();
 enterBtn.onclick=enter;
 skipBtn.onclick=enter;
 
-/* ================= SCROLL ENGINE ================= */
+/* SCROLL */
 let index=0;
 let lock=false;
 
@@ -314,15 +320,16 @@ index=i;
 pages.forEach((p,idx)=>{
 p.style.transform=`translateY(${(idx-index)*100}vh)`;
 });
-updateDots();
+update();
 }
 
-function updateDots(){
+function update(){
 document.querySelectorAll(".dot").forEach((d,i)=>{
 d.classList.toggle("active",i===index);
 });
 }
 
+/* 🔥 FIX: smooth stable scroll */
 window.addEventListener("wheel",(e)=>{
 if(lock) return;
 lock=true;
@@ -333,11 +340,6 @@ if(e.deltaY<0 && index>0) index--;
 move(index);
 
 setTimeout(()=>lock=false,700);
-});
-
-/* ================= OVERLAY ================= */
-document.querySelectorAll(".overlay").forEach(o=>{
-o.onclick=()=>o.style.display="none";
 });
 
 </script>
