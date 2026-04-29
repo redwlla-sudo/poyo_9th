@@ -56,18 +56,6 @@ html, body{
     opacity:0;
     visibility:hidden;
     background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
-    cursor:pointer;
-}
-
-#skipBtn{
-    position:absolute;
-    top:20px;
-    right:20px;
-    z-index:10000;
-    padding:10px 18px;
-    border:none;
-    border-radius:20px;
-    background:white;
 }
 
 /* ================= MAIN ================= */
@@ -84,18 +72,15 @@ html, body{
     flex-direction:column;
 }
 
-/* ================= 1번 페이지 (🔥 영어 자간 수정) ================= */
 .main-title{
     font-size:5rem;
     font-weight:700;
-    letter-spacing:4px; /* 👈 핵심: 살짝만 간격 증가 */
 }
 
 .sub-title{
     font-size:2.2rem;
 }
 
-/* ================= 2번 페이지 ================= */
 .tv-static{
     background:
         radial-gradient(circle at 20% 30%, rgba(0,255,120,0.15), transparent 40%),
@@ -104,42 +89,58 @@ html, body{
     color:#00ff88;
 }
 
-/* ================= 공통 그라데이션 ================= */
 .gradient{
     background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
-/* ================= 5번 페이지 (🔥 Fredoka 적용) ================= */
+/* ================= 5페이지 ================= */
 .page5-text{
-    font-family:'Fredoka', sans-serif; /* 👈 핵심 추가 */
+    font-family:'Fredoka', sans-serif;
     font-size:3.8rem;
     font-weight:900;
     text-align:center;
-    line-height:1.6;
 }
 
-/* ================= UI ================= */
+/* ================= 🔥 NEW TOP UI (GLASS STYLE) ================= */
 .top-ui{
     position:fixed;
     top:15px;
     left:50%;
     transform:translateX(-50%);
     display:flex;
-    gap:20px;
+    gap:15px;
+    padding:10px 18px;
+
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,0.3);
+    border-radius:999px;
+
     z-index:999;
 }
 
 .top-btn{
-    width:70px;
-    height:70px;
-    border-radius:50%;
     display:flex;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
+    gap:6px;
+
+    padding:10px 18px;
+    border-radius:999px;
+
     font-family:'Fredoka', sans-serif;
     font-weight:800;
-    font-size:1rem;
-    background:#cdb4ff;
+    font-size:0.95rem;
+
+    color:black;
+    cursor:pointer;
+
+    transition:0.25s ease;
+}
+
+.top-btn:hover{
+    transform:translateY(-2px) scale(1.05);
+    background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 }
 
 /* ================= DOT ================= */
@@ -198,9 +199,9 @@ html, body{
 <div id="main">
 
 <div class="top-ui">
-    <div class="top-btn" onclick="go(0)">포요</div>
-    <div class="top-btn" onclick="go(1)">추억</div>
-    <div class="top-btn" onclick="go(2)">도전</div>
+    <div class="top-btn">🏠 포요</div>
+    <div class="top-btn">⭐ 추억</div>
+    <div class="top-btn">🎮 게임</div>
 </div>
 
 <div class="volume">
@@ -209,11 +210,11 @@ oninput="mainBgm.volume=this.value">
 </div>
 
 <div class="dots">
-    <div class="dot active" onclick="go(0)"></div>
-    <div class="dot" onclick="go(1)"></div>
-    <div class="dot" onclick="go(2)"></div>
-    <div class="dot" onclick="go(3)"></div>
-    <div class="dot" onclick="go(4)"></div>
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
 </div>
 
 <section class="page">
@@ -290,21 +291,12 @@ const dots=document.querySelectorAll(".dot");
 
 let current=0;
 
-function go(i){
-    pages[i].scrollIntoView({behavior:"smooth"});
-    current=i;
-    updateDots();
-}
-
-function updateDots(){
-    dots.forEach(d=>d.classList.remove("active"));
-    if(dots[current]) dots[current].classList.add("active");
-}
-
 window.addEventListener("scroll",()=>{
     let h=window.innerHeight;
     current=Math.round(window.scrollY/h);
-    updateDots();
+
+    dots.forEach(d=>d.classList.remove("active"));
+    if(dots[current]) dots[current].classList.add("active");
 });
 
 </script>
