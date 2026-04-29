@@ -9,8 +9,8 @@
 
 <style>
 @font-face {
-    font-family: 'YeogiOttaeJalnan';
-    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-family:'YeogiOttaeJalnan';
+    src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
 }
 
 html,body{
@@ -63,34 +63,31 @@ html,body{
     top:20px;
     right:20px;
     z-index:10000;
-    padding:10px 18px;
-    border-radius:20px;
-    font-weight:700;
-    background:rgba(255,255,255,0.4);
 }
 
-/* ================= MAIN (FIXED ALWAYS ON) ================= */
-#main{
+/* ================= MAIN ================= */
+#app{
     position:fixed;
     inset:0;
+    display:none;
 }
 
-/* pages ONLY scroll engine */
+/* 🔥 메인 페이지 절대 고정 유지 */
 #pages{
     height:100vh;
-    overflow:hidden;
+    position:relative;
 }
 
+/* page */
 .page{
     height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
     flex-direction:column;
-    transition:transform 0.6s ease;
+    transition:transform .7s cubic-bezier(0.22,1,0.36,1);
 }
 
-/* gradient pages */
 .page:nth-child(3),
 .page:nth-child(4),
 .page:nth-child(5){
@@ -113,7 +110,14 @@ html,body{
     line-height:1.5;
 }
 
-/* ================= TOP UI (ALWAYS FIXED) ================= */
+/* ================= UI FIX (핵심 수정) ================= */
+#uiLayer{
+    position:fixed;
+    inset:0;
+    z-index:999999;
+    pointer-events:none;
+}
+
 .top-ui{
     position:fixed;
     top:15px;
@@ -125,63 +129,38 @@ html,body{
     background:rgba(255,255,255,0.15);
     backdrop-filter:blur(12px);
     border-radius:999px;
-    z-index:99999;
+    pointer-events:auto;
 }
 
 .top-btn{
     padding:10px 18px;
-    border-radius:999px;
     font-weight:800;
     cursor:pointer;
 }
 
-/* ================= DOT ================= */
+.volume{
+    position:fixed;
+    top:20px;
+    right:20px;
+    pointer-events:auto;
+}
+
 .dots{
     position:fixed;
     right:20px;
     top:50%;
     transform:translateY(-50%);
-    z-index:9999;
+    pointer-events:auto;
 }
+
 .dot{
-    width:10px;
-    height:10px;
+    width:10px;height:10px;
     margin:10px 0;
     border-radius:50%;
     background:#000;
-    opacity:0.3;
+    opacity:.3;
 }
-.dot.active{
-    opacity:1;
-    background:#b8f2e6;
-}
-
-/* ================= VOLUME ================= */
-.volume{
-    position:fixed;
-    top:20px;
-    right:20px;
-    z-index:99999;
-}
-
-/* ================= OVERLAY SYSTEM ================= */
-.overlay{
-    position:fixed;
-    inset:0;
-    display:none;
-    z-index:5000;
-}
-
-.overlay.show{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:3rem;
-}
-
-/* memory/game styles */
-#memory{background:linear-gradient(135deg,#cdb4ff,#b8f2e6);}
-#game{background:linear-gradient(135deg,#b8f2e6,#cdb4ff);}
+.dot.active{background:#b8f2e6;opacity:1;}
 </style>
 </head>
 
@@ -204,12 +183,16 @@ html,body{
 <audio id="introBgm" loop></audio>
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
-<!-- MAIN (ALWAYS ON) -->
-<div id="main">
+<!-- MAIN -->
+<div id="app">
+
+<!-- 🔥 UI LAYER FIX -->
+<div id="uiLayer">
 
 <div class="top-ui">
-<div class="top-btn" onclick="openOverlay('memory')">⭐ 추억</div>
-<div class="top-btn" onclick="openOverlay('game')">🎮 게임</div>
+<div class="top-btn" onclick="movePage(0)">포요</div>
+<div class="top-btn" onclick="openOverlay('memory')">추억</div>
+<div class="top-btn" onclick="openOverlay('game')">게임</div>
 </div>
 
 <div class="volume">
@@ -218,7 +201,10 @@ html,body{
 
 <div class="dots" id="dots"></div>
 
+</div>
+
 <div id="pages">
+
 <div class="page">
 <div class="main-title">POYO 9TH <span class="anniv">ANNIVERSARY</span></div>
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
@@ -235,91 +221,75 @@ html,body{
 상단에서 계속 이어가 보세요
 </div>
 </div>
+
 </div>
 </div>
 
-<!-- OVERLAYS -->
-<div id="memory" class="overlay">추억 페이지</div>
-<div id="game" class="overlay">게임 페이지</div>
+<!-- OVERLAY -->
+<div id="memory" class="overlay">추억</div>
+<div id="game" class="overlay">게임</div>
+
+<style>
+.overlay{
+    position:fixed;
+    inset:0;
+    display:none;
+    z-index:99999;
+    justify-content:center;
+    align-items:center;
+    font-size:3rem;
+}
+</style>
 
 <script>
-const introVideo=document.getElementById("introVideo");
-const enterBtn=document.getElementById("enterBtn");
-const title=document.getElementById("title");
-const mainBgm=document.getElementById("mainBgm");
-const introBgm=document.getElementById("introBgm");
-
-let shown=false;
-let started=false;
-
-window.addEventListener("click",()=>{
-if(started) return;
-started=true;
-introVideo.muted=false;
-introVideo.play();
-introBgm.play();
-},{once:true});
-
-/* 103초 */
-introVideo.addEventListener("timeupdate",()=>{
-if(!shown && introVideo.currentTime>=103){
-shown=true;
-title.style.visibility="visible";
-enterBtn.style.visibility="visible";
-}
-});
-
-function enter(){
-document.getElementById("intro").style.display="none";
-mainBgm.play();
-initScroll();
-}
-enterBtn.onclick=enter;
-skipBtn.onclick=enter;
-
-/* ================= SCROLL ENGINE ================= */
-let index=0;
 const pages=document.querySelectorAll(".page");
 const dots=document.getElementById("dots");
 
-function initScroll(){
-pages.forEach((_,i)=>{
-let d=document.createElement("div");
-d.className="dot";
-d.onclick=()=>move(i);
-dots.appendChild(d);
-});
-update();
-}
+let index=0;
+let lock=false;
 
-function move(i){
+/* 🔥 FIX: smooth scroll (속도 안정화) */
+function movePage(i){
 index=i;
 pages.forEach((p,idx)=>{
 p.style.transform=`translateY(${(idx-index)*100}vh)`;
 });
-update();
+updateDots();
 }
 
-function update(){
+function updateDots(){
 document.querySelectorAll(".dot").forEach((d,i)=>{
 d.classList.toggle("active",i===index);
 });
 }
 
-/* wheel */
-window.addEventListener("wheel",(e)=>{
-if(e.deltaY>0 && index<4) index++;
-if(e.deltaY<0 && index>0) index--;
-move(index);
-});
-
-/* ================= OVERLAY ENGINE ================= */
-function openOverlay(id){
-document.getElementById(id).classList.add("show");
+/* dots init */
+for(let i=0;i<5;i++){
+let d=document.createElement("div");
+d.className="dot";
+d.onclick=()=>movePage(i);
+dots.appendChild(d);
 }
 
-document.querySelectorAll(".overlay").forEach(el=>{
-el.addEventListener("click",()=>el.classList.remove("show"));
+/* 🔥 FIX: scroll speed 안정화 */
+window.addEventListener("wheel",(e)=>{
+if(lock) return;
+lock=true;
+
+if(e.deltaY>0 && index<4) index++;
+if(e.deltaY<0 && index>0) index--;
+
+movePage(index);
+
+setTimeout(()=>lock=false,800); // 속도 고정
+});
+
+/* overlay */
+function openOverlay(id){
+document.getElementById(id).style.display="flex";
+}
+document.querySelectorAll(".overlay").forEach(o=>{
+o.onclick=()=>o.style.display="none";
 });
 </script>
 
