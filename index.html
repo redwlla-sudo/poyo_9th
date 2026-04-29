@@ -58,6 +58,21 @@ html, body{
     background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 }
 
+/* ✅ FIX: 스킵 버튼 항상 보이게 */
+#skipBtn{
+    position:fixed;
+    top:20px;
+    left:20px;
+    z-index:10000;
+    padding:10px 18px;
+    border:none;
+    border-radius:20px;
+    font-weight:700;
+    cursor:pointer;
+    background:rgba(255,255,255,0.4);
+    backdrop-filter:blur(10px);
+}
+
 /* ================= MAIN ================= */
 #main{
     display:none;
@@ -75,6 +90,7 @@ html, body{
 .main-title{
     font-size:5rem;
     font-weight:700;
+    letter-spacing:6px; /* ✅ FIX: 1번 페이지 자간 증가 */
 }
 
 .sub-title{
@@ -95,13 +111,13 @@ html, body{
 
 /* ================= 5페이지 ================= */
 .page5-text{
-    font-family:'Fredoka', sans-serif;
+    font-family:'Fredoka', sans-serif !important; /* ✅ FIX: 폰트 강제 유지 */
     font-size:3.8rem;
     font-weight:900;
     text-align:center;
 }
 
-/* ================= 🔥 NEW TOP UI (GLASS STYLE) ================= */
+/* ================= TOP UI ================= */
 .top-ui{
     position:fixed;
     top:15px;
@@ -110,12 +126,10 @@ html, body{
     display:flex;
     gap:15px;
     padding:10px 18px;
-
     background:rgba(255,255,255,0.15);
     backdrop-filter:blur(12px);
     border:1px solid rgba(255,255,255,0.3);
     border-radius:999px;
-
     z-index:999;
 }
 
@@ -124,17 +138,12 @@ html, body{
     align-items:center;
     justify-content:center;
     gap:6px;
-
     padding:10px 18px;
     border-radius:999px;
-
-    font-family:'Fredoka', sans-serif;
     font-weight:800;
     font-size:0.95rem;
-
     color:black;
     cursor:pointer;
-
     transition:0.25s ease;
 }
 
@@ -190,6 +199,7 @@ html, body{
 </div>
 
 <button id="skipBtn">스킵</button>
+
 </div>
 
 <audio id="introBgm" loop></audio>
@@ -205,8 +215,7 @@ html, body{
 </div>
 
 <div class="volume">
-<input type="range" min="0" max="1" step="0.01"
-oninput="mainBgm.volume=this.value">
+<input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
 </div>
 
 <div class="dots">
