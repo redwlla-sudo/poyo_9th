@@ -56,9 +56,9 @@ html, body{
     opacity:0;
     visibility:hidden;
     background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
-    cursor:pointer;
 }
 
+/* 스킵 */
 #skipBtn{
     position:absolute;
     top:20px;
@@ -75,7 +75,7 @@ html, body{
     display:none;
 }
 
-/* ================= 5 PAGE ================= */
+/* 5 PAGE */
 .page{
     height:100vh;
     display:flex;
@@ -109,17 +109,16 @@ html, body{
     font-size:3rem;
     font-weight:900;
     text-align:center;
-    line-height:1.6;
 }
 
-/* ================= UI (3개로 축소) ================= */
+/* UI */
 .top-ui{
     position:fixed;
     top:15px;
     left:50%;
     transform:translateX(-50%);
     display:flex;
-    gap:25px;
+    gap:20px;
     z-index:999;
 }
 
@@ -131,17 +130,14 @@ html, body{
     justify-content:center;
     align-items:center;
     background:#cdb4ff;
-    cursor:pointer;
-    font-weight:700;
 }
 
-/* ================= DOT ================= */
+/* DOT */
 .dots{
     position:fixed;
     right:20px;
     top:50%;
     transform:translateY(-50%);
-    z-index:999;
 }
 
 .dot{
@@ -158,11 +154,11 @@ html, body{
     transform:scale(1.4);
 }
 
-/* ================= VOLUME ================= */
+/* VOLUME */
 .volume{
     position:fixed;
     top:20px;
-    right:90px;
+    right:20px;
     z-index:9999;
 }
 </style>
@@ -185,22 +181,22 @@ html, body{
 <button id="skipBtn">스킵</button>
 </div>
 
+<!-- 🔥 오디오 (핵심 복구) -->
 <audio id="introBgm" loop></audio>
-<audio id="mainBgm" loop></audio>
+<audio id="mainBgm" loop src="bgm.mp3"></audio>
 
 <!-- ================= MAIN ================= -->
 <div id="main">
 
-<!-- 3개로 축소 -->
 <div class="top-ui">
     <div class="top-btn" onclick="go(0)">포요</div>
     <div class="top-btn" onclick="go(1)">추억</div>
     <div class="top-btn" onclick="go(2)">도전</div>
 </div>
 
-<!-- 볼륨 복구 -->
 <div class="volume">
-<input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
+<input type="range" min="0" max="1" step="0.01"
+oninput="mainBgm.volume=this.value">
 </div>
 
 <div class="dots">
@@ -251,8 +247,8 @@ window.addEventListener("click",()=>{
 },{once:true});
 
 /* ================= 103s UI ================= */
-const title = document.getElementById("title");
-const enterBtn = document.getElementById("enterBtn");
+const title=document.getElementById("title");
+const enterBtn=document.getElementById("enterBtn");
 
 let shown=false;
 
@@ -276,6 +272,7 @@ function enter(){
     introBgm.pause();
     introVideo.pause();
 
+    /* 🔥 핵심 복구 */
     mainBgm.volume=0.5;
     mainBgm.play().catch(()=>{});
 }
@@ -284,13 +281,14 @@ enterBtn.onclick=enter;
 skipBtn.onclick=enter;
 
 /* ================= SCROLL ================= */
-const dots=document.querySelectorAll(".dot");
 const pages=document.querySelectorAll(".page");
+const dots=document.querySelectorAll(".dot");
+
 let current=0;
 
 function go(i){
-    current=i;
     pages[i].scrollIntoView({behavior:"smooth"});
+    current=i;
     updateDots();
 }
 
