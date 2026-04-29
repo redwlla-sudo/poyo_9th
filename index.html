@@ -7,10 +7,16 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-<!-- ✅ 올바른 잘난체 -->
-<link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/Jalnan.css" rel="stylesheet">
-
 <style>
+/* ✅ 여기어때 잘난체 (직접 적용) */
+@font-face {
+    font-family: 'YeogiOttaeJalnan';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 html, body{
     margin:0;
     padding:0;
@@ -103,12 +109,12 @@ html, body{
         ),
         repeating-linear-gradient(
             90deg,
-            rgba(0,255,120,0.4) 0px,
-            rgba(0,255,120,0.25) 2px,
+            rgba(0,255,120,0.45) 0px,
+            rgba(0,255,120,0.3) 2px,
             transparent 5px
         ),
-        radial-gradient(circle at 30% 40%, rgba(0,255,120,0.3), transparent 60%),
-        radial-gradient(circle at 70% 60%, rgba(0,255,120,0.25), transparent 60%);
+        radial-gradient(circle at 30% 40%, rgba(0,255,120,0.35), transparent 60%),
+        radial-gradient(circle at 70% 60%, rgba(0,255,120,0.3), transparent 60%);
     color:#00ff88;
 }
 
@@ -130,13 +136,14 @@ html, body{
     letter-spacing:8px;
 }
 
-/* ✅ 핵심: 잘난체 적용 */
+/* ✅ 1번 페이지 한글 */
 .page:nth-of-type(1) .sub-title{
-    font-family:'yg-jalnan', sans-serif !important;
+    font-family:'YeogiOttaeJalnan' !important;
 }
 
+/* ✅ 5번 페이지 한글 */
 .page:nth-of-type(5) .page5-text{
-    font-family:'yg-jalnan', sans-serif !important;
+    font-family:'YeogiOttaeJalnan' !important;
 }
 
 .sub-title{
