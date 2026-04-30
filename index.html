@@ -8,6 +8,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+@font-face {
+font-family: 'YeogiOttaeJalnan';
+src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+font-weight: normal;
+font-display: swap;
+}
+
 html,body{
 margin:0;
 padding:0;
@@ -15,22 +22,13 @@ font-family:'Fredoka',sans-serif;
 overflow:hidden;
 }
 
-/* ================= INTRO ================= */
-#intro{
-position:fixed;
-inset:0;
-z-index:9999;
-}
-#intro video{
-width:100%;
-height:100%;
-object-fit:cover;
-}
+/* INTRO */
+#intro{position:fixed;inset:0;z-index:9999;}
+#intro video{width:100%;height:100%;object-fit:cover;}
 
 #introText{
 position:absolute;
-top:50%;
-left:50%;
+top:50%;left:50%;
 transform:translate(-50%,-50%);
 text-align:center;
 z-index:10;
@@ -59,7 +57,7 @@ font-weight:800;
 background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 }
 
-/* ================= SKIP ================= */
+/* SKIP */
 #skipBtn{
 position:fixed;
 top:20px;
@@ -67,14 +65,10 @@ right:20px;
 z-index:999999;
 }
 
-/* ================= MAIN ================= */
-#main{
-position:fixed;
-inset:0;
-display:none;
-}
+/* MAIN */
+#main{position:fixed;inset:0;display:none;}
 
-/* ================= UI ================= */
+/* UI */
 #uiLayer{
 position:fixed;
 inset:0;
@@ -82,7 +76,6 @@ z-index:999999;
 pointer-events:none;
 }
 
-/* 🔥 상단 UI (이미지 느낌) */
 .top-ui{
 position:fixed;
 top:20px;
@@ -108,7 +101,6 @@ background:rgba(255,255,255,0.25);
 cursor:pointer;
 }
 
-/* 포요 PNG */
 .poyo-icon{
 width:24px;
 height:24px;
@@ -142,7 +134,7 @@ background:#b8f2e6;
 opacity:1;
 }
 
-/* ================= PAGES ================= */
+/* PAGES */
 .page{
 height:100vh;
 display:flex;
@@ -158,7 +150,7 @@ flex-direction:column;
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
-/* 🔥 2번 페이지 (치지직 느낌) */
+/* 치지직 */
 .tv-static{
 background:
 radial-gradient(circle at center, rgba(0,255,120,0.08), transparent 60%),
@@ -168,11 +160,15 @@ text-shadow:0 0 6px rgba(0,255,120,0.4);
 }
 
 .main-title{font-size:5rem;font-weight:900;}
-.sub-title{font-size:2.2rem;}
 
-/* 🔥 5페이지 문구 (안 깨지는 방식) */
+/* 잘난체 */
+.sub-title{
+font-size:2.2rem;
+font-family:'YeogiOttaeJalnan';
+}
+
+/* 5페이지 */
 .page5{
-position:relative;
 display:flex;
 justify-content:center;
 align-items:center;
@@ -182,7 +178,6 @@ font-size:3.5rem;
 font-weight:900;
 text-align:center;
 line-height:1.5;
-z-index:10;
 }
 </style>
 </head>
@@ -233,12 +228,12 @@ oninput="mainBgm.volume=this.value">
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
 
-<!-- 2 (치지직) -->
+<!-- 🔥 2 (치지직) -->
 <div class="page tv-static">
 <h1>CHZZK SIGNAL</h1>
 </div>
 
-<!-- 3 -->
+<!-- 🔥 3 (빈) -->
 <div class="page"></div>
 
 <!-- 4 -->
@@ -262,13 +257,11 @@ const mainBgm=document.getElementById("mainBgm");
 const title=document.getElementById("title");
 const enterBtn=document.getElementById("enterBtn");
 
-/* 인트로 */
 window.addEventListener("click",()=>{
 introVideo.muted=false;
 introVideo.play().catch(()=>{});
 },{once:true});
 
-/* 103초 */
 let shown=false;
 function loop(){
 if(introVideo.currentTime>=103 && !shown){
@@ -282,7 +275,6 @@ requestAnimationFrame(loop);
 }
 loop();
 
-/* ENTER */
 function enter(){
 introVideo.pause();
 introVideo.currentTime=0;
@@ -298,7 +290,6 @@ mainBgm.play().catch(()=>{});
 skipBtn.onclick=enter;
 enterBtn.onclick=enter;
 
-/* SCROLL */
 let current=0;
 let target=0;
 
