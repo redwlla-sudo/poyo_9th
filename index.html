@@ -36,6 +36,7 @@ transform:translate(-50%,-50%);
 text-align:center;
 }
 
+/* 🔥 유지 + 안정화 */
 #title{
 font-size:5rem;
 font-weight:900;
@@ -156,7 +157,7 @@ flex-direction:column;
 transition:transform .6s ease;
 }
 
-/* 🔥 클래스 기반 배경 (수정 완료) */
+/* 🔥 클래스 기반 배경 */
 .gradient{
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
@@ -169,7 +170,7 @@ color:#00ff88;
 .main-title{font-size:5rem;font-weight:900;}
 .sub-title{font-size:2.2rem;}
 
-/* 🔥 5페이지 고정 레이어 */
+/* 🔥 5페이지 고정 */
 #page5Fixed{
 position:fixed;
 top:50%;
@@ -225,51 +226,50 @@ oninput="mainBgm.volume=this.value">
 
 <div id="pages">
 
-<!-- 1 -->
 <div class="page">
 <div class="main-title">POYO 9TH ANNIVERSARY</div>
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
 
-<!-- 2 (치지직) -->
 <div class="page tv-static">
 <h1>CHZZK SIGNAL</h1>
 </div>
 
-<!-- 3 -->
 <div class="page gradient"></div>
-
-<!-- 4 -->
 <div class="page gradient"></div>
-
-<!-- 5 -->
 <div class="page gradient"></div>
 
 </div>
 </div>
 
-<!-- 🔥 5페이지 문구 따로 분리 -->
 <div id="page5Fixed">
 아직 끝이 아니에요 ✨<br>
 더 많은 추억과 즐거움이 기다리고 있어요<br>
 상단에서 계속 이어가 보세요
 </div>
 
+<!-- 🔥 JS만 교체됨 -->
 <script>
 const introVideo=document.getElementById("introVideo");
 const title=document.getElementById("title");
 const btn=document.getElementById("enterBtn");
 const mainBgm=document.getElementById("mainBgm");
+const pages=document.querySelectorAll(".page");
+const dots=document.getElementById("dots");
+const page5El=document.getElementById("page5Fixed");
 
-/* 클릭 시 소리 */
+let index=0;
+let shown=false;
+let page5Shown=false;
+
+/* 클릭 시 인트로 소리 */
 window.addEventListener("click",()=>{
 introVideo.muted=false;
 introVideo.play().catch(()=>{});
 },{once:true});
 
 /* 103초 */
-let shown=false;
-function loop(){
+function introLoop(){
 if(introVideo.currentTime>=103 && !shown){
 shown=true;
 title.style.opacity=1;
@@ -277,9 +277,9 @@ title.style.visibility="visible";
 btn.style.opacity=1;
 btn.style.visibility="visible";
 }
-requestAnimationFrame(loop);
+requestAnimationFrame(introLoop);
 }
-loop();
+introLoop();
 
 /* 진입 */
 function enter(){
@@ -297,11 +297,7 @@ mainBgm.play().catch(()=>{});
 skipBtn.onclick=enter;
 btn.onclick=enter;
 
-/* 스크롤 */
-let index=0;
-const pages=document.querySelectorAll(".page");
-const dots=document.getElementById("dots");
-
+/* dots */
 for(let i=0;i<5;i++){
 let d=document.createElement("div");
 d.className="dot";
@@ -309,6 +305,7 @@ d.onclick=()=>move(i);
 dots.appendChild(d);
 }
 
+/* 이동 */
 function move(i){
 index=i;
 
@@ -320,19 +317,26 @@ document.querySelectorAll(".dot").forEach((d,i)=>{
 d.classList.toggle("active",i===index);
 });
 
-/* 🔥 5페이지 문구 표시 */
 if(index===4){
-document.getElementById("page5Fixed").style.display="block";
-}else{
-document.getElementById("page5Fixed").style.display="none";
+page5Shown=true;
+}
+if(page5Shown){
+page5El.style.display="block";
 }
 }
 
+/* 스크롤 */
 window.addEventListener("wheel",(e)=>{
 if(e.deltaY>0 && index<4) index++;
 if(e.deltaY<0 && index>0) index--;
 move(index);
 });
+
+/* 초기 정렬 */
+window.onload=()=>{
+move(0);
+page5El.style.display="none";
+};
 </script>
 
 </body>
