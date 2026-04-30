@@ -75,14 +75,14 @@ z-index:100000;
 #main{
 position:fixed;
 inset:0;
-display:none;
+z-index:1;
 }
 
-/* ================= UI (🔥 핵심 수정: 최상단 고정) ================= */
+/* ================= UI (🔥 핵심 수정: 완전 독립 레이어) ================= */
 #uiLayer{
 position:fixed;
 inset:0;
-z-index:2147483647; /* 절대 최상단 */
+z-index:2147483647;
 pointer-events:none;
 }
 
@@ -163,9 +163,7 @@ transition:transform .6s ease, opacity .6s ease;
 opacity:0.3;
 }
 
-.page.active{
-opacity:1;
-}
+.page.active{opacity:1;}
 
 .gradient{
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
@@ -197,7 +195,7 @@ line-height:1.5;
 .overlay{
 position:fixed;
 inset:0;
-z-index:9999999; /* UI보다 무조건 낮게 */
+z-index:9999999;
 display:none;
 justify-content:flex-start;
 align-items:center;
@@ -225,6 +223,24 @@ padding:40px;
 
 <body>
 
+<!-- ================= UI (🔥 main 밖으로 분리됨 = 핵심 해결) ================= -->
+<div id="uiLayer">
+
+<div class="top-ui">
+<div class="top-btn" data-page="home"><img src="poyo.png">포요</div>
+<div class="top-btn" data-overlay="memory">⭐ 추억</div>
+<div class="top-btn" data-overlay="game">🎮 게임</div>
+</div>
+
+<div class="volume">
+🔊 <input type="range" min="0" max="1" step="0.01"
+oninput="mainBgm.volume=this.value">
+</div>
+
+<div class="dots" id="dots"></div>
+
+</div>
+
 <!-- ================= INTRO ================= -->
 <div id="intro">
 <video id="introVideo" autoplay muted playsinline>
@@ -244,25 +260,6 @@ padding:40px;
 <!-- ================= MAIN ================= -->
 <div id="main">
 
-<!-- UI -->
-<div id="uiLayer">
-
-<div class="top-ui">
-<div class="top-btn" data-page="home"><img src="poyo.png">포요</div>
-<div class="top-btn" data-overlay="memory">⭐ 추억</div>
-<div class="top-btn" data-overlay="game">🎮 게임</div>
-</div>
-
-<div class="volume">
-🔊 <input type="range" min="0" max="1" step="0.01"
-oninput="mainBgm.volume=this.value">
-</div>
-
-<div class="dots" id="dots"></div>
-
-</div>
-
-<!-- PAGES -->
 <div id="pages">
 
 <div class="page active">
@@ -321,7 +318,7 @@ introVideo.muted=false;
 introVideo.play().catch(()=>{});
 },{once:true});
 
-/* 103초 UI */
+/* 103초 */
 function introLoop(){
 if(introVideo.currentTime>=103 && !shown){
 shown=true;
@@ -383,7 +380,7 @@ if(e.deltaY<0 && index>0) index--;
 move(index);
 });
 
-/* overlay control */
+/* overlay */
 function showOverlay(id){
 document.getElementById(id).classList.add("show");
 }
@@ -394,7 +391,7 @@ o.classList.remove("show");
 });
 }
 
-/* UI buttons */
+/* UI control */
 document.querySelectorAll(".top-btn").forEach(btn=>{
 btn.addEventListener("click",()=>{
 
