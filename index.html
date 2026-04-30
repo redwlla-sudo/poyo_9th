@@ -36,7 +36,6 @@ transform:translate(-50%,-50%);
 text-align:center;
 }
 
-/* 🔥 INTRO TEXT FIX (절대 유지) */
 #title{
 font-size:5rem;
 font-weight:900;
@@ -45,6 +44,7 @@ visibility:hidden;
 background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
+transition:1s;
 }
 
 #enterBtn{
@@ -56,6 +56,7 @@ font-weight:800;
 opacity:0;
 visibility:hidden;
 background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
+transition:1s;
 }
 
 /* ================= SKIP ================= */
@@ -73,11 +74,11 @@ inset:0;
 display:none;
 }
 
-/* ================= UI (절대 고정 레이어) ================= */
+/* ================= UI ================= */
 #uiLayer{
 position:fixed;
 inset:0;
-z-index:9999999;
+z-index:999999;
 pointer-events:none;
 }
 
@@ -123,6 +124,7 @@ margin:10px 0;
 border-radius:50%;
 background:#000;
 opacity:.3;
+cursor:pointer;
 }
 
 .dot.active{
@@ -142,10 +144,9 @@ display:flex;
 justify-content:center;
 align-items:center;
 flex-direction:column;
-transition:transform .7s ease;
 }
 
-/* background */
+/* 배경 */
 .page:nth-child(3),
 .page:nth-child(4),
 .page:nth-child(5){
@@ -153,7 +154,7 @@ background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
 .tv-static{
-background:linear-gradient(180deg,#002a18,#000);
+background:linear-gradient(180deg,#002a18,#000,#00ff66);
 color:#00ff88;
 }
 
@@ -161,27 +162,12 @@ color:#00ff88;
 .anniv{letter-spacing:8px;}
 .sub-title{font-size:2.2rem;}
 
-/* 🔥 5페이지 문구 (완전 고정) */
 .page5-text{
 font-size:3.5rem;
 font-weight:900;
 text-align:center;
 line-height:1.5;
-position:relative;
-z-index:9999;
 }
-
-/* ================= INTRO UI FIX ================= */
-#introFinal{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-text-align:center;
-display:none;
-z-index:99999;
-}
-
 </style>
 </head>
 
@@ -189,7 +175,6 @@ z-index:99999;
 
 <!-- INTRO -->
 <div id="intro">
-
 <video id="introVideo" autoplay muted playsinline>
 <source src="video2.mp4">
 </video>
@@ -199,16 +184,9 @@ z-index:99999;
 <button id="enterBtn">입장하기</button>
 </div>
 
-<!-- 🔥 103초 UI 전용 (절대 삭제 안됨) -->
-<div id="introFinal">
-<h1>포요 9주년 축하합니다 🎉</h1>
-<button onclick="enter()">입장하기</button>
-</div>
-
 <button id="skipBtn">스킵</button>
 </div>
 
-<audio id="introBgm" loop></audio>
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
 <!-- MAIN -->
@@ -243,7 +221,6 @@ oninput="mainBgm.volume=this.value">
 <div class="page"></div>
 <div class="page"></div>
 
-<!-- 🔥 5페이지 문구 복구 (절대 유지) -->
 <div class="page">
 <div class="page5-text">
 아직 끝이 아니에요 ✨<br>
@@ -257,10 +234,9 @@ oninput="mainBgm.volume=this.value">
 
 <script>
 
-/* ================= AUDIO ================= */
-const introVideo=document.getElementById("introVideo");
-const introBgm=document.getElementById("introBgm");
-const mainBgm=document.getElementById("mainBgm");
+/* ================= INTRO ================= */
+const introVideo = document.getElementById("introVideo");
+const mainBgm = document.getElementById("mainBgm");
 
 let started=false;
 
@@ -269,66 +245,73 @@ if(started) return;
 started=true;
 
 introVideo.muted=false;
-introVideo.play();
-introBgm.play();
+introVideo.play().catch(()=>{});
 },{once:true});
 
-/* ================= 103s FIX (안 깨지는 방식) ================= */
-introVideo.addEventListener("timeupdate",()=>{
-if(introVideo.currentTime>=103 && !window.done){
-window.done=true;
-document.getElementById("introFinal").style.display="block";
+/* 🔥 103초 정확 등장 */
+let shown=false;
+function check(){
+if(introVideo.currentTime>=103 && !shown){
+shown=true;
+
+title.style.opacity=1;
+title.style.visibility="visible";
+
+enterBtn.style.opacity=1;
+enterBtn.style.visibility="visible";
 }
-});
+requestAnimationFrame(check);
+}
+check();
 
 /* ================= ENTER ================= */
 function enter(){
-document.getElementById("intro").style.display="none";
-document.getElementById("main").style.display="block";
+intro.style.display="none";
+main.style.display="block";
 
 introVideo.pause();
-introBgm.pause();
-mainBgm.play();
+mainBgm.play().catch(()=>{});
 }
 
 skipBtn.onclick=enter;
+enterBtn.onclick=enter;
 
-/* ================= SCROLL ================= */
-let index=0;
-let lock=false;
+/* ================= SCROLL ENGINE ================= */
+let current=0;
+let target=0;
 
 const pages=document.querySelectorAll(".page");
-const dots=document.getElementById("dots");
+const dotsContainer=document.getElementById("dots");
 
+/* DOT 생성 */
 for(let i=0;i<5;i++){
 let d=document.createElement("div");
 d.className="dot";
-d.onclick=()=>move(i);
-dots.appendChild(d);
+d.onclick=()=>target=i;
+dotsContainer.appendChild(d);
 }
 
-function move(i){
-index=i;
+/* 애니메이션 */
+function animate(){
+current += (target-current)*0.08;
 
-pages.forEach((p,idx)=>{
-p.style.transform=`translateY(${(idx-index)*100}vh)`;
+pages.forEach((p,i)=>{
+p.style.transform=`translateY(${(i-current)*100}vh)`;
 });
 
+/* DOT 동기화 */
 document.querySelectorAll(".dot").forEach((d,i)=>{
-d.classList.toggle("active",i===index);
+d.classList.toggle("active",Math.round(current)===i);
 });
+
+requestAnimationFrame(animate);
 }
+animate();
 
+/* 휠 */
 window.addEventListener("wheel",(e)=>{
-if(lock) return;
-lock=true;
-
-if(e.deltaY>0 && index<4) index++;
-if(e.deltaY<0 && index>0) index--;
-
-move(index);
-
-setTimeout(()=>lock=false,650);
+if(e.deltaY>0) target=Math.min(4,target+1);
+else target=Math.max(0,target-1);
 });
 
 </script>
