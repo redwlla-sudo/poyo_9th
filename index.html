@@ -55,13 +55,26 @@ html, body {
     opacity:0;
 }
 
-/* ================= GLOBAL UI (항상 고정) ================= */
+/* ================= SKIP ================= */
+#skipBtn {
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:10000;
+    padding:10px 18px;
+    border:none;
+    border-radius:20px;
+    background:rgba(255,255,255,0.3);
+    cursor:pointer;
+}
+
+/* ================= TOP UI (메인에서만 표시) ================= */
 .top-ui {
     position:fixed;
     top:15px;
     left:50%;
     transform:translateX(-50%);
-    display:flex;
+    display:none; /* ⭐ 기본 숨김 */
     gap:20px;
     z-index:9999;
     background:rgba(255,255,255,0.15);
@@ -74,6 +87,14 @@ html, body {
     cursor:pointer;
     font-weight:800;
     color:white;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.top-btn img{
+    width:24px;
+    height:24px;
 }
 
 /* ================= MAIN ================= */
@@ -91,7 +112,7 @@ html, body {
     transition:transform 0.8s ease;
 }
 
-/* page backgrounds */
+/* 메인 배경 복구 */
 .page:nth-child(1),
 .page:nth-child(3),
 .page:nth-child(4),
@@ -128,13 +149,6 @@ html, body {
     background:#b8f2e6;
 }
 
-/* skip */
-#skipBtn {
-    position:fixed;
-    top:20px;
-    right:20px;
-    z-index:9999;
-}
 </style>
 </head>
 
@@ -151,17 +165,18 @@ html, body {
         <button id="enterBtn">입장하기</button>
     </div>
 
+    <!-- 스킵 (인트로 전용) -->
     <button id="skipBtn">SKIP</button>
 </div>
 
 <audio id="introBgm" loop></audio>
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
-<!-- ================= TOP UI (항상 유지) ================= -->
+<!-- ================= TOP UI (메인에서만 등장) ================= -->
 <div class="top-ui">
-    <div class="top-btn" onclick="goPage(0)">포요</div>
-    <div class="top-btn" onclick="openOverlay('memory')">추억</div>
-    <div class="top-btn" onclick="openOverlay('game')">게임</div>
+    <div class="top-btn"><img src="poyo.png">포요</div>
+    <div class="top-btn">⭐ 추억</div>
+    <div class="top-btn">🎮 게임</div>
 </div>
 
 <!-- ================= MAIN ================= -->
@@ -190,13 +205,16 @@ let currentPage = 0;
 
 const intro = document.getElementById("intro");
 const main = document.getElementById("main");
+const topUI = document.querySelector(".top-ui");
+
 const video = document.getElementById("introVideo");
 const introBgm = document.getElementById("introBgm");
 const mainBgm = document.getElementById("mainBgm");
+
 const title = document.getElementById("title");
 const enterBtn = document.getElementById("enterBtn");
 
-/* ================= INTRO START ================= */
+/* ================= INTRO ================= */
 window.addEventListener("click", () => {
     if(APP_STATE !== "intro") return;
 
@@ -206,7 +224,6 @@ window.addEventListener("click", () => {
     introBgm.volume = 0.5;
     introBgm.play().catch(()=>{});
 
-    // 103초 후 UI 표시 (안정 방식)
     setTimeout(() => {
         title.style.opacity = 1;
         enterBtn.style.opacity = 1;
@@ -219,7 +236,7 @@ function enterMain() {
 
     APP_STATE = "main";
 
-    // intro 완전 종료
+    // intro 종료
     video.pause();
     video.src = "";
     introBgm.pause();
@@ -228,12 +245,14 @@ function enterMain() {
     intro.style.display = "none";
     main.style.display = "block";
 
+    // ⭐ TOP UI 메인에서만 활성화
+    topUI.style.display = "flex";
+
     mainBgm.volume = 0.5;
     mainBgm.play().catch(()=>{});
-
 }
 
-/* ================= PAGE ENGINE ================= */
+/* ================= PAGE ================= */
 function goPage(index){
     currentPage = index;
 
