@@ -65,11 +65,11 @@ z-index:100000;
 /* MAIN */
 #main{position:fixed;inset:0;display:none;}
 
-/* UI (항상 최상단 고정) */
+/* 🔥 UI (무조건 최상단 고정 핵심 수정) */
 #uiLayer{
 position:fixed;
 inset:0;
-z-index:999999999;
+z-index:2147483647; /* 최상단 강제 */
 pointer-events:none;
 }
 
@@ -169,19 +169,19 @@ text-align:center;
 line-height:1.5;
 }
 
-/* OVERLAY (추억/게임) */
+/* OVERLAY */
 .overlay{
 position:fixed;
 inset:0;
-z-index:99999999;
+z-index:9999999; /* UI보다 낮게 유지 */
 display:none;
 justify-content:flex-start;
 align-items:center;
 flex-direction:column;
 opacity:0;
 transition:0.4s ease;
-overflow-y:auto;   /* 🔥 핵심: 내부 스크롤 */
-padding-top:120px; /* UI 안 가리게 */
+overflow-y:auto;
+padding-top:120px;
 box-sizing:border-box;
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
@@ -195,15 +195,6 @@ opacity:1;
 width:100%;
 text-align:center;
 padding:40px;
-}
-
-/* UI 위로 반드시 올라오게 */
-#uiLayer,
-.top-ui,
-.volume,
-.dots{
-z-index:1000000000;
-pointer-events:auto;
 }
 </style>
 </head>
@@ -275,7 +266,7 @@ oninput="mainBgm.volume=this.value">
 <div id="memory" class="overlay">
 <div class="overlay-content">
 <h1>⭐ 추억 페이지</h1>
-<p>여기에 스크롤 콘텐츠 추가 가능</p>
+<p>스크롤 가능 영역</p>
 <div style="height:2000px;"></div>
 </div>
 </div>
@@ -299,7 +290,7 @@ const dots=document.getElementById("dots");
 let index=0;
 let shown=false;
 
-/* intro sound unlock */
+/* intro audio unlock */
 window.addEventListener("click",()=>{
 introVideo.muted=false;
 introVideo.play().catch(()=>{});
@@ -342,7 +333,7 @@ d.onclick=()=>move(i);
 dots.appendChild(d);
 }
 
-/* pages */
+/* page move */
 function move(i){
 index=i;
 
@@ -381,7 +372,6 @@ o.classList.remove("show");
 /* UI buttons */
 document.querySelectorAll(".top-btn").forEach(btn=>{
 btn.addEventListener("click",()=>{
-
 const page=btn.dataset.page;
 const overlay=btn.dataset.overlay;
 
