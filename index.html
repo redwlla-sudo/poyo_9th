@@ -36,7 +36,6 @@ transform:translate(-50%,-50%);
 text-align:center;
 }
 
-/* 🔥 유지 + 안정화 */
 #title{
 font-size:5rem;
 font-weight:900;
@@ -157,7 +156,7 @@ flex-direction:column;
 transition:transform .6s ease;
 }
 
-/* 🔥 클래스 기반 배경 */
+/* 배경 */
 .gradient{
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
@@ -170,7 +169,7 @@ color:#00ff88;
 .main-title{font-size:5rem;font-weight:900;}
 .sub-title{font-size:2.2rem;}
 
-/* 🔥 5페이지 고정 */
+/* 🔥 5페이지 문구 */
 #page5Fixed{
 position:fixed;
 top:50%;
@@ -226,29 +225,36 @@ oninput="mainBgm.volume=this.value">
 
 <div id="pages">
 
+<!-- 1 -->
 <div class="page">
 <div class="main-title">POYO 9TH ANNIVERSARY</div>
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
 
+<!-- 2 (치지직) -->
 <div class="page tv-static">
 <h1>CHZZK SIGNAL</h1>
 </div>
 
+<!-- 3 -->
 <div class="page gradient"></div>
+
+<!-- 4 -->
 <div class="page gradient"></div>
+
+<!-- 5 -->
 <div class="page gradient"></div>
 
 </div>
 </div>
 
+<!-- 🔥 5페이지 문구 -->
 <div id="page5Fixed">
 아직 끝이 아니에요 ✨<br>
 더 많은 추억과 즐거움이 기다리고 있어요<br>
 상단에서 계속 이어가 보세요
 </div>
 
-<!-- 🔥 JS만 교체됨 -->
 <script>
 const introVideo=document.getElementById("introVideo");
 const title=document.getElementById("title");
@@ -260,7 +266,6 @@ const page5El=document.getElementById("page5Fixed");
 
 let index=0;
 let shown=false;
-let page5Shown=false;
 
 /* 클릭 시 인트로 소리 */
 window.addEventListener("click",()=>{
@@ -305,23 +310,29 @@ d.onclick=()=>move(i);
 dots.appendChild(d);
 }
 
-/* 이동 */
+/* 🔥 핵심 수정된 move */
 function move(i){
 index=i;
 
+/* 위치 강제 */
 pages.forEach((p,idx)=>{
+p.style.position="absolute";
+p.style.top="0";
+p.style.left="0";
+p.style.width="100%";
 p.style.transform=`translateY(${(idx-index)*100}vh)`;
 });
 
+/* dots */
 document.querySelectorAll(".dot").forEach((d,i)=>{
 d.classList.toggle("active",i===index);
 });
 
+/* 5페이지에서만 표시 */
 if(index===4){
-page5Shown=true;
-}
-if(page5Shown){
 page5El.style.display="block";
+}else{
+page5El.style.display="none";
 }
 }
 
@@ -332,10 +343,9 @@ if(e.deltaY<0 && index>0) index--;
 move(index);
 });
 
-/* 초기 정렬 */
+/* 초기 */
 window.onload=()=>{
 move(0);
-page5El.style.display="none";
 };
 </script>
 
