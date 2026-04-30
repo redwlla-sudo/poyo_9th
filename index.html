@@ -36,7 +36,6 @@ transform:translate(-50%,-50%);
 text-align:center;
 }
 
-/* 🔥 유지 + 안정화 */
 #title{
 font-size:5rem;
 font-weight:900;
@@ -157,10 +156,8 @@ flex-direction:column;
 transition:transform .6s ease;
 }
 
-/* 🔥 순서 기준 재정렬 */
-.page:nth-child(3),
-.page:nth-child(4),
-.page:nth-child(5){
+/* 🔥 클래스 기반 배경 (수정 완료) */
+.gradient{
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
@@ -172,14 +169,18 @@ color:#00ff88;
 .main-title{font-size:5rem;font-weight:900;}
 .sub-title{font-size:2.2rem;}
 
-/* 🔥 5페이지 고정 */
-.page5-text{
+/* 🔥 5페이지 고정 레이어 */
+#page5Fixed{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
 font-size:3.5rem;
 font-weight:900;
 text-align:center;
 line-height:1.5;
-position:relative;
-z-index:99999;
+z-index:999999;
+display:none;
 }
 </style>
 </head>
@@ -230,27 +231,28 @@ oninput="mainBgm.volume=this.value">
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
 
-<!-- 🔥 2 치지직 -->
+<!-- 2 (치지직) -->
 <div class="page tv-static">
 <h1>CHZZK SIGNAL</h1>
 </div>
 
-<!-- 🔥 3 -->
-<div class="page"></div>
+<!-- 3 -->
+<div class="page gradient"></div>
 
 <!-- 4 -->
-<div class="page"></div>
+<div class="page gradient"></div>
 
-<!-- 🔥 5 -->
-<div class="page">
-<div class="page5-text">
+<!-- 5 -->
+<div class="page gradient"></div>
+
+</div>
+</div>
+
+<!-- 🔥 5페이지 문구 따로 분리 -->
+<div id="page5Fixed">
 아직 끝이 아니에요 ✨<br>
 더 많은 추억과 즐거움이 기다리고 있어요<br>
 상단에서 계속 이어가 보세요
-</div>
-</div>
-
-</div>
 </div>
 
 <script>
@@ -265,7 +267,7 @@ introVideo.muted=false;
 introVideo.play().catch(()=>{});
 },{once:true});
 
-/* 🔥 103초 고정 */
+/* 103초 */
 let shown=false;
 function loop(){
 if(introVideo.currentTime>=103 && !shown){
@@ -279,7 +281,7 @@ requestAnimationFrame(loop);
 }
 loop();
 
-/* 🔥 진입 */
+/* 진입 */
 function enter(){
 introVideo.pause();
 introVideo.currentTime=0;
@@ -309,12 +311,21 @@ dots.appendChild(d);
 
 function move(i){
 index=i;
+
 pages.forEach((p,idx)=>{
 p.style.transform=`translateY(${(idx-index)*100}vh)`;
 });
+
 document.querySelectorAll(".dot").forEach((d,i)=>{
 d.classList.toggle("active",i===index);
 });
+
+/* 🔥 5페이지 문구 표시 */
+if(index===4){
+document.getElementById("page5Fixed").style.display="block";
+}else{
+document.getElementById("page5Fixed").style.display="none";
+}
 }
 
 window.addEventListener("wheel",(e)=>{
