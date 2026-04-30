@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-html, body {
+html,body{
     margin:0;
     padding:0;
     font-family:'Fredoka', sans-serif;
@@ -16,20 +16,20 @@ html, body {
 }
 
 /* ================= INTRO ================= */
-#intro {
+#intro{
     position:fixed;
     inset:0;
     z-index:1000;
-    background:black;
 }
 
-#intro video {
+#intro video{
     width:100%;
     height:100%;
     object-fit:cover;
 }
 
-#introText {
+/* ================= TEXT ================= */
+#introText{
     position:absolute;
     top:50%;
     left:50%;
@@ -37,124 +37,132 @@ html, body {
     text-align:center;
 }
 
-#title {
+#title{
     font-size:4rem;
     font-weight:900;
+    opacity:0;
     background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
-    opacity:0;
 }
 
-#enterBtn {
+#enterBtn{
     margin-top:20px;
-    padding:15px 40px;
-    font-size:1.3rem;
-    border:none;
-    border-radius:30px;
-    opacity:0;
+    padding:14px 40px;
+    font-size:1.2rem;
 }
 
 /* ================= SKIP ================= */
-#skipBtn {
+#skipBtn{
     position:fixed;
     top:20px;
     right:20px;
-    z-index:10000;
-    padding:10px 18px;
-    border:none;
-    border-radius:20px;
-    background:rgba(255,255,255,0.3);
-    cursor:pointer;
+    z-index:9999;
 }
 
-/* ================= TOP UI (메인에서만 표시) ================= */
-.top-ui {
+/* ================= TOP UI ================= */
+.top-ui{
     position:fixed;
     top:15px;
     left:50%;
     transform:translateX(-50%);
-    display:none; /* ⭐ 기본 숨김 */
+    display:none;
     gap:20px;
     z-index:9999;
-    background:rgba(255,255,255,0.15);
     padding:10px 20px;
     border-radius:999px;
     backdrop-filter:blur(10px);
+    background:rgba(255,255,255,0.2);
+    color:#000;
 }
 
-.top-btn {
-    cursor:pointer;
-    font-weight:800;
-    color:white;
+.top-btn{
     display:flex;
     align-items:center;
     gap:6px;
+    font-weight:700;
 }
 
 .top-btn img{
-    width:24px;
-    height:24px;
+    width:22px;
 }
 
-/* ================= MAIN ================= */
-#main {
+/* ================= VOLUME ================= */
+.volume{
     position:fixed;
-    inset:0;
-    display:none;
-}
-
-/* pages */
-.page {
-    position:absolute;
-    width:100%;
-    height:100%;
-    transition:transform 0.8s ease;
-}
-
-/* 메인 배경 복구 */
-.page:nth-child(1),
-.page:nth-child(3),
-.page:nth-child(4),
-.page:nth-child(5){
-    background:linear-gradient(135deg,#d9cfff,#b8f2e6);
-}
-
-/* 2번 페이지 */
-.page2 {
-    background:linear-gradient(180deg,#002a10,#000);
-    color:#00ff88;
-}
-
-/* dots */
-.dots {
-    position:fixed;
+    top:80px;
     right:20px;
-    top:50%;
-    transform:translateY(-50%);
+    display:none;
     z-index:9999;
 }
 
-.dot {
+/* ================= MAIN ================= */
+#main{
+    display:none;
+}
+
+/* PAGE STYLE */
+.page{
+    position:absolute;
+    width:100%;
+    height:100%;
+}
+
+/* 1,3,4,5 */
+.page:not(.page2){
+    background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+}
+
+/* 2 PAGE */
+.page2{
+    background:linear-gradient(180deg,#001a10,#000000,#00ff66);
+    color:#00ff88;
+}
+
+/* PAGE1 TEXT */
+.page1-title{
+    font-size:4rem;
+    font-weight:900;
+}
+
+.page1-sub{
+    font-size:1.5rem;
+    opacity:0.8;
+}
+
+/* PAGE5 */
+.page5-text{
+    font-size:2.5rem;
+    text-align:center;
+    font-weight:800;
+}
+
+/* DOTS */
+.dots{
+    position:fixed;
+    right:20px;
+    top:50%;
+}
+
+.dot{
     width:10px;
     height:10px;
     margin:10px;
     border-radius:50%;
-    background:black;
+    background:#000;
     opacity:0.3;
 }
 
-.dot.active {
+.dot.active{
     opacity:1;
     background:#b8f2e6;
 }
-
 </style>
 </head>
 
 <body>
 
-<!-- ================= INTRO ================= -->
+<!-- INTRO -->
 <div id="intro">
     <video id="introVideo" autoplay muted playsinline>
         <source src="video2.mp4">
@@ -165,120 +173,127 @@ html, body {
         <button id="enterBtn">입장하기</button>
     </div>
 
-    <!-- 스킵 (인트로 전용) -->
     <button id="skipBtn">SKIP</button>
 </div>
 
 <audio id="introBgm" loop></audio>
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
-<!-- ================= TOP UI (메인에서만 등장) ================= -->
+<!-- TOP UI -->
 <div class="top-ui">
     <div class="top-btn"><img src="poyo.png">포요</div>
     <div class="top-btn">⭐ 추억</div>
     <div class="top-btn">🎮 게임</div>
 </div>
 
-<!-- ================= MAIN ================= -->
+<!-- VOLUME -->
+<div class="volume">
+    🔊 <input type="range" min="0" max="1" step="0.01"
+    oninput="mainBgm.volume=this.value">
+</div>
+
+<!-- MAIN -->
 <div id="main">
 
-    <div class="dots">
-        <div class="dot active"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-    </div>
+<div class="dots">
+<div class="dot active"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+<div class="dot"></div>
+</div>
 
-    <section class="page">PAGE1</section>
-    <section class="page page2">PAGE2</section>
-    <section class="page">PAGE3</section>
-    <section class="page">PAGE4</section>
-    <section class="page">PAGE5</section>
+<section class="page page1">
+    <div class="page1-title">POYO 9TH ANNIVERSARY</div>
+    <div class="page1-sub">포동이들과 함께 쌓아온 9년의 시간</div>
+</section>
+
+<section class="page page2">CHZZK SIGNAL</section>
+<section class="page">PAGE3</section>
+<section class="page">PAGE4</section>
+
+<section class="page">
+    <div class="page5-text">
+        아직 끝이 아니에요 ✨<br>
+        더 많은 추억과 즐거움이 기다리고 있어요<br>
+        상단에서 계속 이어가 보세요
+    </div>
+</section>
 
 </div>
 
 <script>
 
-let APP_STATE = "intro";
-let currentPage = 0;
+let state="intro";
+let current=0;
+let target=0;
+let animating=false;
 
-const intro = document.getElementById("intro");
-const main = document.getElementById("main");
-const topUI = document.querySelector(".top-ui");
+const intro=document.getElementById("intro");
+const main=document.getElementById("main");
+const topUI=document.querySelector(".top-ui");
+const volume=document.querySelector(".volume");
 
-const video = document.getElementById("introVideo");
-const introBgm = document.getElementById("introBgm");
-const mainBgm = document.getElementById("mainBgm");
+const video=document.getElementById("introVideo");
+const introBgm=document.getElementById("introBgm");
+const mainBgm=document.getElementById("mainBgm");
 
-const title = document.getElementById("title");
-const enterBtn = document.getElementById("enterBtn");
+/* ================= ENTER ================= */
+function enter(){
+state="main";
 
-/* ================= INTRO ================= */
-window.addEventListener("click", () => {
-    if(APP_STATE !== "intro") return;
+intro.style.display="none";
+main.style.display="block";
 
-    video.muted = false;
-    video.play().catch(()=>{});
+topUI.style.display="flex";
+volume.style.display="block";
 
-    introBgm.volume = 0.5;
-    introBgm.play().catch(()=>{});
+video.pause();
+introBgm.pause();
 
-    setTimeout(() => {
-        title.style.opacity = 1;
-        enterBtn.style.opacity = 1;
-    }, 103000);
-
-}, {once:true});
-
-/* ================= ENTER MAIN ================= */
-function enterMain() {
-
-    APP_STATE = "main";
-
-    // intro 종료
-    video.pause();
-    video.src = "";
-    introBgm.pause();
-    introBgm.src = "";
-
-    intro.style.display = "none";
-    main.style.display = "block";
-
-    // ⭐ TOP UI 메인에서만 활성화
-    topUI.style.display = "flex";
-
-    mainBgm.volume = 0.5;
-    mainBgm.play().catch(()=>{});
+mainBgm.volume=0.5;
+mainBgm.play().catch(()=>{});
 }
 
-/* ================= PAGE ================= */
-function goPage(index){
-    currentPage = index;
+/* ================= SMOOTH SCROLL ENGINE ================= */
+function animate(){
+if(state!=="main") return;
 
-    document.querySelectorAll(".page").forEach((p,i)=>{
-        p.style.transform = `translateY(${(i-index)*100}vh)`;
-    });
+current += (target-current)*0.12; // ⭐ 부드러움 핵심
 
-    document.querySelectorAll(".dot").forEach((d,i)=>{
-        d.classList.toggle("active", i===index);
-    });
-}
-
-/* ================= WHEEL ================= */
-window.addEventListener("wheel",(e)=>{
-    if(APP_STATE !== "main") return;
-
-    if(e.deltaY > 0) currentPage++;
-    else currentPage--;
-
-    currentPage = Math.max(0, Math.min(4, currentPage));
-    goPage(currentPage);
+document.querySelectorAll(".page").forEach((p,i)=>{
+p.style.transform=`translateY(${(i-current)*100}vh)`;
 });
 
-/* ================= EVENTS ================= */
-enterBtn.onclick = enterMain;
-skipBtn.onclick = enterMain;
+requestAnimationFrame(animate);
+}
+animate();
+
+/* wheel */
+window.addEventListener("wheel",(e)=>{
+if(state!=="main") return;
+
+if(e.deltaY>0) target++;
+else target--;
+
+target=Math.max(0,Math.min(4,target));
+
+document.querySelectorAll(".dot").forEach((d,i)=>{
+d.classList.toggle("active",i===target);
+});
+
+});
+
+/* intro start */
+window.addEventListener("click",()=>{
+video.muted=false;
+video.play().catch(()=>{});
+introBgm.play().catch(()=>{});
+},{once:true});
+
+/* buttons */
+enterBtn.onclick=enter;
+skipBtn.onclick=enter;
 
 </script>
 
