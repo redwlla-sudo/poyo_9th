@@ -8,259 +8,258 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-html,body{
-margin:0;
-padding:0;
-font-family:'Fredoka', sans-serif;
-overflow-x:hidden;
+html, body {
+    margin:0;
+    padding:0;
+    font-family:'Fredoka', sans-serif;
+    overflow:hidden;
 }
 
 /* ================= INTRO ================= */
-#intro{
-position:fixed;
-inset:0;
-z-index:9999;
+#intro {
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    background:black;
 }
 
-#intro video{
-width:100%;
-height:100%;
-object-fit:cover;
+#intro video {
+    width:100%;
+    height:100%;
+    object-fit:cover;
 }
 
-#introText{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-text-align:center;
+#introText {
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
 }
 
-#introFinal{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-text-align:center;
-display:none;
-z-index:10000;
+#title {
+    font-size:4rem;
+    font-weight:900;
+    background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    opacity:0;
 }
 
-#skipBtn{
-position:fixed;
-top:20px;
-right:20px;
-z-index:10000;
+#enterBtn {
+    margin-top:20px;
+    padding:15px 40px;
+    font-size:1.3rem;
+    border:none;
+    border-radius:30px;
+    opacity:0;
+}
+
+/* ================= GLOBAL UI (항상 고정) ================= */
+.top-ui {
+    position:fixed;
+    top:15px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:20px;
+    z-index:9999;
+    background:rgba(255,255,255,0.15);
+    padding:10px 20px;
+    border-radius:999px;
+    backdrop-filter:blur(10px);
+}
+
+.top-btn {
+    cursor:pointer;
+    font-weight:800;
+    color:white;
 }
 
 /* ================= MAIN ================= */
-#main{
-display:none;
+#main {
+    position:fixed;
+    inset:0;
+    display:none;
 }
 
-/* ================= TOP UI (고정 복구) ================= */
-.top-ui{
-position:fixed;
-top:15px;
-left:50%;
-transform:translateX(-50%);
-display:flex;
-gap:20px;
-padding:14px 22px;
-background:rgba(255,255,255,0.15);
-backdrop-filter:blur(12px);
-border-radius:999px;
-z-index:99999;
-pointer-events:auto;
+/* pages */
+.page {
+    position:absolute;
+    width:100%;
+    height:100%;
+    transition:transform 0.8s ease;
 }
 
-.top-btn img{
-width:24px;
-height:24px;
-border-radius:50%;
-display:block;
+/* page backgrounds */
+.page:nth-child(1),
+.page:nth-child(3),
+.page:nth-child(4),
+.page:nth-child(5){
+    background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
-/* ================= VOLUME ================= */
-.volume{
-position:fixed;
-top:20px;
-right:20px;
-z-index:99999;
+/* 2번 페이지 */
+.page2 {
+    background:linear-gradient(180deg,#002a10,#000);
+    color:#00ff88;
 }
 
-/* ================= DOT ================= */
-.dots{
-position:fixed;
-right:20px;
-top:50%;
-transform:translateY(-50%);
+/* dots */
+.dots {
+    position:fixed;
+    right:20px;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:9999;
 }
 
-.dot{
-width:10px;
-height:10px;
-margin:10px 0;
-border-radius:50%;
-background:black;
-opacity:.3;
+.dot {
+    width:10px;
+    height:10px;
+    margin:10px;
+    border-radius:50%;
+    background:black;
+    opacity:0.3;
 }
 
-.dot.active{
-background:#b8f2e6;
-opacity:1;
+.dot.active {
+    opacity:1;
+    background:#b8f2e6;
 }
 
-/* ================= PAGE ================= */
-.page{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
+/* skip */
+#skipBtn {
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:9999;
 }
-
-/* ================= 5페이지 복구 ================= */
-.page5-text{
-font-size:3rem;
-font-weight:900;
-text-align:center;
-line-height:1.5;
-}
-
-/* ================= INTRO FINAL ================= */
-#introFinal h1{
-color:white;
-}
-
-#introFinal button{
-padding:12px 40px;
-font-size:18px;
-border:none;
-border-radius:30px;
-cursor:pointer;
-}
-
 </style>
 </head>
 
 <body>
 
-<!-- INTRO -->
+<!-- ================= INTRO ================= -->
 <div id="intro">
+    <video id="introVideo" autoplay muted playsinline>
+        <source src="video2.mp4">
+    </video>
 
-<video id="introVideo" autoplay playsinline>
-<source src="video2.mp4">
-</video>
+    <div id="introText">
+        <div id="title">POYO 9TH ANNIVERSARY</div>
+        <button id="enterBtn">입장하기</button>
+    </div>
 
-<div id="introText">
-<h1 style="color:white;">POYO 9TH ANNIVERSARY</h1>
+    <button id="skipBtn">SKIP</button>
 </div>
 
-<!-- 🔥 복구된 최종 UI -->
-<div id="introFinal">
-<h1>포요 9주년 축하합니다 🎉</h1>
-<button onclick="enter()">입장하기</button>
-</div>
-
-</div>
-
-<!-- SKIP -->
-<button id="skipBtn" onclick="enter()">스킵</button>
-
+<audio id="introBgm" loop></audio>
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
-<!-- MAIN -->
+<!-- ================= TOP UI (항상 유지) ================= -->
+<div class="top-ui">
+    <div class="top-btn" onclick="goPage(0)">포요</div>
+    <div class="top-btn" onclick="openOverlay('memory')">추억</div>
+    <div class="top-btn" onclick="openOverlay('game')">게임</div>
+</div>
+
+<!-- ================= MAIN ================= -->
 <div id="main">
 
-<!-- TOP UI (복구 고정) -->
-<div class="top-ui">
-<div class="top-btn">
-<img src="poyo.png" onerror="this.style.display='none'">
-포요
-</div>
-<div class="top-btn">추억</div>
-<div class="top-btn">게임</div>
-</div>
+    <div class="dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
 
-<!-- VOLUME -->
-<div class="volume">
-🔊 <input type="range" min="0" max="1" step="0.01"
-oninput="mainBgm.volume=this.value">
-</div>
-
-<!-- DOT -->
-<div class="dots">
-<div class="dot active"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-</div>
-
-<!-- PAGES -->
-<section class="page">
-<h1>POYO 9TH ANNIVERSARY</h1>
-<p>포동이들과 함께 쌓아온 9년의 시간</p>
-</section>
-
-<section class="page">2페이지</section>
-<section class="page">3페이지</section>
-<section class="page">4페이지</section>
-
-<!-- 🔥 5페이지 복구 -->
-<section class="page">
-<div class="page5-text">
-아직 끝이 아니에요 ✨<br>
-더 많은 추억과 즐거움이 기다리고 있어요<br>
-상단에서 계속 이어가 보세요
-</div>
-</section>
+    <section class="page">PAGE1</section>
+    <section class="page page2">PAGE2</section>
+    <section class="page">PAGE3</section>
+    <section class="page">PAGE4</section>
+    <section class="page">PAGE5</section>
 
 </div>
 
 <script>
 
-const video=document.getElementById("introVideo");
-const mainBgm=document.getElementById("mainBgm");
+let APP_STATE = "intro";
+let currentPage = 0;
 
-/* 🔥 103초 UI 복구 (안정형) */
-function introCheck(){
-if(video.currentTime >= 103){
-document.getElementById("introFinal").style.display="block";
+const intro = document.getElementById("intro");
+const main = document.getElementById("main");
+const video = document.getElementById("introVideo");
+const introBgm = document.getElementById("introBgm");
+const mainBgm = document.getElementById("mainBgm");
+const title = document.getElementById("title");
+const enterBtn = document.getElementById("enterBtn");
+
+/* ================= INTRO START ================= */
+window.addEventListener("click", () => {
+    if(APP_STATE !== "intro") return;
+
+    video.muted = false;
+    video.play().catch(()=>{});
+
+    introBgm.volume = 0.5;
+    introBgm.play().catch(()=>{});
+
+    // 103초 후 UI 표시 (안정 방식)
+    setTimeout(() => {
+        title.style.opacity = 1;
+        enterBtn.style.opacity = 1;
+    }, 103000);
+
+}, {once:true});
+
+/* ================= ENTER MAIN ================= */
+function enterMain() {
+
+    APP_STATE = "main";
+
+    // intro 완전 종료
+    video.pause();
+    video.src = "";
+    introBgm.pause();
+    introBgm.src = "";
+
+    intro.style.display = "none";
+    main.style.display = "block";
+
+    mainBgm.volume = 0.5;
+    mainBgm.play().catch(()=>{});
+
 }
-requestAnimationFrame(introCheck);
-}
-introCheck();
 
-/* 종료 시 보장 */
-video.addEventListener("ended",()=>{
-document.getElementById("introFinal").style.display="block";
-});
+/* ================= PAGE ENGINE ================= */
+function goPage(index){
+    currentPage = index;
 
-/* enter */
-function enter(){
-document.getElementById("intro").style.display="none";
-document.getElementById("main").style.display="block";
-mainBgm.play().catch(()=>{});
+    document.querySelectorAll(".page").forEach((p,i)=>{
+        p.style.transform = `translateY(${(i-index)*100}vh)`;
+    });
+
+    document.querySelectorAll(".dot").forEach((d,i)=>{
+        d.classList.toggle("active", i===index);
+    });
 }
 
-/* wheel */
-let index=0;
-const pages=document.querySelectorAll(".page");
-
-function move(i){
-index=i;
-pages.forEach((p,idx)=>{
-p.style.transform=`translateY(${(idx-index)*100}vh)`;
-});
-}
-
+/* ================= WHEEL ================= */
 window.addEventListener("wheel",(e)=>{
-if(e.deltaY>0 && index<4) index++;
-if(e.deltaY<0 && index>0) index--;
-move(index);
+    if(APP_STATE !== "main") return;
+
+    if(e.deltaY > 0) currentPage++;
+    else currentPage--;
+
+    currentPage = Math.max(0, Math.min(4, currentPage));
+    goPage(currentPage);
 });
+
+/* ================= EVENTS ================= */
+enterBtn.onclick = enterMain;
+skipBtn.onclick = enterMain;
 
 </script>
 
