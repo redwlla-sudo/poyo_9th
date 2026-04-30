@@ -55,7 +55,6 @@ background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 transition:1s;
 }
 
-/* SKIP */
 #skipBtn{
 position:fixed;
 top:20px;
@@ -66,15 +65,14 @@ z-index:100000;
 /* MAIN */
 #main{position:fixed;inset:0;display:none;}
 
-/* UI */
+/* UI (항상 최상단 고정) */
 #uiLayer{
 position:fixed;
 inset:0;
-z-index:9999999;
+z-index:999999999;
 pointer-events:none;
 }
 
-/* 🔥 UI 전체 크기 유지 + 글자 확대 */
 .top-ui{
 position:fixed;
 top:20px;
@@ -95,7 +93,7 @@ align-items:center;
 gap:12px;
 padding:14px 26px;
 font-weight:900;
-font-size:1.25rem; /* 🔥 텍스트 확대 */
+font-size:1.25rem;
 cursor:pointer;
 }
 
@@ -104,7 +102,6 @@ width:28px;
 height:28px;
 }
 
-/* 볼륨 */
 .volume{
 position:fixed;
 top:20px;
@@ -112,7 +109,6 @@ right:20px;
 pointer-events:auto;
 }
 
-/* dots */
 .dots{
 position:fixed;
 right:20px;
@@ -144,8 +140,11 @@ display:flex;
 justify-content:center;
 align-items:center;
 flex-direction:column;
-transition:transform .6s ease;
+transition:transform .6s ease, opacity .6s ease;
+opacity:0.3;
 }
+
+.page.active{opacity:1;}
 
 .gradient{
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
@@ -163,12 +162,48 @@ font-size:2.2rem;
 font-family:'Jalnan';
 }
 
-/* 5페이지 */
 .page5-text{
 font-size:3.5rem;
 font-weight:900;
 text-align:center;
 line-height:1.5;
+}
+
+/* OVERLAY (추억/게임) */
+.overlay{
+position:fixed;
+inset:0;
+z-index:99999999;
+display:none;
+justify-content:flex-start;
+align-items:center;
+flex-direction:column;
+opacity:0;
+transition:0.4s ease;
+overflow-y:auto;   /* 🔥 핵심: 내부 스크롤 */
+padding-top:120px; /* UI 안 가리게 */
+box-sizing:border-box;
+background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+}
+
+.overlay.show{
+display:flex;
+opacity:1;
+}
+
+.overlay-content{
+width:100%;
+text-align:center;
+padding:40px;
+}
+
+/* UI 위로 반드시 올라오게 */
+#uiLayer,
+.top-ui,
+.volume,
+.dots{
+z-index:1000000000;
+pointer-events:auto;
 }
 </style>
 </head>
@@ -197,9 +232,9 @@ line-height:1.5;
 <div id="uiLayer">
 
 <div class="top-ui">
-<div class="top-btn"><img src="poyo.png">포요</div>
-<div class="top-btn">⭐ 추억</div>
-<div class="top-btn">🎮 게임</div>
+<div class="top-btn" data-page="home"><img src="poyo.png">포요</div>
+<div class="top-btn" data-overlay="memory">⭐ 추억</div>
+<div class="top-btn" data-overlay="game">🎮 게임</div>
 </div>
 
 <div class="volume">
@@ -213,7 +248,7 @@ oninput="mainBgm.volume=this.value">
 
 <div id="pages">
 
-<div class="page">
+<div class="page active">
 <div class="main-title">POYO 9TH ANNIVERSARY</div>
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
@@ -236,6 +271,23 @@ oninput="mainBgm.volume=this.value">
 </div>
 </div>
 
+<!-- OVERLAY -->
+<div id="memory" class="overlay">
+<div class="overlay-content">
+<h1>⭐ 추억 페이지</h1>
+<p>여기에 스크롤 콘텐츠 추가 가능</p>
+<div style="height:2000px;"></div>
+</div>
+</div>
+
+<div id="game" class="overlay">
+<div class="overlay-content">
+<h1>🎮 게임 페이지</h1>
+<p>게임 콘텐츠 영역</p>
+<div style="height:2000px;"></div>
+</div>
+</div>
+
 <script>
 const introVideo=document.getElementById("introVideo");
 const title=document.getElementById("title");
@@ -247,11 +299,13 @@ const dots=document.getElementById("dots");
 let index=0;
 let shown=false;
 
+/* intro sound unlock */
 window.addEventListener("click",()=>{
 introVideo.muted=false;
 introVideo.play().catch(()=>{});
 },{once:true});
 
+/* 103초 UI */
 function introLoop(){
 if(introVideo.currentTime>=103 && !shown){
 shown=true;
@@ -264,6 +318,7 @@ requestAnimationFrame(introLoop);
 }
 introLoop();
 
+/* enter */
 function enter(){
 introVideo.pause();
 introVideo.currentTime=0;
@@ -279,6 +334,7 @@ mainBgm.play().catch(()=>{});
 skipBtn.onclick=enter;
 btn.onclick=enter;
 
+/* dots */
 for(let i=0;i<5;i++){
 let d=document.createElement("div");
 d.className="dot";
@@ -286,6 +342,7 @@ d.onclick=()=>move(i);
 dots.appendChild(d);
 }
 
+/* pages */
 function move(i){
 index=i;
 
@@ -295,6 +352,7 @@ p.style.top="0";
 p.style.left="0";
 p.style.width="100%";
 p.style.transform=`translateY(${(idx-index)*100}vh)`;
+p.classList.toggle("active",idx===index);
 });
 
 document.querySelectorAll(".dot").forEach((d,i)=>{
@@ -302,10 +360,41 @@ d.classList.toggle("active",i===index);
 });
 }
 
+/* wheel */
 window.addEventListener("wheel",(e)=>{
 if(e.deltaY>0 && index<4) index++;
 if(e.deltaY<0 && index>0) index--;
 move(index);
+});
+
+/* overlay control */
+function showOverlay(id){
+document.getElementById(id).classList.add("show");
+}
+
+function hideOverlays(){
+document.querySelectorAll(".overlay").forEach(o=>{
+o.classList.remove("show");
+});
+}
+
+/* UI buttons */
+document.querySelectorAll(".top-btn").forEach(btn=>{
+btn.addEventListener("click",()=>{
+
+const page=btn.dataset.page;
+const overlay=btn.dataset.overlay;
+
+if(page==="home"){
+hideOverlays();
+move(0);
+}
+
+if(overlay){
+showOverlay(overlay);
+}
+
+});
 });
 
 window.onload=()=>{
