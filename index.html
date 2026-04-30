@@ -21,17 +21,8 @@ overflow:hidden;
 }
 
 /* INTRO */
-#intro{
-position:fixed;
-inset:0;
-z-index:9999;
-}
-
-#intro video{
-width:100%;
-height:100%;
-object-fit:cover;
-}
+#intro{position:fixed;inset:0;z-index:9999;}
+#intro video{width:100%;height:100%;object-fit:cover;}
 
 #introText{
 position:absolute;
@@ -72,28 +63,16 @@ z-index:100000;
 }
 
 /* MAIN */
-#main{
-position:fixed;
-inset:0;
-display:none;
-}
+#main{position:fixed;inset:0;display:none;}
 
-/* UI (기본 숨김) */
+/* UI */
 #uiLayer{
 position:fixed;
 inset:0;
-z-index:2147483647;
+z-index:9999999;
 pointer-events:none;
-display:none; /* 🔥 핵심 */
 }
 
-.top-ui,
-.volume,
-.dots{
-pointer-events:auto;
-}
-
-/* top ui */
 .top-ui{
 position:fixed;
 top:20px;
@@ -105,6 +84,7 @@ padding:18px 30px;
 background:rgba(255,255,255,0.18);
 backdrop-filter:blur(14px);
 border-radius:999px;
+pointer-events:auto;
 }
 
 .top-btn{
@@ -117,16 +97,11 @@ font-size:1.25rem;
 cursor:pointer;
 }
 
-.top-btn img{
-width:28px;
-height:28px;
-}
-
-/* volume */
 .volume{
 position:fixed;
 top:20px;
 right:20px;
+pointer-events:auto;
 }
 
 /* dots */
@@ -135,6 +110,7 @@ position:fixed;
 right:20px;
 top:50%;
 transform:translateY(-50%);
+pointer-events:auto;
 }
 
 .dot{
@@ -163,96 +139,53 @@ display:flex;
 justify-content:center;
 align-items:center;
 flex-direction:column;
-transition:transform .6s ease, opacity .6s ease;
-opacity:0.3;
+transition:transform .6s ease;
 }
 
-.page.active{opacity:1;}
-
-.gradient{
-background:linear-gradient(135deg,#d9cfff,#b8f2e6);
-}
-
+/* PAGE 2 */
 .tv-static{
 background:linear-gradient(180deg,#00110a,#000);
 color:#00ff88;
 }
 
-.main-title{
-font-size:5rem;
-font-weight:900;
-}
-
-.sub-title{
-font-size:2.2rem;
-font-family:'Jalnan';
-}
-
-.page5-text{
-font-size:3.5rem;
-font-weight:900;
+/* STEP SYSTEM */
+.signal-box{
 text-align:center;
-line-height:1.5;
+width:80%;
 }
 
-/* OVERLAY */
-.overlay{
-position:fixed;
-inset:0;
-z-index:9999999;
-display:none;
-justify-content:flex-start;
-align-items:center;
-flex-direction:column;
-opacity:0;
-transition:0.4s ease;
-overflow-y:auto;
-padding-top:120px;
-box-sizing:border-box;
-background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+.step{
+margin:20px auto;
+padding:20px;
+border:1px solid rgba(0,255,136,0.4);
+border-radius:12px;
+cursor:pointer;
+opacity:0.3;
+transition:0.3s;
 }
 
-.overlay.show{
-display:flex;
+.step.active{
 opacity:1;
 }
 
-.overlay-content{
-width:100%;
-text-align:center;
-padding:40px;
+.step.locked{
+opacity:0.1;
+pointer-events:none;
 }
 
-/* 🔥 overlay에서는 dots 숨김 */
-.hide-dots .dots{
-display:none;
+.content{
+margin-top:10px;
+font-size:1.2rem;
 }
+
 </style>
 </head>
 
 <body>
 
-<!-- UI -->
-<div id="uiLayer">
-
-<div class="top-ui">
-<div class="top-btn" data-page="home"><img src="poyo.png">포요</div>
-<div class="top-btn" data-overlay="memory">⭐ 추억</div>
-<div class="top-btn" data-overlay="game">🎮 게임</div>
-</div>
-
-<div class="volume">
-🔊 <input type="range" min="0" max="1" step="0.01"
-oninput="mainBgm.volume=this.value">
-</div>
-
-<div class="dots" id="dots"></div>
-
-</div>
-
 <!-- INTRO -->
 <div id="intro">
-<video id="introVideo" autoplay muted playsinline>
+<video autoplay muted playsinline>
 <source src="video2.mp4">
 </video>
 
@@ -264,169 +197,96 @@ oninput="mainBgm.volume=this.value">
 <button id="skipBtn">스킵</button>
 </div>
 
-<audio id="mainBgm" loop src="bgm.mp3"></audio>
-
 <!-- MAIN -->
 <div id="main">
 
+<div id="uiLayer">
+<div class="top-ui">
+<div class="top-btn">포요</div>
+<div class="top-btn">추억</div>
+<div class="top-btn">게임</div>
+</div>
+
+<div class="volume">🔊</div>
+
+<div class="dots" id="dots"></div>
+</div>
+
 <div id="pages">
 
-<div class="page active">
-<div class="main-title">POYO 9TH ANNIVERSARY</div>
-<div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
+<!-- PAGE 1 -->
+<div class="page">
+POYO 9TH ANNIVERSARY
 </div>
 
+<!-- PAGE 2 (STEP SYSTEM ONLY) -->
 <div class="page tv-static">
+
+<div class="signal-box">
+
 <h1>CHZZK SIGNAL</h1>
+
+<!-- STEP 1 -->
+<div id="step1" class="step active">
+STEP 1
+<div class="content">???</div>
 </div>
 
-<div class="page gradient"></div>
+<!-- STEP 2 -->
+<div id="step2" class="step locked">
+STEP 2
+<div class="content">LOCKED</div>
+</div>
 
-<div class="page gradient"></div>
+<!-- STEP 3 -->
+<div id="step3" class="step locked">
+STEP 3
+<div class="content">LOCKED</div>
+</div>
 
-<div class="page gradient">
-<div class="page5-text">
+</div>
+
+</div>
+
+<!-- PAGE 3 -->
+<div class="page"></div>
+<div class="page"></div>
+
+<!-- PAGE 5 -->
+<div class="page">
 아직 끝이 아니에요 ✨<br>
-더 많은 추억과 즐거움이 기다리고 있어요<br>
-상단에서 계속 이어가 보세요
-</div>
+더 많은 추억과 즐거움이 기다리고 있어요
 </div>
 
-</div>
-</div>
-
-<!-- OVERLAY -->
-<div id="memory" class="overlay">
-<div class="overlay-content">
-<h1>⭐ 추억 페이지</h1>
-<div style="height:2000px;"></div>
-</div>
-</div>
-
-<div id="game" class="overlay">
-<div class="overlay-content">
-<h1>🎮 게임 페이지</h1>
-<div style="height:2000px;"></div>
 </div>
 </div>
 
 <script>
-const introVideo=document.getElementById("introVideo");
-const title=document.getElementById("title");
-const btn=document.getElementById("enterBtn");
-const mainBgm=document.getElementById("mainBgm");
-const pages=document.querySelectorAll(".page");
-const dots=document.getElementById("dots");
-const uiLayer=document.getElementById("uiLayer");
 
-let index=0;
-let shown=false;
+/* STEP SYSTEM */
+let step = 1;
 
-/* intro unlock */
-window.addEventListener("click",()=>{
-introVideo.muted=false;
-introVideo.play().catch(()=>{});
-},{once:true});
+const step1 = document.getElementById("step1");
+const step2 = document.getElementById("step2");
+const step3 = document.getElementById("step3");
 
-/* 103초 */
-function introLoop(){
-if(introVideo.currentTime>=103 && !shown){
-shown=true;
-title.style.opacity=1;
-title.style.visibility="visible";
-btn.style.opacity=1;
-btn.style.visibility="visible";
-}
-requestAnimationFrame(introLoop);
-}
-introLoop();
-
-/* enter */
-function enter(){
-introVideo.pause();
-introVideo.currentTime=0;
-introVideo.muted=true;
-
-document.getElementById("intro").style.display="none";
-document.getElementById("main").style.display="block";
-
-/* 🔥 UI 활성화 */
-uiLayer.style.display="block";
-
-mainBgm.play().catch(()=>{});
-}
-
-skipBtn.onclick=enter;
-btn.onclick=enter;
-
-/* dots */
-for(let i=0;i<5;i++){
-let d=document.createElement("div");
-d.className="dot";
-d.onclick=()=>move(i);
-dots.appendChild(d);
-}
-
-/* page move */
-function move(i){
-index=i;
-
-pages.forEach((p,idx)=>{
-p.style.position="absolute";
-p.style.top="0";
-p.style.left="0";
-p.style.width="100%";
-p.style.transform=`translateY(${(idx-index)*100}vh)`;
-p.classList.toggle("active",idx===index);
-});
-
-document.querySelectorAll(".dot").forEach((d,i)=>{
-d.classList.toggle("active",i===index);
-});
-}
-
-/* wheel */
-window.addEventListener("wheel",(e)=>{
-if(e.deltaY>0 && index<4) index++;
-if(e.deltaY<0 && index>0) index--;
-move(index);
-});
-
-/* overlay + dots control */
-function showOverlay(id){
-document.body.classList.add("hide-dots"); /* 🔥 dots 숨김 */
-document.getElementById(id).classList.add("show");
-}
-
-function hideOverlays(){
-document.body.classList.remove("hide-dots"); /* 복구 */
-document.querySelectorAll(".overlay").forEach(o=>{
-o.classList.remove("show");
-});
-}
-
-/* UI buttons */
-document.querySelectorAll(".top-btn").forEach(btn=>{
-btn.addEventListener("click",()=>{
-
-const overlay=btn.dataset.overlay;
-const page=btn.dataset.page;
-
-if(page==="home"){
-hideOverlays();
-move(0);
-}
-
-if(overlay){
-showOverlay(overlay);
-}
-
-});
-});
-
-window.onload=()=>{
-move(0);
+step1.onclick = () => {
+if(step !== 1) return;
+step2.classList.remove("locked");
+step = 2;
 };
+
+step2.onclick = () => {
+if(step !== 2) return;
+step3.classList.remove("locked");
+step = 3;
+};
+
+step3.onclick = () => {
+if(step !== 3) return;
+console.log("ALL UNLOCKED");
+};
+
 </script>
 
 </body>
