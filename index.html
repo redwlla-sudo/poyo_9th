@@ -20,9 +20,18 @@ font-family:'Fredoka',sans-serif;
 overflow:hidden;
 }
 
-/* INTRO */
-#intro{position:fixed;inset:0;z-index:9999;}
-#intro video{width:100%;height:100%;object-fit:cover;}
+/* ================= INTRO ================= */
+#intro{
+position:fixed;
+inset:0;
+z-index:9999;
+}
+
+#intro video{
+width:100%;
+height:100%;
+object-fit:cover;
+}
 
 #introText{
 position:absolute;
@@ -62,15 +71,25 @@ right:20px;
 z-index:100000;
 }
 
-/* MAIN */
-#main{position:fixed;inset:0;display:none;}
+/* ================= MAIN ================= */
+#main{
+position:fixed;
+inset:0;
+display:none;
+}
 
-/* 🔥 UI (무조건 최상단 고정 핵심 수정) */
+/* ================= UI (🔥 핵심 수정: 최상단 고정) ================= */
 #uiLayer{
 position:fixed;
 inset:0;
-z-index:2147483647; /* 최상단 강제 */
+z-index:2147483647; /* 절대 최상단 */
 pointer-events:none;
+}
+
+.top-ui,
+.volume,
+.dots{
+pointer-events:auto;
 }
 
 .top-ui{
@@ -84,7 +103,6 @@ padding:18px 30px;
 background:rgba(255,255,255,0.18);
 backdrop-filter:blur(14px);
 border-radius:999px;
-pointer-events:auto;
 }
 
 .top-btn{
@@ -106,7 +124,6 @@ height:28px;
 position:fixed;
 top:20px;
 right:20px;
-pointer-events:auto;
 }
 
 .dots{
@@ -114,7 +131,6 @@ position:fixed;
 right:20px;
 top:50%;
 transform:translateY(-50%);
-pointer-events:auto;
 }
 
 .dot{
@@ -131,8 +147,11 @@ background:#b8f2e6;
 opacity:1;
 }
 
-/* PAGES */
-#pages{height:100vh;position:relative;}
+/* ================= PAGES ================= */
+#pages{
+height:100vh;
+position:relative;
+}
 
 .page{
 height:100vh;
@@ -144,7 +163,9 @@ transition:transform .6s ease, opacity .6s ease;
 opacity:0.3;
 }
 
-.page.active{opacity:1;}
+.page.active{
+opacity:1;
+}
 
 .gradient{
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
@@ -155,7 +176,10 @@ background:linear-gradient(180deg,#00110a,#000);
 color:#00ff88;
 }
 
-.main-title{font-size:5rem;font-weight:900;}
+.main-title{
+font-size:5rem;
+font-weight:900;
+}
 
 .sub-title{
 font-size:2.2rem;
@@ -169,11 +193,11 @@ text-align:center;
 line-height:1.5;
 }
 
-/* OVERLAY */
+/* ================= OVERLAY ================= */
 .overlay{
 position:fixed;
 inset:0;
-z-index:9999999; /* UI보다 낮게 유지 */
+z-index:9999999; /* UI보다 무조건 낮게 */
 display:none;
 justify-content:flex-start;
 align-items:center;
@@ -201,7 +225,7 @@ padding:40px;
 
 <body>
 
-<!-- INTRO -->
+<!-- ================= INTRO ================= -->
 <div id="intro">
 <video id="introVideo" autoplay muted playsinline>
 <source src="video2.mp4">
@@ -217,9 +241,10 @@ padding:40px;
 
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
-<!-- MAIN -->
+<!-- ================= MAIN ================= -->
 <div id="main">
 
+<!-- UI -->
 <div id="uiLayer">
 
 <div class="top-ui">
@@ -237,6 +262,7 @@ oninput="mainBgm.volume=this.value">
 
 </div>
 
+<!-- PAGES -->
 <div id="pages">
 
 <div class="page active">
@@ -249,6 +275,7 @@ oninput="mainBgm.volume=this.value">
 </div>
 
 <div class="page gradient"></div>
+
 <div class="page gradient"></div>
 
 <div class="page gradient">
@@ -262,11 +289,10 @@ oninput="mainBgm.volume=this.value">
 </div>
 </div>
 
-<!-- OVERLAY -->
+<!-- ================= OVERLAY ================= -->
 <div id="memory" class="overlay">
 <div class="overlay-content">
 <h1>⭐ 추억 페이지</h1>
-<p>스크롤 가능 영역</p>
 <div style="height:2000px;"></div>
 </div>
 </div>
@@ -274,7 +300,6 @@ oninput="mainBgm.volume=this.value">
 <div id="game" class="overlay">
 <div class="overlay-content">
 <h1>🎮 게임 페이지</h1>
-<p>게임 콘텐츠 영역</p>
 <div style="height:2000px;"></div>
 </div>
 </div>
@@ -290,7 +315,7 @@ const dots=document.getElementById("dots");
 let index=0;
 let shown=false;
 
-/* intro audio unlock */
+/* intro unlock */
 window.addEventListener("click",()=>{
 introVideo.muted=false;
 introVideo.play().catch(()=>{});
@@ -333,7 +358,7 @@ d.onclick=()=>move(i);
 dots.appendChild(d);
 }
 
-/* page move */
+/* pages move */
 function move(i){
 index=i;
 
@@ -372,8 +397,9 @@ o.classList.remove("show");
 /* UI buttons */
 document.querySelectorAll(".top-btn").forEach(btn=>{
 btn.addEventListener("click",()=>{
-const page=btn.dataset.page;
+
 const overlay=btn.dataset.overlay;
+const page=btn.dataset.page;
 
 if(page==="home"){
 hideOverlays();
