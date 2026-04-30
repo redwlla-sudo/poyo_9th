@@ -7,6 +7,14 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
 
+<!-- 🔥 여기어때 잘난체 -->
+<style>
+@font-face {
+font-family: 'Jalnan';
+src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+}
+</style>
+
 <style>
 html,body{
 margin:0;
@@ -82,16 +90,17 @@ z-index:9999999;
 pointer-events:none;
 }
 
+/* 🔥 상단 UI 크기 증가 */
 .top-ui{
 position:fixed;
-top:15px;
+top:20px;
 left:50%;
 transform:translateX(-50%);
 display:flex;
-gap:18px;
-padding:14px 22px;
-background:rgba(255,255,255,0.15);
-backdrop-filter:blur(12px);
+gap:22px;
+padding:18px 28px;
+background:rgba(255,255,255,0.18);
+backdrop-filter:blur(14px);
 border-radius:999px;
 pointer-events:auto;
 }
@@ -99,15 +108,16 @@ pointer-events:auto;
 .top-btn{
 display:flex;
 align-items:center;
-gap:8px;
-padding:10px 18px;
-font-weight:800;
+gap:10px;
+padding:12px 22px;
+font-weight:900;
+font-size:1.1rem;
 cursor:pointer;
 }
 
 .top-btn img{
-width:22px;
-height:22px;
+width:26px;
+height:26px;
 }
 
 /* 볼륨 */
@@ -156,7 +166,6 @@ flex-direction:column;
 transition:transform .6s ease;
 }
 
-/* 배경 */
 .gradient{
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
@@ -167,20 +176,19 @@ color:#00ff88;
 }
 
 .main-title{font-size:5rem;font-weight:900;}
-.sub-title{font-size:2.2rem;}
 
-/* 🔥 5페이지 문구 */
-#page5Fixed{
-position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
+/* 🔥 잘난체 적용 */
+.sub-title{
+font-size:2.2rem;
+font-family:'Jalnan';
+}
+
+/* 🔥 5페이지 문구 (완전 고정 inside page) */
+.page5-text{
 font-size:3.5rem;
 font-weight:900;
 text-align:center;
 line-height:1.5;
-z-index:999999;
-display:none;
 }
 </style>
 </head>
@@ -231,7 +239,7 @@ oninput="mainBgm.volume=this.value">
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
 
-<!-- 2 (치지직) -->
+<!-- 2 -->
 <div class="page tv-static">
 <h1>CHZZK SIGNAL</h1>
 </div>
@@ -242,17 +250,16 @@ oninput="mainBgm.volume=this.value">
 <!-- 4 -->
 <div class="page gradient"></div>
 
-<!-- 5 -->
-<div class="page gradient"></div>
-
-</div>
-</div>
-
-<!-- 🔥 5페이지 문구 -->
-<div id="page5Fixed">
+<!-- 🔥 5 (문구 여기 고정됨) -->
+<div class="page gradient">
+<div class="page5-text">
 아직 끝이 아니에요 ✨<br>
 더 많은 추억과 즐거움이 기다리고 있어요<br>
 상단에서 계속 이어가 보세요
+</div>
+</div>
+
+</div>
 </div>
 
 <script>
@@ -262,12 +269,11 @@ const btn=document.getElementById("enterBtn");
 const mainBgm=document.getElementById("mainBgm");
 const pages=document.querySelectorAll(".page");
 const dots=document.getElementById("dots");
-const page5El=document.getElementById("page5Fixed");
 
 let index=0;
 let shown=false;
 
-/* 클릭 시 인트로 소리 */
+/* 클릭 시 소리 */
 window.addEventListener("click",()=>{
 introVideo.muted=false;
 introVideo.play().catch(()=>{});
@@ -310,11 +316,10 @@ d.onclick=()=>move(i);
 dots.appendChild(d);
 }
 
-/* 🔥 핵심 수정된 move */
+/* 이동 */
 function move(i){
 index=i;
 
-/* 위치 강제 */
 pages.forEach((p,idx)=>{
 p.style.position="absolute";
 p.style.top="0";
@@ -323,27 +328,17 @@ p.style.width="100%";
 p.style.transform=`translateY(${(idx-index)*100}vh)`;
 });
 
-/* dots */
 document.querySelectorAll(".dot").forEach((d,i)=>{
 d.classList.toggle("active",i===index);
 });
-
-/* 5페이지에서만 표시 */
-if(index===4){
-page5El.style.display="block";
-}else{
-page5El.style.display="none";
-}
 }
 
-/* 스크롤 */
 window.addEventListener("wheel",(e)=>{
 if(e.deltaY>0 && index<4) index++;
 if(e.deltaY<0 && index>0) index--;
 move(index);
 });
 
-/* 초기 */
 window.onload=()=>{
 move(0);
 };
