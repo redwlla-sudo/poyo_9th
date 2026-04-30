@@ -33,7 +33,7 @@ top:50%;
 left:50%;
 transform:translate(-50%,-50%);
 text-align:center;
-z-index:10001;
+z-index:10;
 }
 
 #title,#enterBtn{
@@ -64,7 +64,7 @@ background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 position:fixed;
 top:20px;
 right:20px;
-z-index:99999999;
+z-index:999999;
 }
 
 /* ================= MAIN ================= */
@@ -78,37 +78,43 @@ display:none;
 #uiLayer{
 position:fixed;
 inset:0;
-z-index:999999999;
+z-index:999999;
 pointer-events:none;
 }
 
+/* 🔥 상단 UI (이미지 느낌) */
 .top-ui{
 position:fixed;
 top:20px;
 left:50%;
 transform:translateX(-50%);
 display:flex;
-gap:18px;
-padding:14px 22px;
-background:rgba(255,255,255,0.25);
-backdrop-filter:blur(12px);
+gap:14px;
+padding:10px 18px;
+background:rgba(255,255,255,0.2);
+backdrop-filter:blur(15px);
 border-radius:999px;
 pointer-events:auto;
 }
 
 .top-btn{
-padding:8px;
+display:flex;
+align-items:center;
+gap:8px;
+padding:10px 18px;
+border-radius:999px;
+font-weight:700;
+background:rgba(255,255,255,0.25);
 cursor:pointer;
 }
 
-/* 🔥 아이콘 */
-.icon{
-width:32px;
-height:32px;
-object-fit:contain;
-pointer-events:none;
+/* 포요 PNG */
+.poyo-icon{
+width:24px;
+height:24px;
 }
 
+/* 볼륨 */
 .volume{
 position:fixed;
 top:20px;
@@ -116,6 +122,7 @@ right:20px;
 pointer-events:auto;
 }
 
+/* DOT */
 .dots{
 position:fixed;
 right:20px;
@@ -123,11 +130,8 @@ top:50%;
 transform:translateY(-50%);
 pointer-events:auto;
 }
-
 .dot{
-width:10px;
-height:10px;
-margin:10px 0;
+width:10px;height:10px;margin:10px 0;
 border-radius:50%;
 background:#000;
 opacity:.3;
@@ -147,14 +151,14 @@ align-items:center;
 flex-direction:column;
 }
 
-/* 배경 */
+/* 3~5 배경 */
 .page:nth-child(3),
 .page:nth-child(4),
 .page:nth-child(5){
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
-/* 2페이지 */
+/* 🔥 2번 페이지 (치지직 느낌) */
 .tv-static{
 background:
 radial-gradient(circle at center, rgba(0,255,120,0.08), transparent 60%),
@@ -166,12 +170,19 @@ text-shadow:0 0 6px rgba(0,255,120,0.4);
 .main-title{font-size:5rem;font-weight:900;}
 .sub-title{font-size:2.2rem;}
 
+/* 🔥 5페이지 문구 (안 깨지는 방식) */
+.page5{
+position:relative;
+display:flex;
+justify-content:center;
+align-items:center;
+}
 .page5-text{
 font-size:3.5rem;
 font-weight:900;
 text-align:center;
 line-height:1.5;
-z-index:9999;
+z-index:10;
 }
 </style>
 </head>
@@ -199,9 +210,11 @@ z-index:9999;
 
 <div id="uiLayer">
 <div class="top-ui">
-  <div class="top-btn"><img src="poyo.png" class="icon"></div>
-  <div class="top-btn"><img src="poyo.png" class="icon"></div>
-  <div class="top-btn"><img src="poyo.png" class="icon"></div>
+  <div class="top-btn">
+    <img src="poyo.png" class="poyo-icon"> 포요
+  </div>
+  <div class="top-btn">⭐ 추억</div>
+  <div class="top-btn">🎮 게임</div>
 </div>
 
 <div class="volume">
@@ -214,19 +227,25 @@ oninput="mainBgm.volume=this.value">
 
 <div id="pages">
 
+<!-- 1 -->
 <div class="page">
 <div class="main-title">POYO 9TH ANNIVERSARY</div>
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
 
+<!-- 2 (치지직) -->
 <div class="page tv-static">
 <h1>CHZZK SIGNAL</h1>
 </div>
 
-<div class="page"></div>
+<!-- 3 -->
 <div class="page"></div>
 
-<div class="page">
+<!-- 4 -->
+<div class="page"></div>
+
+<!-- 5 -->
+<div class="page page5">
 <div class="page5-text">
 아직 끝이 아니에요 ✨<br>
 더 많은 추억과 즐거움이 기다리고 있어요<br>
@@ -243,11 +262,13 @@ const mainBgm=document.getElementById("mainBgm");
 const title=document.getElementById("title");
 const enterBtn=document.getElementById("enterBtn");
 
+/* 인트로 */
 window.addEventListener("click",()=>{
 introVideo.muted=false;
 introVideo.play().catch(()=>{});
 },{once:true});
 
+/* 103초 */
 let shown=false;
 function loop(){
 if(introVideo.currentTime>=103 && !shown){
@@ -261,6 +282,7 @@ requestAnimationFrame(loop);
 }
 loop();
 
+/* ENTER */
 function enter(){
 introVideo.pause();
 introVideo.currentTime=0;
@@ -279,7 +301,6 @@ enterBtn.onclick=enter;
 /* SCROLL */
 let current=0;
 let target=0;
-let lock=false;
 
 const pages=document.querySelectorAll(".page");
 const dots=document.getElementById("dots");
@@ -292,7 +313,7 @@ dots.appendChild(d);
 }
 
 function animate(){
-current += (target-current)*0.035;
+current += (target-current)*0.045;
 
 pages.forEach((p,i)=>{
 p.style.transform=`translateY(${(i-current)*100}vh)`;
@@ -307,13 +328,8 @@ requestAnimationFrame(animate);
 animate();
 
 window.addEventListener("wheel",(e)=>{
-if(lock) return;
-lock=true;
-
 if(e.deltaY>0) target=Math.min(4,target+1);
 else target=Math.max(0,target-1);
-
-setTimeout(()=>lock=false,450);
 });
 </script>
 
