@@ -9,153 +9,142 @@
 
 <style>
 html,body{
-    margin:0;
-    padding:0;
-    font-family:'Fredoka', sans-serif;
-    overflow:hidden;
+margin:0;
+padding:0;
+font-family:'Fredoka',sans-serif;
+overflow:hidden;
 }
 
 /* ================= INTRO ================= */
 #intro{
-    position:fixed;
-    inset:0;
-    z-index:1000;
+position:fixed;
+inset:0;
+z-index:1000;
 }
 
 #intro video{
-    width:100%;
-    height:100%;
-    object-fit:cover;
+width:100%;
+height:100%;
+object-fit:cover;
 }
 
-/* ================= TEXT ================= */
 #introText{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    text-align:center;
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
 }
 
 #title{
-    font-size:4rem;
-    font-weight:900;
-    opacity:0;
-    background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
+font-size:4rem;
+font-weight:900;
+opacity:0;
+background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
 
 #enterBtn{
-    margin-top:20px;
-    padding:14px 40px;
-    font-size:1.2rem;
+margin-top:20px;
+padding:14px 40px;
+opacity:0;
+transition:0.3s;
 }
 
-/* ================= SKIP ================= */
+/* SKIP */
 #skipBtn{
-    position:fixed;
-    top:20px;
-    right:20px;
-    z-index:9999;
+position:fixed;
+top:20px;
+right:20px;
+z-index:9999;
 }
 
 /* ================= TOP UI ================= */
 .top-ui{
-    position:fixed;
-    top:15px;
-    left:50%;
-    transform:translateX(-50%);
-    display:none;
-    gap:20px;
-    z-index:9999;
-    padding:10px 20px;
-    border-radius:999px;
-    backdrop-filter:blur(10px);
-    background:rgba(255,255,255,0.2);
-    color:#000;
-}
-
-.top-btn{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    font-weight:700;
-}
-
-.top-btn img{
-    width:22px;
-}
-
-/* ================= VOLUME ================= */
-.volume{
-    position:fixed;
-    top:80px;
-    right:20px;
-    display:none;
-    z-index:9999;
+position:fixed;
+top:15px;
+left:50%;
+transform:translateX(-50%);
+display:none;
+gap:20px;
+z-index:9999;
+padding:10px 20px;
+border-radius:999px;
+background:rgba(255,255,255,0.2);
+color:#000;
 }
 
 /* ================= MAIN ================= */
 #main{
-    display:none;
+display:none;
 }
 
-/* PAGE STYLE */
 .page{
-    position:absolute;
-    width:100%;
-    height:100%;
+position:absolute;
+width:100%;
+height:100%;
+transition:transform 0.8s ease;
 }
 
-/* 1,3,4,5 */
+/* background */
 .page:not(.page2){
-    background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
-/* 2 PAGE */
 .page2{
-    background:linear-gradient(180deg,#001a10,#000000,#00ff66);
-    color:#00ff88;
+background:linear-gradient(180deg,#001a10,#000,#00ff66);
+color:#00ff88;
 }
 
-/* PAGE1 TEXT */
+/* PAGE1 */
 .page1-title{
-    font-size:4rem;
-    font-weight:900;
+font-size:4rem;
+font-weight:900;
 }
 
 .page1-sub{
-    font-size:1.5rem;
-    opacity:0.8;
+font-size:1.5rem;
+opacity:0.8;
 }
 
 /* PAGE5 */
 .page5-text{
-    font-size:2.5rem;
-    text-align:center;
-    font-weight:800;
+font-size:2.4rem;
+text-align:center;
+font-weight:800;
 }
 
-/* DOTS */
+/* DOT NAV */
 .dots{
-    position:fixed;
-    right:20px;
-    top:50%;
+position:fixed;
+right:20px;
+top:50%;
+transform:translateY(-50%);
 }
 
 .dot{
-    width:10px;
-    height:10px;
-    margin:10px;
-    border-radius:50%;
-    background:#000;
-    opacity:0.3;
+width:10px;
+height:10px;
+margin:10px;
+border-radius:50%;
+background:#000;
+opacity:0.3;
+cursor:pointer;
 }
 
 .dot.active{
-    opacity:1;
-    background:#b8f2e6;
+opacity:1;
+background:#b8f2e6;
+}
+
+/* VOLUME */
+.volume{
+position:fixed;
+top:80px;
+right:20px;
+display:none;
+z-index:9999;
 }
 </style>
 </head>
@@ -164,16 +153,16 @@ html,body{
 
 <!-- INTRO -->
 <div id="intro">
-    <video id="introVideo" autoplay muted playsinline>
-        <source src="video2.mp4">
-    </video>
+<video id="introVideo" autoplay muted playsinline>
+<source src="video2.mp4">
+</video>
 
-    <div id="introText">
-        <div id="title">POYO 9TH ANNIVERSARY</div>
-        <button id="enterBtn">입장하기</button>
-    </div>
+<div id="introText">
+<div id="title">POYO 9TH ANNIVERSARY</div>
+<button id="enterBtn">입장하기</button>
+</div>
 
-    <button id="skipBtn">SKIP</button>
+<button id="skipBtn">SKIP</button>
 </div>
 
 <audio id="introBgm" loop></audio>
@@ -181,31 +170,25 @@ html,body{
 
 <!-- TOP UI -->
 <div class="top-ui">
-    <div class="top-btn"><img src="poyo.png">포요</div>
-    <div class="top-btn">⭐ 추억</div>
-    <div class="top-btn">🎮 게임</div>
-</div>
-
-<!-- VOLUME -->
-<div class="volume">
-    🔊 <input type="range" min="0" max="1" step="0.01"
-    oninput="mainBgm.volume=this.value">
+<div>포요</div>
+<div>추억</div>
+<div>게임</div>
 </div>
 
 <!-- MAIN -->
 <div id="main">
 
 <div class="dots">
-<div class="dot active"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
-<div class="dot"></div>
+<div class="dot active" data-i="0"></div>
+<div class="dot" data-i="1"></div>
+<div class="dot" data-i="2"></div>
+<div class="dot" data-i="3"></div>
+<div class="dot" data-i="4"></div>
 </div>
 
 <section class="page page1">
-    <div class="page1-title">POYO 9TH ANNIVERSARY</div>
-    <div class="page1-sub">포동이들과 함께 쌓아온 9년의 시간</div>
+<div class="page1-title">POYO 9TH ANNIVERSARY</div>
+<div class="page1-sub">포동이들과 함께 쌓아온 9년의 시간</div>
 </section>
 
 <section class="page page2">CHZZK SIGNAL</section>
@@ -213,11 +196,11 @@ html,body{
 <section class="page">PAGE4</section>
 
 <section class="page">
-    <div class="page5-text">
-        아직 끝이 아니에요 ✨<br>
-        더 많은 추억과 즐거움이 기다리고 있어요<br>
-        상단에서 계속 이어가 보세요
-    </div>
+<div class="page5-text">
+아직 끝이 아니에요 ✨<br>
+더 많은 추억과 즐거움이 기다리고 있어요<br>
+상단에서 계속 이어가 보세요
+</div>
 </section>
 
 </div>
@@ -225,18 +208,30 @@ html,body{
 <script>
 
 let state="intro";
-let current=0;
+let page=0;
 let target=0;
-let animating=false;
+let shown=false;
 
 const intro=document.getElementById("intro");
 const main=document.getElementById("main");
-const topUI=document.querySelector(".top-ui");
-const volume=document.querySelector(".volume");
 
 const video=document.getElementById("introVideo");
 const introBgm=document.getElementById("introBgm");
 const mainBgm=document.getElementById("mainBgm");
+
+const title=document.getElementById("title");
+const enterBtn=document.getElementById("enterBtn");
+
+/* ================= 103s BUTTON ================= */
+function loop(){
+if(video.currentTime>=103 && !shown){
+shown=true;
+title.style.opacity=1;
+enterBtn.style.opacity=1;
+}
+requestAnimationFrame(loop);
+}
+loop();
 
 /* ================= ENTER ================= */
 function enter(){
@@ -245,9 +240,6 @@ state="main";
 intro.style.display="none";
 main.style.display="block";
 
-topUI.style.display="flex";
-volume.style.display="block";
-
 video.pause();
 introBgm.pause();
 
@@ -255,21 +247,26 @@ mainBgm.volume=0.5;
 mainBgm.play().catch(()=>{});
 }
 
-/* ================= SMOOTH SCROLL ENGINE ================= */
+/* ================= SMOOTH SCROLL ================= */
 function animate(){
 if(state!=="main") return;
 
-current += (target-current)*0.12; // ⭐ 부드러움 핵심
+page += (target-page)*0.12;
 
 document.querySelectorAll(".page").forEach((p,i)=>{
-p.style.transform=`translateY(${(i-current)*100}vh)`;
+p.style.transform=`translateY(${(i-page)*100}vh)`;
+});
+
+/* DOT SYNC */
+document.querySelectorAll(".dot").forEach((d,i)=>{
+d.classList.toggle("active",Math.round(page)===i);
 });
 
 requestAnimationFrame(animate);
 }
 animate();
 
-/* wheel */
+/* ================= WHEEL ================= */
 window.addEventListener("wheel",(e)=>{
 if(state!=="main") return;
 
@@ -277,23 +274,24 @@ if(e.deltaY>0) target++;
 else target--;
 
 target=Math.max(0,Math.min(4,target));
-
-document.querySelectorAll(".dot").forEach((d,i)=>{
-d.classList.toggle("active",i===target);
 });
 
+/* ================= DOT CLICK ================= */
+document.querySelectorAll(".dot").forEach(dot=>{
+dot.addEventListener("click",()=>{
+target = Number(dot.dataset.i);
+});
 });
 
-/* intro start */
+/* ================= EVENTS ================= */
+enterBtn.onclick=enter;
+skipBtn.onclick=enter;
+
 window.addEventListener("click",()=>{
 video.muted=false;
 video.play().catch(()=>{});
 introBgm.play().catch(()=>{});
 },{once:true});
-
-/* buttons */
-enterBtn.onclick=enter;
-skipBtn.onclick=enter;
 
 </script>
 
