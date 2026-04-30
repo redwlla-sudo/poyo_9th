@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>POYO 9TH</title>
+<title>포요 9주년</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
 
@@ -11,16 +11,15 @@
 html,body{
 margin:0;
 padding:0;
-overflow:hidden;
 font-family:'Fredoka',sans-serif;
+overflow:hidden;
 }
 
 /* ================= INTRO ================= */
 #intro{
 position:fixed;
 inset:0;
-z-index:1000;
-background:#000;
+z-index:9999;
 }
 
 #intro video{
@@ -29,7 +28,7 @@ height:100%;
 object-fit:cover;
 }
 
-#introUI{
+#introText{
 position:absolute;
 top:50%;
 left:50%;
@@ -37,104 +36,150 @@ transform:translate(-50%,-50%);
 text-align:center;
 }
 
+/* 🔥 INTRO TEXT FIX (절대 유지) */
 #title{
-font-size:4rem;
-opacity:0;
+font-size:5rem;
 font-weight:900;
+opacity:0;
+visibility:hidden;
 background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
-transition:1s;
 }
 
 #enterBtn{
 margin-top:20px;
-padding:14px 40px;
+padding:18px 60px;
+border-radius:40px;
+font-size:1.6rem;
+font-weight:800;
 opacity:0;
-transition:1s;
+visibility:hidden;
+background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
 }
 
-/* SKIP */
+/* ================= SKIP ================= */
 #skipBtn{
 position:fixed;
 top:20px;
 right:20px;
-z-index:9999;
+z-index:100000;
 }
 
-/* ================= TOP UI ================= */
+/* ================= MAIN ================= */
+#main{
+position:fixed;
+inset:0;
+display:none;
+}
+
+/* ================= UI (절대 고정 레이어) ================= */
+#uiLayer{
+position:fixed;
+inset:0;
+z-index:9999999;
+pointer-events:none;
+}
+
 .top-ui{
 position:fixed;
 top:15px;
 left:50%;
 transform:translateX(-50%);
-display:none;
-gap:20px;
-z-index:9999;
-color:#000;
+display:flex;
+gap:18px;
+padding:14px 22px;
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(12px);
+border-radius:999px;
+pointer-events:auto;
 }
 
-/* ================= MAIN ================= */
-#main{
-display:none;
-}
-
-.page{
-position:absolute;
-width:100%;
-height:100%;
-transition:transform 0.7s ease;
-}
-
-/* PAGE1/3/4/5 */
-.page:not(.page2){
-background:linear-gradient(135deg,#d9cfff,#b8f2e6);
-}
-
-/* PAGE2 (고정 그라데이션) */
-.page2{
-background:linear-gradient(180deg,#001a10,#000,#00ff66);
-color:#00ff88;
-}
-
-/* PAGE1 TEXT */
-.page1-title{
-font-size:4rem;
-font-weight:900;
-}
-
-.page1-sub{
-font-size:1.5rem;
-}
-
-/* PAGE5 */
-.page5-text{
-font-size:2.3rem;
+.top-btn{
+padding:10px 18px;
 font-weight:800;
-text-align:center;
+cursor:pointer;
 }
 
-/* DOT */
+.volume{
+position:fixed;
+top:20px;
+right:20px;
+pointer-events:auto;
+}
+
 .dots{
 position:fixed;
 right:20px;
 top:50%;
 transform:translateY(-50%);
+pointer-events:auto;
 }
 
 .dot{
 width:10px;
 height:10px;
-margin:10px;
+margin:10px 0;
 border-radius:50%;
 background:#000;
-opacity:0.3;
-cursor:pointer;
+opacity:.3;
 }
 
 .dot.active{
-opacity:1;
 background:#b8f2e6;
+opacity:1;
+}
+
+/* ================= PAGES ================= */
+#pages{
+height:100vh;
+position:relative;
+}
+
+.page{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+transition:transform .7s ease;
+}
+
+/* background */
+.page:nth-child(3),
+.page:nth-child(4),
+.page:nth-child(5){
+background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+}
+
+.tv-static{
+background:linear-gradient(180deg,#002a18,#000);
+color:#00ff88;
+}
+
+.main-title{font-size:5rem;font-weight:900;}
+.anniv{letter-spacing:8px;}
+.sub-title{font-size:2.2rem;}
+
+/* 🔥 5페이지 문구 (완전 고정) */
+.page5-text{
+font-size:3.5rem;
+font-weight:900;
+text-align:center;
+line-height:1.5;
+position:relative;
+z-index:9999;
+}
+
+/* ================= INTRO UI FIX ================= */
+#introFinal{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+display:none;
+z-index:99999;
 }
 
 </style>
@@ -146,143 +191,145 @@ background:#b8f2e6;
 <div id="intro">
 
 <video id="introVideo" autoplay muted playsinline>
-<source src="video.mp4">
+<source src="video2.mp4">
 </video>
 
-<div id="introUI">
+<div id="introText">
 <div id="title">POYO 9TH ANNIVERSARY</div>
 <button id="enterBtn">입장하기</button>
 </div>
 
-<button id="skipBtn">SKIP</button>
+<!-- 🔥 103초 UI 전용 (절대 삭제 안됨) -->
+<div id="introFinal">
+<h1>포요 9주년 축하합니다 🎉</h1>
+<button onclick="enter()">입장하기</button>
 </div>
 
-<audio id="introAudio" loop></audio>
-<audio id="mainAudio" loop src="bgm.mp3"></audio>
+<button id="skipBtn">스킵</button>
+</div>
+
+<audio id="introBgm" loop></audio>
+<audio id="mainBgm" loop src="bgm.mp3"></audio>
 
 <!-- MAIN -->
 <div id="main">
 
+<div id="uiLayer">
+
 <div class="top-ui">
-<div>포요</div>
-<div>추억</div>
-<div>게임</div>
+<div class="top-btn">포요</div>
+<div class="top-btn">추억</div>
+<div class="top-btn">게임</div>
 </div>
 
-<div class="dots">
-<div class="dot active" data-i="0"></div>
-<div class="dot" data-i="1"></div>
-<div class="dot" data-i="2"></div>
-<div class="dot" data-i="3"></div>
-<div class="dot" data-i="4"></div>
+<div class="volume">
+🔊 <input type="range" min="0" max="1" step="0.01"
+oninput="mainBgm.volume=this.value">
 </div>
 
-<section class="page page1">
-<div class="page1-title">POYO 9TH ANNIVERSARY</div>
-<div class="page1-sub">포동이들과 함께 쌓아온 9년의 시간</div>
-</section>
+<div class="dots" id="dots"></div>
 
-<section class="page page2">CHZZK STYLE GREEN</section>
-<section class="page">PAGE3</section>
-<section class="page">PAGE4</section>
+</div>
 
-<section class="page">
+<div id="pages">
+
+<div class="page">
+<div class="main-title">POYO 9TH <span class="anniv">ANNIVERSARY</span></div>
+<div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
+</div>
+
+<div class="page tv-static"><h1>CHZZK SIGNAL</h1></div>
+
+<div class="page"></div>
+<div class="page"></div>
+
+<!-- 🔥 5페이지 문구 복구 (절대 유지) -->
+<div class="page">
 <div class="page5-text">
 아직 끝이 아니에요 ✨<br>
 더 많은 추억과 즐거움이 기다리고 있어요<br>
 상단에서 계속 이어가 보세요
 </div>
-</section>
+</div>
 
+</div>
 </div>
 
 <script>
 
-let state="intro";
-let page=0;
-let target=0;
-let shown=false;
+/* ================= AUDIO ================= */
+const introVideo=document.getElementById("introVideo");
+const introBgm=document.getElementById("introBgm");
+const mainBgm=document.getElementById("mainBgm");
 
-const intro=document.getElementById("intro");
-const main=document.getElementById("main");
+let started=false;
 
-const video=document.getElementById("introVideo");
-const introAudio=document.getElementById("introAudio");
-const mainAudio=document.getElementById("mainAudio");
+window.addEventListener("click",()=>{
+if(started) return;
+started=true;
 
-const title=document.getElementById("title");
-const enterBtn=document.getElementById("enterBtn");
+introVideo.muted=false;
+introVideo.play();
+introBgm.play();
+},{once:true});
 
-/* ================= 103s ================= */
-function loop(){
-if(video.currentTime>=103 && !shown){
-shown=true;
-title.style.opacity=1;
-enterBtn.style.opacity=1;
+/* ================= 103s FIX (안 깨지는 방식) ================= */
+introVideo.addEventListener("timeupdate",()=>{
+if(introVideo.currentTime>=103 && !window.done){
+window.done=true;
+document.getElementById("introFinal").style.display="block";
 }
-requestAnimationFrame(loop);
-}
-loop();
+});
 
 /* ================= ENTER ================= */
 function enter(){
-state="main";
+document.getElementById("intro").style.display="none";
+document.getElementById("main").style.display="block";
 
-intro.style.display="none";
-main.style.display="block";
-
-video.pause();
-introAudio.pause();
-
-/* MAIN AUDIO START */
-mainAudio.volume=0.5;
-mainAudio.play().catch(()=>{});
-
-/* START SCROLL ENGINE */
-animate();
+introVideo.pause();
+introBgm.pause();
+mainBgm.play();
 }
 
-/* ================= SMOOTH SCROLL ================= */
-function animate(){
-if(state!=="main") return;
+skipBtn.onclick=enter;
 
-page += (target-page)*0.1;
+/* ================= SCROLL ================= */
+let index=0;
+let lock=false;
 
-document.querySelectorAll(".page").forEach((p,i)=>{
-p.style.transform=`translateY(${(i-page)*100}vh)`;
+const pages=document.querySelectorAll(".page");
+const dots=document.getElementById("dots");
+
+for(let i=0;i<5;i++){
+let d=document.createElement("div");
+d.className="dot";
+d.onclick=()=>move(i);
+dots.appendChild(d);
+}
+
+function move(i){
+index=i;
+
+pages.forEach((p,idx)=>{
+p.style.transform=`translateY(${(idx-index)*100}vh)`;
 });
 
 document.querySelectorAll(".dot").forEach((d,i)=>{
-d.classList.toggle("active",Math.round(page)===i);
+d.classList.toggle("active",i===index);
 });
-
-requestAnimationFrame(animate);
 }
 
-/* ================= WHEEL ================= */
 window.addEventListener("wheel",(e)=>{
-if(state!=="main") return;
+if(lock) return;
+lock=true;
 
-target += e.deltaY>0 ? 1 : -1;
-target=Math.max(0,Math.min(4,target));
+if(e.deltaY>0 && index<4) index++;
+if(e.deltaY<0 && index>0) index--;
+
+move(index);
+
+setTimeout(()=>lock=false,650);
 });
-
-/* ================= DOT ================= */
-document.querySelectorAll(".dot").forEach(dot=>{
-dot.addEventListener("click",()=>{
-target = Number(dot.dataset.i);
-});
-});
-
-/* ================= EVENTS ================= */
-enterBtn.onclick=enter;
-skipBtn.onclick=enter;
-
-window.addEventListener("click",()=>{
-video.muted=false;
-video.play().catch(()=>{});
-introAudio.play().catch(()=>{});
-},{once:true});
 
 </script>
 
