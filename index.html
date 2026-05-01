@@ -80,6 +80,7 @@ display:none;
 
 .top-ui,.volume,.dots{pointer-events:auto;}
 
+/* UI 사이즈 조정 */
 .top-ui{
 position:fixed;
 top:20px;
@@ -157,7 +158,7 @@ position:relative;
 overflow:hidden;
 }
 
-/* 🔥 SIGNAL 작게 */
+/* 🔥 [핵심] 2페이지 전용 스타일 (다른 페이지 영향 차단) */
 .tv-static h1{
 font-size:1.8rem;
 opacity:0.5;
@@ -165,8 +166,7 @@ letter-spacing:2px;
 margin-bottom:10px;
 }
 
-/* 🔥 핵심 문장 크게 */
-.signal-text{
+.tv-static .signal-text{
 margin-top:10px;
 margin-bottom:40px;
 text-align:center;
@@ -176,8 +176,30 @@ font-weight:900;
 z-index:1;
 }
 
-.signal-text strong{
+.tv-static .signal-text strong{
 font-size:3.2rem;
+}
+
+/* 🔥 이진수 배경 */
+.binary-bg{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:200%;
+font-size:14px;
+line-height:14px;
+white-space:pre;
+color:#00ff88;
+opacity:0.07;
+animation:binaryMove 20s linear infinite;
+z-index:0;
+pointer-events:none;
+}
+
+@keyframes binaryMove{
+from{transform:translateY(0);}
+to{transform:translateY(-50%);}
 }
 
 /* STEP */
@@ -205,32 +227,50 @@ opacity:0.15;
 pointer-events:none;
 }
 
-/* 🔥 이진수 배경 */
-.binary-bg{
-position:absolute;
-top:0;
-left:0;
+/* 🔥 [절대 고정 보호 코드] */
+.page .main-title{
+font-size:5rem !important;
+font-weight:900 !important;
+}
+
+.page .sub-title{
+font-size:2.2rem !important;
+font-family:'Jalnan' !important;
+}
+
+.page5-text{
+font-size:3.5rem !important;
+font-weight:900 !important;
+line-height:1.5 !important;
+}
+
+/* OVERLAY */
+.overlay{
+position:fixed;
+inset:0;
+z-index:9999999;
+display:none;
+justify-content:flex-start;
+align-items:center;
+flex-direction:column;
+opacity:0;
+transition:0.4s ease;
+overflow-y:auto;
+padding-top:120px;
+background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+}
+
+.overlay.show{
+display:flex;
+opacity:1;
+}
+
+.overlay-content{
 width:100%;
-height:200%;
-font-size:14px;
-line-height:14px;
-white-space:pre;
-color:#00ff88;
-opacity:0.07;
-animation:binaryMove 20s linear infinite;
-z-index:0;
-pointer-events:none;
+text-align:center;
+padding:40px;
 }
 
-@keyframes binaryMove{
-from{transform:translateY(0);}
-to{transform:translateY(-50%);}
-}
-
-/* 나머지 유지 */
-.overlay{position:fixed;inset:0;z-index:9999999;display:none;justify-content:flex-start;align-items:center;flex-direction:column;opacity:0;transition:0.4s ease;overflow-y:auto;padding-top:120px;background:linear-gradient(135deg,#d9cfff,#b8f2e6);}
-.overlay.show{display:flex;opacity:1;}
-.overlay-content{width:100%;text-align:center;padding:40px;}
 .hide-dots .dots{display:none;}
 </style>
 </head>
@@ -278,10 +318,8 @@ oninput="mainBgm.volume=this.value">
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
 
-<!-- 🔥 2페이지 -->
 <div class="page tv-static">
 
-<!-- 🔥 이진수 -->
 <div class="binary-bg">
 0101010101010101010101010101010101010101010101010101010101010101
 0101010101010101010101010101010101010101010101010101010101010101
@@ -318,12 +356,11 @@ oninput="mainBgm.volume=this.value">
 </div>
 </div>
 
-<!-- OVERLAY 그대로 유지 -->
+<!-- OVERLAY -->
 <div id="memory" class="overlay"><div class="overlay-content"><h1>⭐ 추억 페이지</h1><div style="height:2000px;"></div></div></div>
 <div id="game" class="overlay"><div class="overlay-content"><h1>🎮 게임 페이지</h1><div style="height:2000px;"></div></div></div>
 
 <script>
-/* 기존 JS 그대로 유지 */
 const introVideo=document.getElementById("introVideo");
 const title=document.getElementById("title");
 const btn=document.getElementById("enterBtn");
