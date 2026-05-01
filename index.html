@@ -21,17 +21,8 @@ overflow:hidden;
 }
 
 /* INTRO */
-#intro{
-position:fixed;
-inset:0;
-z-index:9999;
-}
-
-#intro video{
-width:100%;
-height:100%;
-object-fit:cover;
-}
+#intro{position:fixed;inset:0;z-index:9999;}
+#intro video{width:100%;height:100%;object-fit:cover;}
 
 #introText{
 position:absolute;
@@ -78,22 +69,17 @@ inset:0;
 display:none;
 }
 
-/* UI (기본 숨김) */
+/* UI */
 #uiLayer{
 position:fixed;
 inset:0;
 z-index:2147483647;
 pointer-events:none;
-display:none; /* 🔥 핵심 */
+display:none;
 }
 
-.top-ui,
-.volume,
-.dots{
-pointer-events:auto;
-}
+.top-ui,.volume,.dots{pointer-events:auto;}
 
-/* top ui */
 .top-ui{
 position:fixed;
 top:20px;
@@ -117,19 +103,10 @@ font-size:1.25rem;
 cursor:pointer;
 }
 
-.top-btn img{
-width:28px;
-height:28px;
-}
+.top-btn img{width:28px;height:28px;}
 
-/* volume */
-.volume{
-position:fixed;
-top:20px;
-right:20px;
-}
+.volume{position:fixed;top:20px;right:20px;}
 
-/* dots */
 .dots{
 position:fixed;
 right:20px;
@@ -152,10 +129,7 @@ opacity:1;
 }
 
 /* PAGES */
-#pages{
-height:100vh;
-position:relative;
-}
+#pages{height:100vh;position:relative;}
 
 .page{
 height:100vh;
@@ -178,10 +152,7 @@ background:linear-gradient(180deg,#00110a,#000);
 color:#00ff88;
 }
 
-.main-title{
-font-size:5rem;
-font-weight:900;
-}
+.main-title{font-size:5rem;font-weight:900;}
 
 .sub-title{
 font-size:2.2rem;
@@ -223,9 +194,35 @@ text-align:center;
 padding:40px;
 }
 
-/* 🔥 overlay에서는 dots 숨김 */
-.hide-dots .dots{
-display:none;
+.hide-dots .dots{display:none;}
+
+/* 🔥 STEP SYSTEM */
+.signal-box{
+margin-top:40px;
+text-align:center;
+width:80%;
+max-width:600px;
+}
+
+.step{
+margin:15px auto;
+padding:20px;
+border:1px solid rgba(0,255,136,0.4);
+border-radius:12px;
+cursor:pointer;
+opacity:0.3;
+transition:0.3s;
+}
+
+.step.active{opacity:1;}
+.step.locked{
+opacity:0.15;
+pointer-events:none;
+}
+
+.step .content{
+margin-top:10px;
+font-size:1.1rem;
 }
 </style>
 </head>
@@ -234,7 +231,6 @@ display:none;
 
 <!-- UI -->
 <div id="uiLayer">
-
 <div class="top-ui">
 <div class="top-btn" data-page="home"><img src="poyo.png">포요</div>
 <div class="top-btn" data-overlay="memory">⭐ 추억</div>
@@ -247,7 +243,6 @@ oninput="mainBgm.volume=this.value">
 </div>
 
 <div class="dots" id="dots"></div>
-
 </div>
 
 <!-- INTRO -->
@@ -268,7 +263,6 @@ oninput="mainBgm.volume=this.value">
 
 <!-- MAIN -->
 <div id="main">
-
 <div id="pages">
 
 <div class="page active">
@@ -276,12 +270,31 @@ oninput="mainBgm.volume=this.value">
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
 
+<!-- 🔥 STEP 추가된 페이지 -->
 <div class="page tv-static">
 <h1>CHZZK SIGNAL</h1>
+
+<div id="stepSystem" class="signal-box">
+
+<div id="step1" class="step active">
+STEP 1
+<div class="content">???</div>
+</div>
+
+<div id="step2" class="step locked">
+STEP 2
+<div class="content">LOCKED</div>
+</div>
+
+<div id="step3" class="step locked">
+STEP 3
+<div class="content">LOCKED</div>
+</div>
+
+</div>
 </div>
 
 <div class="page gradient"></div>
-
 <div class="page gradient"></div>
 
 <div class="page gradient">
@@ -322,13 +335,11 @@ const uiLayer=document.getElementById("uiLayer");
 let index=0;
 let shown=false;
 
-/* intro unlock */
 window.addEventListener("click",()=>{
 introVideo.muted=false;
 introVideo.play().catch(()=>{});
 },{once:true});
 
-/* 103초 */
 function introLoop(){
 if(introVideo.currentTime>=103 && !shown){
 shown=true;
@@ -341,7 +352,6 @@ requestAnimationFrame(introLoop);
 }
 introLoop();
 
-/* enter */
 function enter(){
 introVideo.pause();
 introVideo.currentTime=0;
@@ -350,7 +360,6 @@ introVideo.muted=true;
 document.getElementById("intro").style.display="none";
 document.getElementById("main").style.display="block";
 
-/* 🔥 UI 활성화 */
 uiLayer.style.display="block";
 
 mainBgm.play().catch(()=>{});
@@ -359,7 +368,6 @@ mainBgm.play().catch(()=>{});
 skipBtn.onclick=enter;
 btn.onclick=enter;
 
-/* dots */
 for(let i=0;i<5;i++){
 let d=document.createElement("div");
 d.className="dot";
@@ -367,7 +375,6 @@ d.onclick=()=>move(i);
 dots.appendChild(d);
 }
 
-/* page move */
 function move(i){
 index=i;
 
@@ -385,30 +392,26 @@ d.classList.toggle("active",i===index);
 });
 }
 
-/* wheel */
 window.addEventListener("wheel",(e)=>{
 if(e.deltaY>0 && index<4) index++;
 if(e.deltaY<0 && index>0) index--;
 move(index);
 });
 
-/* overlay + dots control */
 function showOverlay(id){
-document.body.classList.add("hide-dots"); /* 🔥 dots 숨김 */
+document.body.classList.add("hide-dots");
 document.getElementById(id).classList.add("show");
 }
 
 function hideOverlays(){
-document.body.classList.remove("hide-dots"); /* 복구 */
+document.body.classList.remove("hide-dots");
 document.querySelectorAll(".overlay").forEach(o=>{
 o.classList.remove("show");
 });
 }
 
-/* UI buttons */
 document.querySelectorAll(".top-btn").forEach(btn=>{
 btn.addEventListener("click",()=>{
-
 const overlay=btn.dataset.overlay;
 const page=btn.dataset.page;
 
@@ -416,16 +419,55 @@ if(page==="home"){
 hideOverlays();
 move(0);
 }
-
 if(overlay){
 showOverlay(overlay);
 }
+});
+});
 
-});
-});
+/* 🔥 STEP MODULE */
+const StepSystem = (()=>{
+let currentStep=1;
+
+function init(){
+const root=document.getElementById("stepSystem");
+if(!root) return;
+
+const step1=root.querySelector("#step1");
+const step2=root.querySelector("#step2");
+const step3=root.querySelector("#step3");
+
+if(!step1||!step2||!step3) return;
+
+step1.onclick=()=>{
+if(currentStep!==1) return;
+unlock(step2);
+currentStep=2;
+};
+
+step2.onclick=()=>{
+if(currentStep!==2) return;
+unlock(step3);
+currentStep=3;
+};
+
+step3.onclick=()=>{
+if(currentStep!==3) return;
+console.log("ALL UNLOCKED");
+};
+}
+
+function unlock(el){
+el.classList.remove("locked");
+el.classList.add("active");
+}
+
+return {init};
+})();
 
 window.onload=()=>{
 move(0);
+StepSystem.init();
 };
 </script>
 
