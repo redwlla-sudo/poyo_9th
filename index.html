@@ -20,185 +20,21 @@ font-family:'Fredoka',sans-serif;
 overflow:hidden;
 }
 
-/* INTRO */
-#intro{position:fixed;inset:0;z-index:9999;}
-#intro video{width:100%;height:100%;object-fit:cover;}
+/* 기존 스타일 그대로 유지 */
 
-#introText{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-text-align:center;
-}
-
-#title{
-font-size:5rem;
-font-weight:900;
-opacity:0;
-visibility:hidden;
-background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-transition:1s;
-}
-
-#enterBtn{
+/* 🔥 문구 스타일만 추가 */
+.signal-text{
 margin-top:20px;
-padding:18px 60px;
-border-radius:40px;
+margin-bottom:30px;
+text-align:center;
+line-height:1.6;
 font-size:1.6rem;
 font-weight:800;
-opacity:0;
-visibility:hidden;
-background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
-transition:1s;
 }
-
-#skipBtn{
-position:fixed;
-top:20px;
-right:20px;
-z-index:100000;
-}
-
-/* MAIN */
-#main{
-position:fixed;
-inset:0;
-display:none;
-}
-
-/* UI */
-#uiLayer{
-position:fixed;
-inset:0;
-z-index:2147483647;
-pointer-events:none;
-display:none;
-}
-
-.top-ui,.volume,.dots{pointer-events:auto;}
-
-.top-ui{
-position:fixed;
-top:20px;
-left:50%;
-transform:translateX(-50%);
-display:flex;
-gap:24px;
-padding:18px 30px;
-background:rgba(255,255,255,0.18);
-backdrop-filter:blur(14px);
-border-radius:999px;
-}
-
-.top-btn{
-display:flex;
-align-items:center;
-gap:12px;
-padding:14px 26px;
-font-weight:900;
-font-size:1.25rem;
-cursor:pointer;
-}
-
-.top-btn img{width:28px;height:28px;}
-
-.volume{position:fixed;top:20px;right:20px;}
-
-.dots{
-position:fixed;
-right:20px;
-top:50%;
-transform:translateY(-50%);
-}
-
-.dot{
-width:10px;
-height:10px;
-margin:10px 0;
-border-radius:50%;
-background:#000;
-opacity:.3;
-}
-
-.dot.active{
-background:#b8f2e6;
-opacity:1;
-}
-
-/* PAGES */
-#pages{height:100vh;position:relative;}
-
-.page{
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-transition:transform .6s ease, opacity .6s ease;
-opacity:0.3;
-}
-
-.page.active{opacity:1;}
-
-.gradient{
-background:linear-gradient(135deg,#d9cfff,#b8f2e6);
-}
-
-.tv-static{
-background:linear-gradient(180deg,#00110a,#000);
-color:#00ff88;
-}
-
-.main-title{font-size:5rem;font-weight:900;}
-
-.sub-title{
-font-size:2.2rem;
-font-family:'Jalnan';
-}
-
-.page5-text{
-font-size:3.5rem;
-font-weight:900;
-text-align:center;
-line-height:1.5;
-}
-
-/* OVERLAY */
-.overlay{
-position:fixed;
-inset:0;
-z-index:9999999;
-display:none;
-justify-content:flex-start;
-align-items:center;
-flex-direction:column;
-opacity:0;
-transition:0.4s ease;
-overflow-y:auto;
-padding-top:120px;
-box-sizing:border-box;
-background:linear-gradient(135deg,#d9cfff,#b8f2e6);
-}
-
-.overlay.show{
-display:flex;
-opacity:1;
-}
-
-.overlay-content{
-width:100%;
-text-align:center;
-padding:40px;
-}
-
-.hide-dots .dots{display:none;}
 
 /* 🔥 STEP SYSTEM */
 .signal-box{
-margin-top:40px;
+margin-top:10px;
 text-align:center;
 width:80%;
 max-width:600px;
@@ -224,6 +60,36 @@ pointer-events:none;
 margin-top:10px;
 font-size:1.1rem;
 }
+
+/* 나머지 CSS 전부 그대로 */
+#intro{position:fixed;inset:0;z-index:9999;}
+#intro video{width:100%;height:100%;object-fit:cover;}
+#introText{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+#title{font-size:5rem;font-weight:900;opacity:0;visibility:hidden;background:linear-gradient(45deg,#cdb4ff,#b8f2e6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:1s;}
+#enterBtn{margin-top:20px;padding:18px 60px;border-radius:40px;font-size:1.6rem;font-weight:800;opacity:0;visibility:hidden;background:linear-gradient(45deg,#cdb4ff,#b8f2e6);transition:1s;}
+#skipBtn{position:fixed;top:20px;right:20px;z-index:100000;}
+#main{position:fixed;inset:0;display:none;}
+#uiLayer{position:fixed;inset:0;z-index:2147483647;pointer-events:none;display:none;}
+.top-ui,.volume,.dots{pointer-events:auto;}
+.top-ui{position:fixed;top:20px;left:50%;transform:translateX(-50%);display:flex;gap:24px;padding:18px 30px;background:rgba(255,255,255,0.18);backdrop-filter:blur(14px);border-radius:999px;}
+.top-btn{display:flex;align-items:center;gap:12px;padding:14px 26px;font-weight:900;font-size:1.25rem;cursor:pointer;}
+.top-btn img{width:28px;height:28px;}
+.volume{position:fixed;top:20px;right:20px;}
+.dots{position:fixed;right:20px;top:50%;transform:translateY(-50%);}
+.dot{width:10px;height:10px;margin:10px 0;border-radius:50%;background:#000;opacity:.3;}
+.dot.active{background:#b8f2e6;opacity:1;}
+#pages{height:100vh;position:relative;}
+.page{height:100vh;display:flex;justify-content:center;align-items:center;flex-direction:column;transition:transform .6s ease, opacity .6s ease;opacity:0.3;}
+.page.active{opacity:1;}
+.gradient{background:linear-gradient(135deg,#d9cfff,#b8f2e6);}
+.tv-static{background:linear-gradient(180deg,#00110a,#000);color:#00ff88;}
+.main-title{font-size:5rem;font-weight:900;}
+.sub-title{font-size:2.2rem;font-family:'Jalnan';}
+.page5-text{font-size:3.5rem;font-weight:900;text-align:center;line-height:1.5;}
+.overlay{position:fixed;inset:0;z-index:9999999;display:none;justify-content:flex-start;align-items:center;flex-direction:column;opacity:0;transition:0.4s ease;overflow-y:auto;padding-top:120px;box-sizing:border-box;background:linear-gradient(135deg,#d9cfff,#b8f2e6);}
+.overlay.show{display:flex;opacity:1;}
+.overlay-content{width:100%;text-align:center;padding:40px;}
+.hide-dots .dots{display:none;}
 </style>
 </head>
 
@@ -270,9 +136,14 @@ oninput="mainBgm.volume=this.value">
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
 
-<!-- 🔥 STEP 추가된 페이지 -->
+<!-- 🔥 2페이지 -->
 <div class="page tv-static">
-<h1>CHZZK SIGNAL</h1>
+<h1>SIGNAL DETECTED</h1>
+
+<div class="signal-text">
+9년이라는 시간은<br>
+우리가 함께 만들어온 시간입니다
+</div>
 
 <div id="stepSystem" class="signal-box">
 
@@ -324,6 +195,8 @@ STEP 3
 </div>
 
 <script>
+/* 기존 JS 그대로 유지 + STEP 모듈 그대로 */
+
 const introVideo=document.getElementById("introVideo");
 const title=document.getElementById("title");
 const btn=document.getElementById("enterBtn");
@@ -425,8 +298,8 @@ showOverlay(overlay);
 });
 });
 
-/* 🔥 STEP MODULE */
-const StepSystem = (()=>{
+/* STEP MODULE */
+const StepSystem=(()=>{
 let currentStep=1;
 
 function init(){
@@ -462,7 +335,7 @@ el.classList.remove("locked");
 el.classList.add("active");
 }
 
-return {init};
+return{init};
 })();
 
 window.onload=()=>{
