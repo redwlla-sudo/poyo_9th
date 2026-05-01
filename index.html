@@ -80,7 +80,6 @@ display:none;
 
 .top-ui,.volume,.dots{pointer-events:auto;}
 
-/* 🔥 UI 크기 축소 */
 .top-ui{
 position:fixed;
 top:20px;
@@ -154,30 +153,31 @@ background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 .tv-static{
 background:linear-gradient(180deg,#00110a,#000);
 color:#00ff88;
+position:relative;
+overflow:hidden;
 }
 
-.main-title{font-size:5rem;font-weight:900;}
-
-.sub-title{
-font-size:2.2rem;
-font-family:'Jalnan';
+/* 🔥 SIGNAL 작게 */
+.tv-static h1{
+font-size:1.8rem;
+opacity:0.5;
+letter-spacing:2px;
+margin-bottom:10px;
 }
 
-.page5-text{
-font-size:3.5rem;
-font-weight:900;
-text-align:center;
-line-height:1.5;
-}
-
-/* 🔥 문구 크기 증가 */
+/* 🔥 핵심 문장 크게 */
 .signal-text{
-margin-top:20px;
-margin-bottom:30px;
+margin-top:10px;
+margin-bottom:40px;
 text-align:center;
-line-height:1.6;
-font-size:2.2rem;
-font-weight:800;
+line-height:1.4;
+font-size:2.8rem;
+font-weight:900;
+z-index:1;
+}
+
+.signal-text strong{
+font-size:3.2rem;
 }
 
 /* STEP */
@@ -186,6 +186,7 @@ margin-top:10px;
 text-align:center;
 width:80%;
 max-width:600px;
+z-index:1;
 }
 
 .step{
@@ -204,39 +205,32 @@ opacity:0.15;
 pointer-events:none;
 }
 
-.step .content{
-margin-top:10px;
-font-size:1.1rem;
-}
-
-/* OVERLAY */
-.overlay{
-position:fixed;
-inset:0;
-z-index:9999999;
-display:none;
-justify-content:flex-start;
-align-items:center;
-flex-direction:column;
-opacity:0;
-transition:0.4s ease;
-overflow-y:auto;
-padding-top:120px;
-box-sizing:border-box;
-background:linear-gradient(135deg,#d9cfff,#b8f2e6);
-}
-
-.overlay.show{
-display:flex;
-opacity:1;
-}
-
-.overlay-content{
+/* 🔥 이진수 배경 */
+.binary-bg{
+position:absolute;
+top:0;
+left:0;
 width:100%;
-text-align:center;
-padding:40px;
+height:200%;
+font-size:14px;
+line-height:14px;
+white-space:pre;
+color:#00ff88;
+opacity:0.07;
+animation:binaryMove 20s linear infinite;
+z-index:0;
+pointer-events:none;
 }
 
+@keyframes binaryMove{
+from{transform:translateY(0);}
+to{transform:translateY(-50%);}
+}
+
+/* 나머지 유지 */
+.overlay{position:fixed;inset:0;z-index:9999999;display:none;justify-content:flex-start;align-items:center;flex-direction:column;opacity:0;transition:0.4s ease;overflow-y:auto;padding-top:120px;background:linear-gradient(135deg,#d9cfff,#b8f2e6);}
+.overlay.show{display:flex;opacity:1;}
+.overlay-content{width:100%;text-align:center;padding:40px;}
 .hide-dots .dots{display:none;}
 </style>
 </head>
@@ -284,12 +278,22 @@ oninput="mainBgm.volume=this.value">
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
 
+<!-- 🔥 2페이지 -->
 <div class="page tv-static">
+
+<!-- 🔥 이진수 -->
+<div class="binary-bg">
+0101010101010101010101010101010101010101010101010101010101010101
+0101010101010101010101010101010101010101010101010101010101010101
+0101010101010101010101010101010101010101010101010101010101010101
+0101010101010101010101010101010101010101010101010101010101010101
+</div>
+
 <h1>SIGNAL DETECTED</h1>
 
 <div class="signal-text">
 9년이라는 시간은<br>
-우리가 함께 만들어온 시간입니다
+<strong>우리가 함께 만들어온 시간입니다</strong>
 </div>
 
 <div id="stepSystem" class="signal-box">
@@ -297,6 +301,7 @@ oninput="mainBgm.volume=this.value">
 <div id="step2" class="step locked">STEP 2<div class="content">LOCKED</div></div>
 <div id="step3" class="step locked">STEP 3<div class="content">LOCKED</div></div>
 </div>
+
 </div>
 
 <div class="page gradient"></div>
@@ -313,11 +318,12 @@ oninput="mainBgm.volume=this.value">
 </div>
 </div>
 
-<!-- OVERLAY -->
+<!-- OVERLAY 그대로 유지 -->
 <div id="memory" class="overlay"><div class="overlay-content"><h1>⭐ 추억 페이지</h1><div style="height:2000px;"></div></div></div>
 <div id="game" class="overlay"><div class="overlay-content"><h1>🎮 게임 페이지</h1><div style="height:2000px;"></div></div></div>
 
 <script>
+/* 기존 JS 그대로 유지 */
 const introVideo=document.getElementById("introVideo");
 const title=document.getElementById("title");
 const btn=document.getElementById("enterBtn");
@@ -346,13 +352,12 @@ requestAnimationFrame(introLoop);
 }
 introLoop();
 
-/* 🔥 버퍼링 제거 핵심 */
 function enter(){
 introVideo.pause();
 introVideo.currentTime=0;
 introVideo.muted=true;
 
-move(0); /* 먼저 렌더링 */
+move(0);
 
 document.getElementById("intro").style.display="none";
 document.getElementById("main").style.display="block";
