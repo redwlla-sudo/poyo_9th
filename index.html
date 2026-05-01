@@ -150,7 +150,7 @@ position:relative;
 overflow:hidden;
 }
 
-/* 2페이지 전용 */
+/* 2페이지 */
 .tv-static h1{
 font-size:1.8rem;
 opacity:0.5;
@@ -172,7 +172,7 @@ z-index:1;
 font-size:3.2rem;
 }
 
-/* 이진수 */
+/* binary */
 .binary-bg{
 position:absolute;
 top:0;
@@ -219,12 +219,8 @@ opacity:0.15;
 pointer-events:none;
 }
 
-/* 🔥 5페이지 완전 중앙 고정 */
+/* 5페이지 중앙 */
 .page5-text{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
 text-align:center;
 font-size:3.5rem !important;
 font-weight:900 !important;
@@ -256,11 +252,15 @@ transition:0.4s ease;
 overflow-y:auto;
 padding-top:120px;
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+
+/* 🔥 인트로에서 클릭 막기 */
+pointer-events:none;
 }
 
 .overlay.show{
 display:flex;
 opacity:1;
+pointer-events:auto; /* 🔥 활성화 시만 클릭 가능 */
 }
 
 .overlay-content{
@@ -317,10 +317,7 @@ oninput="mainBgm.volume=this.value">
 </div>
 
 <div class="page tv-static">
-<div class="binary-bg">
-0101010101010101010101010101010101010101010101010101010101010101
-0101010101010101010101010101010101010101010101010101010101010101
-</div>
+<div class="binary-bg">0101010101010101010101010101010101010101010101010101010101010101</div>
 
 <h1>SIGNAL DETECTED</h1>
 
@@ -355,15 +352,66 @@ oninput="mainBgm.volume=this.value">
 <div id="game" class="overlay"><div class="overlay-content"><h1>🎮 게임 페이지</h1><div style="height:2000px;"></div></div></div>
 
 <script>
+const introVideo=document.getElementById("introVideo");
+const title=document.getElementById("title");
+const btn=document.getElementById("enterBtn");
+const mainBgm=document.getElementById("mainBgm");
 const pages=document.querySelectorAll(".page");
 const dots=document.getElementById("dots");
+const uiLayer=document.getElementById("uiLayer");
 
 let index=0;
+let shown=false;
 
-/* 이동 */
+window.addEventListener("click",()=>{
+introVideo.muted=false;
+introVideo.play().catch(()=>{});
+},{once:true});
+
+function introLoop(){
+if(introVideo.currentTime>=103 && !shown){
+shown=true;
+title.style.opacity=1;
+title.style.visibility="visible";
+btn.style.opacity=1;
+btn.style.visibility="visible";
+}
+requestAnimationFrame(introLoop);
+}
+introLoop();
+
+function enter(){
+introVideo.pause();
+introVideo.currentTime=0;
+introVideo.muted=true;
+
+move(0);
+
+document.getElementById("intro").style.display="none";
+document.getElementById("main").style.display="block";
+
+uiLayer.style.display="block";
+
+mainBgm.play().catch(()=>{});
+}
+
+skipBtn.onclick=enter;
+btn.onclick=enter;
+
+for(let i=0;i<5;i++){
+let d=document.createElement("div");
+d.className="dot";
+d.onclick=()=>move(i);
+dots.appendChild(d);
+}
+
 function move(i){
 index=i;
 pages.forEach((p,idx)=>{
+p.style.position="absolute";
+p.style.top="0";
+p.style.left="0";
+p.style.width="100%";
 p.style.transform=`translateY(${(idx-index)*100}vh)`;
 p.classList.toggle("active",idx===index);
 });
@@ -372,21 +420,23 @@ d.classList.toggle("active",i===index);
 });
 }
 
-/* overlay */
+window.addEventListener("wheel",(e)=>{
+if(e.deltaY>0 && index<4) index++;
+if(e.deltaY<0 && index>0) index--;
+move(index);
+});
+
 function showOverlay(id){
-hideOverlays(); /* 🔥 기존 제거 후 */
 document.body.classList.add("hide-dots");
+document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
 document.getElementById(id).classList.add("show");
 }
 
 function hideOverlays(){
 document.body.classList.remove("hide-dots");
-document.querySelectorAll(".overlay").forEach(o=>{
-o.classList.remove("show");
-});
+document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
 }
 
-/* 버튼 */
 document.querySelectorAll(".top-btn").forEach(btn=>{
 btn.addEventListener("click",()=>{
 const overlay=btn.dataset.overlay;
@@ -396,12 +446,13 @@ if(page==="home"){
 hideOverlays();
 move(0);
 }
-
 if(overlay){
-showOverlay(overlay); /* 🔥 서로 이동 가능 */
+showOverlay(overlay);
 }
 });
 });
+
+window.onload=()=>{move(0);}
 </script>
 
 </body>
