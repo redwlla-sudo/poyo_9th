@@ -369,9 +369,20 @@ oninput="mainBgm.volume=this.value; introVideo.volume=this.value">
 </div>
 
 <div class="signal-box">
-<div class="step active" data-step="1">STEP 1<div class="content">9 Years : Still On-Air (3,287일의 기록)</div></div>
-<div class="step locked" data-step="2">STEP 2<div class="content">LOCKED</div></div>
-<div class="step locked" data-step="3">STEP 3<div class="content">LOCKED</div></div>
+<div class="step active" data-step="1">
+STEP 1
+<div class="content">[ 9Years : Still On-Air ]<br>(3,287일의 기록)</div>
+</div>
+
+<div class="step locked" data-step="2">
+STEP 2
+<div class="content">LOCKED</div>
+</div>
+
+<div class="step locked" data-step="3">
+STEP 3
+<div class="content">LOCKED</div>
+</div>
 </div>
 </div>
 
@@ -406,6 +417,7 @@ oninput="mainBgm.volume=this.value; introVideo.volume=this.value">
 </div>
 
 <script>
+/* 기존 유지 */
 const introVideo=document.getElementById("introVideo");
 const title=document.getElementById("title");
 const btn=document.getElementById("enterBtn");
@@ -413,9 +425,6 @@ const mainBgm=document.getElementById("mainBgm");
 const pages=document.querySelectorAll(".page");
 const dots=document.getElementById("dots");
 const uiLayer=document.getElementById("uiLayer");
-
-/* 🔥 추가: 볼륨 동기화 */
-introVideo.volume = mainBgm.volume;
 
 let index=0;
 let shown=false;
@@ -448,9 +457,6 @@ document.getElementById("intro").style.display="none";
 document.getElementById("main").style.display="block";
 
 uiLayer.style.display="block";
-
-/* 🔥 추가: 진입 시에도 볼륨 맞춤 */
-introVideo.volume = mainBgm.volume;
 
 mainBgm.play().catch(()=>{});
 }
@@ -513,52 +519,28 @@ showOverlay(overlay);
 });
 });
 
-/* STEP */
+/* 🔥 STEP 해금 + 텍스트 교체 */
 const steps=document.querySelectorAll(".step");
-const stepOverlay=document.getElementById("stepOverlay");
-const stepContent=document.getElementById("stepContent");
 
-const stepData={
-1:"9 Years : Still On-Air<br>(3,287일의 기록)",
-2:"데뷔 당시 목표 (추후 입력)",
-3:"그리고 우리는<br>지금도 함께하고 있다"
+const stepTexts={
+2:`[ The Origin ]<br>: 첫 번째 로그<br>(3,287일 전, 데뷔 첫 목표)`,
+3:`[ NEXT LOGGING ]<br>"다시 새롭게 시작될 페이지,<br>당신과 함께 채워갈 내일의 기록"`
 };
 
 steps.forEach((step,i)=>{
 step.addEventListener("click",()=>{
 if(step.classList.contains("locked")) return;
 
-hideOverlays();
-
-stepContent.innerHTML=stepData[step.dataset.step];
-stepOverlay.classList.add("show");
-
-steps.forEach(s=>s.classList.remove("active"));
-step.classList.add("active");
-
+/* 다음 STEP 해금 + 텍스트 교체 */
 if(i+1<steps.length){
-steps[i+1].classList.remove("locked");
-}
-});
-});
+let next=steps[i+1];
+next.classList.remove("locked");
 
-stepOverlay.addEventListener("click",(e)=>{
-if(e.target===stepOverlay){
-stepOverlay.classList.remove("show");
+let content=next.querySelector(".content");
+content.innerHTML=stepTexts[i+2]; /* 핵심 */
 }
 });
-
-window.addEventListener("keydown",(e)=>{
-if(e.key==="Escape"){
-stepOverlay.classList.remove("show");
-}
 });
-
-window.addEventListener("wheel",(e)=>{
-if(stepOverlay.classList.contains("show")){
-e.preventDefault();
-}
-},{passive:false});
 
 window.onload=()=>{move(0);}
 </script>
