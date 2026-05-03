@@ -219,7 +219,7 @@ opacity:0.15;
 pointer-events:none;
 }
 
-/* 🔥 STEP CARD (수정 완료) */
+/* STEP CARD */
 #stepOverlay{
 position:fixed;
 inset:0;
@@ -327,7 +327,7 @@ padding:40px;
 
 <div class="volume">
 🔊 <input type="range" min="0" max="1" step="0.01"
-oninput="mainBgm.volume=this.value">
+oninput="mainBgm.volume=this.value; introVideo.volume=this.value">
 </div>
 
 <div class="dots" id="dots"></div>
@@ -406,7 +406,6 @@ oninput="mainBgm.volume=this.value">
 </div>
 
 <script>
-/* ===== 기존 코드 그대로 유지 ===== */
 const introVideo=document.getElementById("introVideo");
 const title=document.getElementById("title");
 const btn=document.getElementById("enterBtn");
@@ -414,6 +413,9 @@ const mainBgm=document.getElementById("mainBgm");
 const pages=document.querySelectorAll(".page");
 const dots=document.getElementById("dots");
 const uiLayer=document.getElementById("uiLayer");
+
+/* 🔥 추가: 볼륨 동기화 */
+introVideo.volume = mainBgm.volume;
 
 let index=0;
 let shown=false;
@@ -446,6 +448,9 @@ document.getElementById("intro").style.display="none";
 document.getElementById("main").style.display="block";
 
 uiLayer.style.display="block";
+
+/* 🔥 추가: 진입 시에도 볼륨 맞춤 */
+introVideo.volume = mainBgm.volume;
 
 mainBgm.play().catch(()=>{});
 }
