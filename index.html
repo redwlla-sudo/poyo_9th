@@ -252,15 +252,13 @@ transition:0.4s ease;
 overflow-y:auto;
 padding-top:120px;
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
-
-/* 🔥 인트로에서 클릭 막기 */
 pointer-events:none;
 }
 
 .overlay.show{
 display:flex;
 opacity:1;
-pointer-events:auto; /* 🔥 활성화 시만 클릭 가능 */
+pointer-events:auto;
 }
 
 .overlay-content{
@@ -426,6 +424,7 @@ if(e.deltaY<0 && index>0) index--;
 move(index);
 });
 
+/* overlay */
 function showOverlay(id){
 document.body.classList.add("hide-dots");
 document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
@@ -449,6 +448,24 @@ move(0);
 if(overlay){
 showOverlay(overlay);
 }
+});
+});
+
+/* 🔥 STEP UNLOCK SYSTEM */
+const steps = document.querySelectorAll(".step");
+
+steps.forEach((step, i) => {
+step.addEventListener("click", () => {
+
+if(step.classList.contains("locked")) return;
+
+steps.forEach(s => s.classList.remove("active"));
+step.classList.add("active");
+
+if(i + 1 < steps.length){
+steps[i+1].classList.remove("locked");
+}
+
 });
 });
 
