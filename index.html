@@ -219,8 +219,8 @@ opacity:0.15;
 pointer-events:none;
 }
 
-/* 🔥 STEP CARD (수정된 디자인) */
-#stepOverlay{
+/* STEP POPUP (안전 z-index) */
+.step-overlay{
 position:fixed;
 inset:0;
 background:rgba(0,0,0,0.5);
@@ -233,36 +233,32 @@ transition:0.3s;
 z-index:1000;
 }
 
-#stepOverlay.show{
+.step-overlay.show{
 opacity:1;
 pointer-events:auto;
 }
 
-#stepCard{
-background:linear-gradient(180deg,#00110a,#000);
-padding:60px 80px;
-border-radius:6px;
+.step-card{
+background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+padding:40px;
+border-radius:20px;
 text-align:center;
-min-width:500px;
-max-width:800px;
-transform:scale(0.85);
+min-width:300px;
+max-width:500px;
+transform:scale(0.8);
 opacity:0;
 transition:0.3s;
-border:1px solid rgba(0,255,136,0.3);
 }
 
-#stepOverlay.show #stepCard{
+.step-overlay.show .step-card{
 transform:scale(1);
 opacity:1;
 }
 
-#stepContent{
-font-size:2.4rem;
+.step-card-content{
+font-size:1.8rem;
 font-weight:900;
 line-height:1.5;
-color:#00ff88;
-font-family:'Fredoka',sans-serif;
-letter-spacing:1px;
 }
 
 /* 5페이지 */
@@ -290,8 +286,6 @@ position:fixed;
 inset:0;
 z-index:9999999;
 display:none;
-justify-content:flex-start;
-align-items:center;
 flex-direction:column;
 opacity:0;
 transition:0.4s ease;
@@ -305,12 +299,6 @@ pointer-events:none;
 display:flex;
 opacity:1;
 pointer-events:auto;
-}
-
-.overlay-content{
-width:100%;
-text-align:center;
-padding:40px;
 }
 
 .hide-dots .dots{display:none;}
@@ -328,8 +316,7 @@ padding:40px;
 </div>
 
 <div class="volume">
-🔊 <input type="range" min="0" max="1" step="0.01"
-oninput="mainBgm.volume=this.value">
+🔊 <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
 </div>
 
 <div class="dots" id="dots"></div>
@@ -361,7 +348,7 @@ oninput="mainBgm.volume=this.value">
 </div>
 
 <div class="page tv-static">
-<div class="binary-bg">0101010101010101010101010101010101010101010101010101010101010101</div>
+<div class="binary-bg">0101010101010101010101010101010101010101010101010101010101</div>
 
 <h1>SIGNAL DETECTED</h1>
 
@@ -391,24 +378,70 @@ oninput="mainBgm.volume=this.value">
 </div>
 </div>
 
-<!-- STEP CARD -->
-<div id="stepOverlay">
-<div id="stepCard">
-<div id="stepContent"></div>
+<!-- STEP POPUP -->
+<div id="stepOverlay" class="step-overlay">
+<div class="step-card">
+<div id="stepContent" class="step-card-content"></div>
 </div>
 </div>
 
 <!-- OVERLAY -->
-<div id="memory" class="overlay">
-<div class="overlay-content"><h1>⭐ 추억 페이지</h1><div style="height:2000px;"></div></div>
-</div>
-
-<div id="game" class="overlay">
-<div class="overlay-content"><h1>🎮 게임 페이지</h1><div style="height:2000px;"></div></div>
-</div>
+<div id="memory" class="overlay"></div>
+<div id="game" class="overlay"></div>
 
 <script>
-/* (기존 JS 전부 그대로 유지 + STEP 코드 그대로 유지) */
+const steps=document.querySelectorAll(".step");
+const stepOverlay=document.getElementById("stepOverlay");
+const stepContent=document.getElementById("stepContent");
+
+/* overlay 충돌 방지 */
+function closeOverlays(){
+document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
+}
+
+/* 데이터 */
+const stepData={
+1:"9 Years : Still On-Air<br>(3,287일의 기록)",
+2:"데뷔 당시 목표 (추후 입력)",
+3:"그리고 우리는<br>지금도 함께하고 있다"
+};
+
+/* STEP */
+steps.forEach((step,i)=>{
+step.addEventListener("click",()=>{
+if(step.classList.contains("locked")) return;
+
+closeOverlays(); /* 🔥 핵심 */
+
+stepContent.innerHTML=stepData[step.dataset.step];
+stepOverlay.classList.add("show");
+
+steps.forEach(s=>s.classList.remove("active"));
+step.classList.add("active");
+
+if(i+1<steps.length){
+steps[i+1].classList.remove("locked");
+}
+});
+});
+
+/* 닫기 */
+stepOverlay.addEventListener("click",(e)=>{
+if(e.target===stepOverlay){
+stepOverlay.classList.remove("show");
+}
+});
+
+window.addEventListener("keydown",(e)=>{
+if(e.key==="Escape"){
+stepOverlay.classList.remove("show");
+}
+});
+
+/* wheel 차단 */
+window.addEventListener("wheel",(e)=>{
+if(stepOverlay.classList.contains("show")) return;
+});
 </script>
 
 </body>
