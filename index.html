@@ -13,7 +13,431 @@ font-family: 'Jalnan';
 src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
 }
 
+html,body{<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>포요 9주년</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+@font-face {
+font-family: 'Jalnan';
+src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+}
+
 html,body{
+margin:0;
+padding:0;
+font-family:'Fredoka',sans-serif;
+overflow:hidden;
+}
+
+/* INTRO */
+#intro{position:fixed;inset:0;z-index:9999;}
+#intro video{width:100%;height:100%;object-fit:cover;}
+
+#introText{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+}
+
+#title{
+font-size:5rem;
+font-weight:900;
+opacity:0;
+visibility:hidden;
+background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+transition:1s;
+}
+
+#enterBtn{
+margin-top:20px;
+padding:18px 60px;
+border-radius:40px;
+font-size:1.6rem;
+font-weight:800;
+opacity:0;
+visibility:hidden;
+background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
+transition:1s;
+}
+
+#skipBtn{
+position:fixed;
+top:20px;
+right:20px;
+z-index:100000;
+}
+
+/* MAIN */
+#main{position:fixed;inset:0;display:none;}
+
+/* UI */
+#uiLayer{
+position:fixed;
+inset:0;
+z-index:2147483647;
+pointer-events:none;
+display:none;
+}
+
+.top-ui,.volume,.dots{pointer-events:auto;}
+
+.top-ui{
+position:fixed;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+gap:18px;
+padding:14px 24px;
+background:rgba(255,255,255,0.18);
+backdrop-filter:blur(14px);
+border-radius:999px;
+}
+
+.top-btn{
+display:flex;
+align-items:center;
+gap:10px;
+padding:10px 18px;
+font-weight:900;
+font-size:1.1rem;
+cursor:pointer;
+}
+
+.top-btn img{width:24px;height:24px;}
+
+.volume{position:fixed;top:20px;right:20px;}
+
+.dots{
+position:fixed;
+right:20px;
+top:50%;
+transform:translateY(-50%);
+}
+
+.dot{
+width:10px;
+height:10px;
+margin:10px 0;
+border-radius:50%;
+background:#000;
+opacity:.3;
+}
+
+.dot.active{
+background:#b8f2e6;
+opacity:1;
+}
+
+/* PAGES */
+#pages{height:100vh;position:relative;}
+
+.page{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+transition:transform .6s ease, opacity .6s ease;
+opacity:0.3;
+}
+
+.page.active{opacity:1;}
+
+.gradient{
+background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+}
+
+.tv-static{
+background:linear-gradient(180deg,#00110a,#000);
+color:#00ff88;
+position:relative;
+overflow:hidden;
+}
+
+/* 2페이지 */
+.tv-static h1{
+font-size:1.8rem;
+opacity:0.5;
+letter-spacing:2px;
+margin-bottom:10px;
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.logo{
+height:28px;
+width:auto;
+}
+
+.tv-static .signal-text{
+margin-top:10px;
+margin-bottom:40px;
+text-align:center;
+line-height:1.4;
+font-size:2.8rem;
+font-weight:900;
+z-index:1;
+}
+
+.tv-static .signal-text strong{
+font-size:3.2rem;
+}
+
+/* binary */
+.binary-bg{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:200%;
+font-size:14px;
+line-height:14px;
+white-space:pre;
+color:#00ff88;
+opacity:0.07;
+animation:binaryMove 20s linear infinite;
+z-index:0;
+pointer-events:none;
+}
+
+@keyframes binaryMove{
+from{transform:translateY(0);}
+to{transform:translateY(-50%);}
+}
+
+/* STEP */
+.signal-box{
+margin-top:10px;
+text-align:center;
+width:80%;
+max-width:600px;
+z-index:1;
+}
+
+.step{
+margin:15px auto;
+padding:20px;
+border:1px solid rgba(0,255,136,0.4);
+cursor:pointer;
+opacity:0.3;
+transition:0.3s;
+}
+
+.step.active{
+opacity:1;
+border:2px solid #00ff88;
+transform:scale(1.05);
+}
+
+.step.locked{
+opacity:0.15;
+pointer-events:none;
+}
+
+/* STEP CARD */
+#stepOverlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.5);
+display:flex;
+justify-content:center;
+align-items:center;
+opacity:0;
+pointer-events:none;
+transition:0.3s;
+z-index:1000;
+}
+
+#stepOverlay.show{
+opacity:1;
+pointer-events:auto;
+}
+
+#stepCard{
+background:#000;
+border:1px solid #00ff88;
+padding:50px;
+min-width:500px;
+max-width:700px;
+text-align:center;
+}
+
+#yearCounter{
+font-size:4rem;
+margin-bottom:20px;
+color:#00ff88;
+}
+
+#stepContent{
+font-size:1.6rem;
+line-height:1.6;
+color:#00ff88;
+}
+
+/* 5페이지 */
+.page5-text{
+text-align:center;
+font-size:3.5rem !important;
+font-weight:900 !important;
+line-height:1.5 !important;
+}
+
+.page .main-title{
+font-size:5rem !important;
+font-weight:900 !important;
+}
+
+.page .sub-title{
+font-size:2.2rem !important;
+font-family:'Jalnan' !important;
+}
+
+/* OVERLAY */
+.overlay{
+position:fixed;
+inset:0;
+z-index:9999999;
+display:none;
+flex-direction:column;
+opacity:0;
+transition:0.4s ease;
+overflow-y:auto;
+padding-top:120px;
+background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+pointer-events:none;
+}
+
+.overlay.show{
+display:flex;
+opacity:1;
+pointer-events:auto;
+}
+
+.overlay-content{
+width:100%;
+text-align:center;
+padding:40px;
+}
+
+.hide-dots .dots{display:none;}
+</style>
+</head>
+
+<body>
+
+<!-- (HTML 동일 유지) -->
+
+<!-- STEP CARD -->
+<div id="stepOverlay">
+<div id="stepCard">
+<div id="yearCounter">0</div>
+<div id="stepContent"></div>
+</div>
+</div>
+
+<script>
+/* ===== 기존 유지 코드 생략 없음 ===== */
+
+/* STEP */
+const steps=document.querySelectorAll(".step");
+const stepOverlay=document.getElementById("stepOverlay");
+const counter=document.getElementById("yearCounter");
+const stepContent=document.getElementById("stepContent");
+
+/* ✔ 더 느리게 */
+const SPEED = 8;
+
+/* ✔ 멈춤 포인트 */
+const stops=[365,730,1095,1461,1826,2191,2556,2922,3287];
+
+/* ✔ 문장 (주년 포함) */
+const messages=[
+"1주년 · 365일 — 어색했던 첫 방송, 우리만의 시작점.",
+"2주년 · 730일 — 작은 채팅 하나에도 밤새 설레던, 서로에게 스며들기 시작한 시간.",
+"3주년 · 1,095일 — 특별한 날이 아니어도 방송 알람 하나에 습관처럼 모여드는 우리.",
+"4주년 · 1,461일 — 오늘도 어김없이 찾아온, 우리만의 당연한 저녁.",
+"5주년 · 1,826일 — 함께한 시간이 벌써 이만큼, 여전히 새로운 우리의 대화.",
+"6주년 · 2,191일 — 말하지 않아도 다 아는 편안한 사이.",
+"7주년 · 2,556일 — 함께라서 가능했던 행운 같은 순간들.",
+"8주년 · 2,922일 — 지나온 날보다 앞으로가 더 기대되는 이유.",
+"9주년 · 3,287일 — 다시 새롭게 시작될 페이지, 포동이들과 함께 채워갈 내일의 기록"
+];
+
+function runStep1(){
+let num=0;
+let idx=0;
+
+function animateTo(target){
+function loop(){
+num+=SPEED;
+
+if(num>=target){
+num=target;
+
+counter.innerText=num.toLocaleString();
+stepContent.innerText=messages[idx];
+
+idx++;
+
+if(idx>=stops.length) return;
+
+setTimeout(()=>{
+animateTo(stops[idx]);
+},900);
+
+return;
+}
+
+counter.innerText=num.toLocaleString();
+requestAnimationFrame(loop);
+}
+loop();
+}
+animateTo(stops[0]);
+}
+
+/* STEP 클릭 */
+steps.forEach((step,i)=>{
+step.addEventListener("click",()=>{
+if(step.classList.contains("locked")) return;
+
+stepOverlay.classList.add("show");
+
+if(step.dataset.step==="1"){
+runStep1();
+}
+
+/* 🔥 해금 시 텍스트 교체 */
+if(i===0){
+steps[1].classList.remove("locked");
+steps[1].querySelector(".content").innerText="The Origin : 첫 번째 로그";
+}
+if(i===1){
+steps[2].classList.remove("locked");
+steps[2].querySelector(".content").innerText="NEXT LOGGING";
+}
+
+steps.forEach(s=>s.classList.remove("active"));
+step.classList.add("active");
+
+});
+});
+</script>
+
+</body>
+</html>
 margin:0;
 padding:0;
 font-family:'Fredoka',sans-serif;
