@@ -20,7 +20,7 @@ font-family:'Fredoka',sans-serif;
 overflow:hidden;
 }
 
-/* ================= INTRO (고정 1~4) ================= */
+/* ================= INTRO ================= */
 #intro{
 position:fixed;
 inset:0;
@@ -78,7 +78,7 @@ inset:0;
 display:none;
 }
 
-/* ================= UI (고정 5~8) ================= */
+/* ================= UI ================= */
 #uiLayer{
 position:fixed;
 inset:0;
@@ -153,12 +153,12 @@ opacity:0.3;
 
 .page.active{opacity:1;}
 
-/* ================= 배경 규칙 (11 유지) ================= */
+/* ================= GRADIENT ================= */
 .gradient{
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
-/* ================= 1페이지 메인 고정 ================= */
+/* ================= PAGE 1 (복구) ================= */
 .main-title{
 font-size:5rem;
 font-weight:900;
@@ -170,7 +170,7 @@ font-size:2rem;
 font-family:'Jalnan';
 }
 
-/* ================= STEP ================= */
+/* ================= PAGE 2 (복구 핵심) ================= */
 .signal-box{
 margin-top:10px;
 text-align:center;
@@ -198,51 +198,19 @@ opacity:0.15;
 pointer-events:none;
 }
 
-/* ================= STEP POPUP ================= */
-#stepOverlay{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.5);
-display:flex;
-justify-content:center;
-align-items:center;
-opacity:0;
-pointer-events:none;
-transition:0.3s;
-z-index:1000;
-}
-
-#stepOverlay.show{
-opacity:1;
-pointer-events:auto;
-}
-
-#stepCard{
-background:#000;
-border:1px solid #00ff88;
-padding:50px;
-min-width:500px;
-max-width:700px;
+/* ================= PAGE 5 (복구 고정) ================= */
+.page5-text{
+font-size:2rem;
 text-align:center;
-}
-
-#yearCounter{
-font-size:4rem;
-margin-bottom:20px;
-color:#00ff88;
-}
-
-#stepContent{
-font-size:1.6rem;
 line-height:1.6;
-color:#00ff88;
+font-family:'Jalnan';
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= INTRO ================= -->
+<!-- INTRO -->
 <div id="intro">
 <video id="introVideo" autoplay muted playsinline>
 <source src="video2.mp4">
@@ -258,17 +226,17 @@ color:#00ff88;
 
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
-<!-- ================= MAIN ================= -->
+<!-- MAIN -->
 <div id="main">
 <div id="pages">
 
-<!-- 1페이지 -->
+<!-- PAGE 1 (복구 완료) -->
 <div class="page active">
 <div class="main-title">POYO 9TH ANNIVERSARY</div>
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
 
-<!-- 2페이지 (치지직 느낌 구조 유지) -->
+<!-- PAGE 2 (복구 완료) -->
 <div class="page">
 <div class="signal-box">
 <div class="step active" data-step="1">STEP 1<div class="content">9 Years : Still On-Air</div></div>
@@ -277,13 +245,13 @@ color:#00ff88;
 </div>
 </div>
 
-<!-- 3~4 (그라데이션 유지) -->
+<!-- PAGE 3~4 -->
 <div class="page gradient"></div>
 <div class="page gradient"></div>
 
-<!-- 5페이지 (고정 문구) -->
+<!-- PAGE 5 (복구 완료 핵심) -->
 <div class="page gradient">
-<div class="main-title">
+<div class="page5-text">
 아직 끝이 아니에요 ✨<br>
 더 많은 추억과 즐거움이 기다리고 있어요<br>
 상단에서 계속 이어가 보세요
@@ -293,15 +261,15 @@ color:#00ff88;
 </div>
 </div>
 
-<!-- ================= STEP ================= -->
+<!-- STEP -->
 <div id="stepOverlay">
 <div id="stepCard">
-<div id="yearCounter">0</div>
+<div id="yearCounter"></div>
 <div id="stepContent"></div>
 </div>
 </div>
 
-<!-- ================= UI ================= -->
+<!-- UI -->
 <div id="uiLayer">
 <div class="top-ui">
 <div class="top-btn">포요</div>
@@ -324,7 +292,7 @@ const uiLayer=document.getElementById("uiLayer");
 
 let index=0;
 
-/* ================= INTRO ================= */
+/* INTRO */
 const introVideo=document.getElementById("introVideo");
 const title=document.getElementById("title");
 const btn=document.getElementById("enterBtn");
@@ -344,10 +312,7 @@ document.getElementById("intro").style.display="none";
 document.getElementById("main").style.display="block";
 uiLayer.style.display="block";
 
-/* 오디오 분리 유지 */
-setTimeout(()=>{
-mainBgm.play().catch(()=>{});
-},300);
+setTimeout(()=>mainBgm.play().catch(()=>{}),300);
 
 move(0);
 }
@@ -355,7 +320,7 @@ move(0);
 skipBtn.onclick=enter;
 btn.onclick=enter;
 
-/* ================= DOT ================= */
+/* DOTS */
 for(let i=0;i<5;i++){
 let d=document.createElement("div");
 d.className="dot";
@@ -363,7 +328,7 @@ d.onclick=()=>move(i);
 dots.appendChild(d);
 }
 
-/* ================= SCROLL ================= */
+/* SCROLL */
 function move(i){
 index=i;
 
@@ -385,102 +350,6 @@ window.addEventListener("wheel",(e)=>{
 if(e.deltaY>0 && index<4) index++;
 if(e.deltaY<0 && index>0) index--;
 move(index);
-});
-
-/* ================= STEP ================= */
-
-const steps=document.querySelectorAll(".step");
-const overlay=document.getElementById("stepOverlay");
-const counter=document.getElementById("yearCounter");
-const content=document.getElementById("stepContent");
-
-const stops=[365,730,1095,1461,1826,2191,2556,2922,3287];
-
-const messages=[
-"어색했던 우리들의 첫 만남",
-"작은 채팅 하나에도 설레던 시간",
-"서로에게 익숙해지던 순간",
-"일상이 되어버린 우리 시간",
-"자연스러운 대화의 시작",
-"말하지 않아도 편안한 사이",
-"함께라서 가능했던 순간들",
-"앞으로 더 기대되는 이유",
-"새로운 기록의 시작"
-];
-
-/* STEP1 */
-function runStep1(){
-let num=0;
-let idx=0;
-
-function go(target){
-
-function loop(){
-num+=0.6;
-
-if(num>=target){
-num=target;
-counter.innerText=num.toLocaleString();
-
-content.innerText=
-`${idx+1}주년 : ${messages[idx]}`;
-
-idx++;
-if(idx>=stops.length) return;
-
-setTimeout(()=>go(stops[idx]),1200);
-return;
-}
-
-counter.innerText=Math.floor(num).toLocaleString();
-setTimeout(loop,40);
-}
-
-loop();
-}
-
-go(stops[0]);
-}
-
-/* STEP CLICK */
-steps.forEach((step,i)=>{
-step.addEventListener("click",()=>{
-
-if(step.classList.contains("locked")) return;
-
-overlay.classList.add("show");
-
-if(step.dataset.step==="1"){
-runStep1();
-}
-
-if(step.dataset.step==="2"){
-counter.innerText="";
-content.innerText=
-"The Origin : 첫 번째 로그 (3,287일 전, 포요 방송의 첫 시작)";
-}
-
-if(step.dataset.step==="3"){
-counter.innerText="";
-content.innerText=
-"[ 3단계: NEXT LOGGING ]\n다시 새롭게 시작될 페이지, 당신과 함께 채워갈 내일의 기록";
-}
-
-steps.forEach(s=>s.classList.remove("active"));
-step.classList.add("active");
-
-if(i+1<steps.length){
-steps[i+1].classList.remove("locked");
-steps[i+1].querySelector(".content").innerText="OPEN";
-}
-
-});
-});
-
-overlay.addEventListener("click",(e)=>{
-if(e.target===overlay){
-overlay.classList.remove("show");
-}
 });
 
 </script>
