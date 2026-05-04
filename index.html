@@ -269,6 +269,7 @@ color:#00ff88;
 font-size:1.6rem;
 line-height:1.6;
 color:#00ff88;
+text-align:center;
 }
 
 /* 5페이지 */
@@ -407,7 +408,7 @@ STEP 3
 <!-- STEP CARD -->
 <div id="stepOverlay">
 <div id="stepCard">
-<div id="yearCounter">0</div>
+<div id="yearCounter">0일</div>
 <div id="stepContent"></div>
 </div>
 </div>
@@ -550,14 +551,14 @@ unlockText:"[ 9 Years : Still on-Air ] - (3,287일의 기록)",
 stops:[365,730,1095,1461,1826,2191,2556,2922,3287],
 messages:[
 "1주년 : 어색했던 첫 방송, 우리만의 시작점.",
-"2주년 : 작은 채팅 하나에도 밤새 설레던, 서로에게 스며들기 시작한 시간.",
-"3주년 : 특별한 날이 아니어도 방송 알람 하나에 습관처럼 모여드는 우리.",
+"2주년 : 작은 채팅 하나에도 밤새 설레던,<br>서로에게 스며들기 시작한 시간.",
+"3주년 : 특별한 날이 아니어도 방송 알람 하나에,<br>습관처럼 모여드는 우리.",
 "4주년 : 오늘도 어김없이 찾아온, 우리만의 당연한 저녁.",
 "5주년 : 함께한 시간이 벌써 이만큼, 여전히 새로운 우리의 대화.",
 "6주년 : 말하지 않아도 다 아는 편안한 사이.",
 "7주년 : 함께라서 가능했던 행운 같은 순간들.",
 "8주년 : 지나온 날보다 앞으로가 더 기대되는 이유.",
-"9주년 : 다시 새롭게 시작될 페이지, 포동이들과 함께 채워갈 내일의 기록"
+"9주년 : 다시 새롭게 시작될 페이지,<br>우리가 함께 채워갈 내일의 기록"
 ]
 },
 2:{
@@ -586,7 +587,7 @@ stepState.timerId=null;
 
 function resetStepPopup(){
 counter.innerText="";
-stepContent.innerText="";
+stepContent.innerHTML="";
 }
 
 function openStep(stepNum){
@@ -622,8 +623,8 @@ num+=20;
 
 if(num>=target){
 num=target;
-counter.innerText=num.toLocaleString();
-stepContent.innerText=data.messages[idx];
+counter.innerText=num.toLocaleString() + "일";
+stepContent.innerHTML=data.messages[idx];
 
 idx++;
 
@@ -639,7 +640,7 @@ animateTo(data.stops[idx]);
 return;
 }
 
-counter.innerText=num.toLocaleString();
+counter.innerText=num.toLocaleString() + "일";
 stepState.rafId=requestAnimationFrame(loop);
 }
 
