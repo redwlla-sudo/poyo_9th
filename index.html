@@ -13,7 +13,6 @@ font-family: 'Jalnan';
 src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
 }
 
-/* ✅ 추가된 폰트 */
 @font-face {
 font-family: 'NeoDunggeunGothicPro';
 src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/NeoDunggeunmoPro-Regular.woff2') format('woff2');
@@ -158,33 +157,88 @@ position:relative;
 overflow:hidden;
 }
 
+/* 2페이지 */
+.tv-static h1{
+font-size:1.8rem;
+opacity:0.5;
+letter-spacing:2px;
+margin-bottom:10px;
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.logo{
+height:28px;
+width:auto;
+}
+
+.tv-static .signal-text{
+margin-top:10px;
+margin-bottom:40px;
+text-align:center;
+line-height:1.4;
+font-size:2.8rem;
+font-weight:900;
+z-index:1;
+}
+
+.tv-static .signal-text strong{
+font-size:3.2rem;
+}
+
+/* binary */
+.binary-bg{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:200%;
+font-size:14px;
+line-height:14px;
+white-space:pre;
+color:#00ff88;
+opacity:0.07;
+animation:binaryMove 20s linear infinite;
+z-index:0;
+pointer-events:none;
+}
+
+@keyframes binaryMove{
+from{transform:translateY(0);}
+to{transform:translateY(-50%);}
+}
+
+/* STEP */
+.signal-box{
+margin-top:10px;
+text-align:center;
+width:80%;
+max-width:600px;
+z-index:1;
+}
+
+.step{
+margin:15px auto;
+padding:20px;
+border:1px solid rgba(0,255,136,0.4);
+cursor:pointer;
+opacity:0.3;
+transition:0.3s;
+}
+
+.step.active{
+opacity:1;
+border:2px solid #00ff88;
+transform:scale(1.05);
+}
+
+.step.locked{
+opacity:0.15;
+pointer-events:none;
+}
+
 /* STEP CARD */
-#stepCard{
-background:#000;
-border:1px solid #00ff88;
-padding:50px;
-min-width:500px;
-max-width:700px;
-text-align:center;
-
-/* ✅ 폰트 적용 */
-font-family:'NeoDunggeunGothicPro',sans-serif;
-}
-
-#yearCounter{
-font-size:4rem;
-margin-bottom:20px;
-color:#00ff88;
-}
-
-#stepContent{
-font-size:1.6rem;
-line-height:1.6;
-color:#00ff88;
-text-align:center;
-}
-
-/* OVERLAY */
 #stepOverlay{
 position:fixed;
 inset:0;
@@ -202,10 +256,162 @@ z-index:1000;
 opacity:1;
 pointer-events:auto;
 }
+
+#stepCard{
+background:#000;
+border:1px solid #00ff88;
+padding:50px;
+min-width:500px;
+max-width:700px;
+text-align:center;
+font-family:'NeoDunggeunGothicPro',sans-serif;
+}
+
+#yearCounter{
+font-size:4rem;
+margin-bottom:20px;
+color:#00ff88;
+}
+
+#stepContent{
+font-size:1.6rem;
+line-height:1.6;
+color:#00ff88;
+text-align:center;
+}
+
+/* 5페이지 */
+.page5-text{
+text-align:center;
+font-size:3.5rem !important;
+font-weight:900 !important;
+line-height:1.5 !important;
+}
+
+.page .main-title{
+font-size:5rem !important;
+font-weight:900 !important;
+}
+
+.page .sub-title{
+font-size:2.2rem !important;
+font-family:'Jalnan' !important;
+}
+
+/* OVERLAY */
+.overlay{
+position:fixed;
+inset:0;
+z-index:9999999;
+display:none;
+flex-direction:column;
+opacity:0;
+transition:0.4s ease;
+overflow-y:auto;
+padding-top:120px;
+background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+pointer-events:none;
+}
+
+.overlay.show{
+display:flex;
+opacity:1;
+pointer-events:auto;
+}
+
+.overlay-content{
+width:100%;
+text-align:center;
+padding:40px;
+}
+
+.hide-dots .dots{display:none;}
 </style>
 </head>
 
 <body>
+
+<div id="uiLayer">
+<div class="top-ui">
+<div class="top-btn" data-page="home"><img src="poyo.png">포요</div>
+<div class="top-btn" data-overlay="memory">⭐ 추억</div>
+<div class="top-btn" data-overlay="game">🎮 게임</div>
+</div>
+
+<div class="volume">
+🔊 <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
+</div>
+
+<div class="dots" id="dots"></div>
+</div>
+
+<div id="intro">
+<video id="introVideo" autoplay muted playsinline>
+<source src="video2.mp4">
+</video>
+
+<div id="introText">
+<div id="title">POYO 9TH ANNIVERSARY</div>
+<button id="enterBtn">입장하기</button>
+</div>
+
+<button id="skipBtn">스킵</button>
+</div>
+
+<audio id="mainBgm" loop src="bgm.mp3"></audio>
+
+<div id="main">
+<div id="pages">
+
+<div class="page active">
+<div class="main-title">POYO 9TH ANNIVERSARY</div>
+<div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
+</div>
+
+<div class="page tv-static">
+<div class="binary-bg">0101010101010101010101010101010101010101010101010101010101010101</div>
+
+<h1>
+<img src="img.png" class="logo">
+SIGNAL DETECTED
+</h1>
+
+<div class="signal-text">
+9년이라는 시간은<br>
+<strong>우리가 함께 만들어온 시간입니다</strong>
+</div>
+
+<div class="signal-box">
+<div class="step active" data-step="1">
+STEP 1
+<div class="content">LOCKED</div>
+</div>
+
+<div class="step locked" data-step="2">
+STEP 2
+<div class="content">LOCKED</div>
+</div>
+
+<div class="step locked" data-step="3">
+STEP 3
+<div class="content">LOCKED</div>
+</div>
+</div>
+</div>
+
+<div class="page gradient"></div>
+<div class="page gradient"></div>
+
+<div class="page gradient">
+<div class="page5-text">
+아직 끝이 아니에요 ✨<br>
+더 많은 추억과 즐거움이 기다리고 있어요<br>
+상단에서 계속 이어가 보세요
+</div>
+</div>
+
+</div>
+</div>
 
 <!-- STEP CARD -->
 <div id="stepOverlay">
@@ -215,17 +421,141 @@ pointer-events:auto;
 </div>
 </div>
 
+<div id="memory" class="overlay">
+<div class="overlay-content"><h1>⭐ 추억 페이지</h1></div>
+</div>
+
+<div id="game" class="overlay">
+<div class="overlay-content"><h1>🎮 게임 페이지</h1></div>
+</div>
+
 <script>
+const introVideo=document.getElementById("introVideo");
+const title=document.getElementById("title");
+const btn=document.getElementById("enterBtn");
+const skipBtn=document.getElementById("skipBtn");
+const mainBgm=document.getElementById("mainBgm");
+const pages=document.querySelectorAll(".page");
+const dots=document.getElementById("dots");
+const uiLayer=document.getElementById("uiLayer");
+
+let index=0;
+let shown=false;
+
+window.addEventListener("click",()=>{
+introVideo.muted=false;
+introVideo.volume=mainBgm.volume;
+introVideo.play().catch(()=>{});
+},{once:true});
+
+function introLoop(){
+if(introVideo.currentTime>=103 && !shown){
+shown=true;
+title.style.opacity=1;
+title.style.visibility="visible";
+btn.style.opacity=1;
+btn.style.visibility="visible";
+}
+requestAnimationFrame(introLoop);
+}
+introLoop();
+
+function enter(){
+introVideo.pause();
+introVideo.currentTime=0;
+introVideo.muted=true;
+
+move(0);
+
+document.getElementById("intro").style.display="none";
+document.getElementById("main").style.display="block";
+
+uiLayer.style.display="block";
+
+mainBgm.play().catch(()=>{});
+}
+
+skipBtn.onclick=enter;
+btn.onclick=enter;
+
+for(let i=0;i<5;i++){
+let d=document.createElement("div");
+d.className="dot";
+d.onclick=()=>move(i);
+dots.appendChild(d);
+}
+
+function move(i){
+index=i;
+pages.forEach((p,idx)=>{
+p.style.position="absolute";
+p.style.top="0";
+p.style.left="0";
+p.style.width="100%";
+p.style.transform=`translateY(${(idx-index)*100}vh)`;
+p.classList.toggle("active",idx===index);
+});
+document.querySelectorAll(".dot").forEach((d,i)=>{
+d.classList.toggle("active",i===index);
+});
+}
+
+window.addEventListener("wheel",(e)=>{
+if(stepOverlay.classList.contains("show")) return;
+
+if(e.deltaY>0 && index<4) index++;
+if(e.deltaY<0 && index>0) index--;
+move(index);
+});
+
+/* overlay */
+function showOverlay(id){
+document.body.classList.add("hide-dots");
+document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
+document.getElementById(id).classList.add("show");
+}
+
+function hideOverlays(){
+document.body.classList.remove("hide-dots");
+document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
+}
+
+document.querySelectorAll(".top-btn").forEach(btn=>{
+btn.addEventListener("click",()=>{
+const overlay=btn.dataset.overlay;
+const page=btn.dataset.page;
+
+if(page==="home"){
+hideOverlays();
+move(0);
+}
+
+if(overlay){
+showOverlay(overlay);
+}
+});
+});
+
+/* =========================
+   STEP 독립 시스템
+========================= */
+
 const steps=document.querySelectorAll(".step");
 const stepOverlay=document.getElementById("stepOverlay");
 const counter=document.getElementById("yearCounter");
 const stepContent=document.getElementById("stepContent");
 
-let stepState={unlocked:1};
+let stepState={
+unlocked:1,
+running:false,
+rafId:null,
+timerId:null
+};
 
 const stepData={
 1:{
 type:"count",
+unlockText:"[ 9 Years : Still on-Air ] - (3,287일의 기록)",
 stops:[365,730,1095,1461,1826,2191,2556,2922,3287],
 messages:[
 "1주년 : 어색했던 첫 방송, 우리만의 시작점.",
@@ -240,31 +570,58 @@ messages:[
 ]
 },
 2:{
-type:"text",
-text:"[ The Origin : 첫 번째 로그 ] (3,287일 전, 포요님의 치지직 첫 데뷔)"
+type:"empty",
+unlockText:"[ The Origin : 첫 번째 로그 ] (3,287일 전, 포요님의 치지직 첫 데뷔)"
 },
 3:{
-type:"text",
-text:"[ 3단계: NEXT LOGGING ]<br>다시 새롭게 시작될 페이지,<br>우리가 함께 채워갈 내일의 기록"
+type:"empty",
+unlockText:"[ 3단계: NEXT LOGGING ]<br>\"다시 새롭게 시작될 페이지,<br>포동이들과 함께 채워갈 내일의 기록\""
 }
 };
 
-function openStep(step){
-if(step>stepState.unlocked) return;
+function stopStepAnimation(){
+stepState.running=false;
+
+if(stepState.rafId){
+cancelAnimationFrame(stepState.rafId);
+stepState.rafId=null;
+}
+
+if(stepState.timerId){
+clearTimeout(stepState.timerId);
+stepState.timerId=null;
+}
+}
+
+function resetStepPopup(){
+counter.innerText="";
+stepContent.innerHTML="";
+}
+
+function openStep(stepNum){
+if(stepNum>stepState.unlocked) return;
+
+stopStepAnimation();
+resetStepPopup();
 
 stepOverlay.classList.add("show");
 
-counter.innerText="";
-stepContent.innerHTML="";
+const data=stepData[stepNum];
 
-if(stepData[step].type==="count"){
-runCount(stepData[step]);
-}else{
-stepContent.innerHTML=stepData[step].text;
+if(data.type==="count"){
+runStepCount(data);
+}
+
+if(data.type==="empty"){
+resetStepPopup();
 }
 }
 
-function runCount(data){
+function runStepCount(data){
+if(stepState.running) return;
+
+stepState.running=true;
+
 let num=0;
 let idx=0;
 
@@ -274,24 +631,84 @@ num+=20;
 
 if(num>=target){
 num=target;
-counter.innerText=num.toLocaleString()+"일";
+counter.innerText=num.toLocaleString() + "일";
 stepContent.innerHTML=data.messages[idx];
 
 idx++;
-if(idx>=data.stops.length) return;
 
-setTimeout(()=>animateTo(data.stops[idx]),2500);
+if(idx>=data.stops.length){
+stepState.running=false;
 return;
 }
 
-counter.innerText=num.toLocaleString()+"일";
-requestAnimationFrame(loop);
+stepState.timerId=setTimeout(()=>{
+animateTo(data.stops[idx]);
+},2500);
+
+return;
 }
+
+counter.innerText=num.toLocaleString() + "일";
+stepState.rafId=requestAnimationFrame(loop);
+}
+
 loop();
 }
 
 animateTo(data.stops[0]);
 }
+
+function unlockCurrentStep(stepNum){
+const currentStep=steps[stepNum-1];
+if(!currentStep) return;
+
+const content=currentStep.querySelector(".content");
+if(content){
+content.innerHTML=stepData[stepNum].unlockText;
+}
+}
+
+function unlockNextStep(currentStepNum){
+if(stepState.unlocked!==currentStepNum) return;
+if(currentStepNum>=3) return;
+
+const nextStepNum=currentStepNum+1;
+const nextStep=steps[nextStepNum-1];
+
+if(!nextStep) return;
+
+stepState.unlocked=nextStepNum;
+nextStep.classList.remove("locked");
+
+const content=nextStep.querySelector(".content");
+if(content){
+content.innerHTML=stepData[nextStepNum].unlockText;
+}
+}
+
+steps.forEach(step=>{
+step.addEventListener("click",()=>{
+if(step.classList.contains("locked")) return;
+
+const stepNum=parseInt(step.dataset.step,10);
+
+unlockCurrentStep(stepNum);
+openStep(stepNum);
+
+steps.forEach(s=>s.classList.remove("active"));
+step.classList.add("active");
+
+unlockNextStep(stepNum);
+});
+});
+
+stepOverlay.addEventListener("click",(e)=>{
+if(e.target===stepOverlay){
+stepOverlay.classList.remove("show");
+stopStepAnimation();
+resetStepPopup();
+}
+});
 </script>
 
 </body>
