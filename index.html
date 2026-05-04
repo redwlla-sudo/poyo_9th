@@ -270,23 +270,35 @@ overflow:hidden;
 }
 
 #stepCard.step1-card{
-min-width:560px;
-max-width:720px;
-min-height:210px;
-padding:44px 54px;
+width:760px;
+max-width:82vw;
+min-height:250px;
+padding:46px 64px;
+box-sizing:border-box;
 }
 
 #stepCard.step2-card{
-min-width:620px;
-max-width:820px;
-min-height:320px;
-padding:52px 58px;
+width:820px;
+max-width:86vw;
+min-height:340px;
+padding:54px 62px;
+box-sizing:border-box;
 }
 
 #yearCounter{
 font-size:4rem;
 margin-bottom:20px;
 color:#00ff88;
+}
+
+#stepCard.step1-card #yearCounter{
+font-size:4.4rem;
+margin-bottom:24px;
+}
+
+#stepCard.step1-card #stepContent{
+font-size:1.45rem;
+line-height:1.75;
 }
 
 #stepContent{
@@ -300,7 +312,7 @@ text-align:center;
 .step2-stage{
 position:relative;
 width:100%;
-min-height:320px;
+min-height:340px;
 display:flex;
 justify-content:center;
 align-items:center;
@@ -327,7 +339,7 @@ top:50%;
 left:50%;
 transform:translate(-50%,-50%);
 opacity:0;
-font-size:1.38rem;
+font-size:1.36rem;
 line-height:1.85;
 white-space:normal;
 animation:
@@ -348,10 +360,10 @@ originMessageOut .8s ease forwards 5.7s;
 .origin-layout{
 position:absolute;
 inset:0;
-display:grid;
-grid-template-columns:190px 1fr;
-gap:28px;
+display:flex;
 align-items:center;
+justify-content:center;
+gap:26px;
 opacity:0;
 animation:originLayoutIn .8s ease forwards;
 animation-delay:6.7s;
@@ -363,43 +375,38 @@ animation-delay:6.7s;
 }
 
 .origin-left{
-height:180px;
+width:190px;
+height:190px;
 display:flex;
 align-items:center;
 justify-content:center;
 }
 
 .origin-left-line{
-position:relative;
-width:150px;
-height:1px;
+width:170px;
+height:3px;
 background:#00ff88;
-opacity:.75;
-}
-
-.origin-left-line::before{
-content:"";
-position:absolute;
-left:-10px;
-top:50%;
-transform:translateY(-50%);
-width:8px;
-height:22px;
-background:#00ff88;
-animation:cursorBlink .7s infinite;
+opacity:.85;
+box-shadow:0 0 10px rgba(0,255,136,.45);
 }
 
 .origin-right{
-font-size:1rem;
+width:440px;
+font-size:1.05rem;
 line-height:1.9;
 text-align:left;
 white-space:pre-line;
 }
 
-.cursor{
+.typing-cursor{
 display:inline-block;
-margin-left:2px;
+width:10px;
+height:1.15em;
+margin-left:4px;
+background:#00ff88;
+vertical-align:-0.18em;
 animation:cursorBlink .7s infinite;
+box-shadow:0 0 8px rgba(0,255,136,.55);
 }
 
 @keyframes cursorBlink{
@@ -834,7 +841,7 @@ stepContent.className="step2-stage";
 stepContent.innerHTML=
 '<div class="origin-number">10,000</div>'+
 '<div class="origin-message">'+
-'잊고 있었던, 우리들의 첫 번째 페이지.<br>'+
+'잊고 있었던, 우리들의 첫번째 페이지. '+
 '서툴게 적었던 만 명이라는 꿈, 그 작았던 숫자가 지금 우리를 여기까지 데려왔습니다.'+
 '</div>'+
 '<div class="origin-layout">'+
@@ -853,13 +860,16 @@ let i=0;
 
 stepState.typeTimer=setInterval(()=>{
 if(i<text.length){
-target.innerHTML+=text[i]==="\n" ? "<br>" : text[i];
+const typed=text
+.slice(0,i+1)
+.replace(/\n/g,"<br>");
+target.innerHTML=typed+'<span class="typing-cursor"></span>';
 playTypeTick();
 i++;
 }else{
 clearInterval(stepState.typeTimer);
 stepState.typeTimer=null;
-target.innerHTML+='<span class="cursor">.</span>';
+target.innerHTML=text.replace(/\n/g,"<br>")+'<span class="typing-cursor"></span>';
 }
 },70);
 },7600);
