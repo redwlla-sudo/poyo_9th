@@ -9,8 +9,8 @@
 
 <style>
 @font-face {
-font-family: 'Jalnan';
-src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+font-family:'Jalnan';
+src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
 }
 
 html,body{
@@ -65,7 +65,7 @@ z-index:100000;
 /* MAIN */
 #main{position:fixed;inset:0;display:none;}
 
-/* UI */
+/* UI (절대 고정) */
 #uiLayer{
 position:fixed;
 inset:0;
@@ -99,8 +99,6 @@ font-size:1.1rem;
 cursor:pointer;
 }
 
-.top-btn img{width:24px;height:24px;}
-
 .volume{position:fixed;top:20px;right:20px;}
 
 .dots{
@@ -125,7 +123,10 @@ opacity:1;
 }
 
 /* PAGES */
-#pages{height:100vh;position:relative;}
+#pages{
+height:100vh;
+position:relative;
+}
 
 .page{
 height:100vh;
@@ -141,13 +142,6 @@ opacity:0.3;
 
 .gradient{
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
-}
-
-.tv-static{
-background:linear-gradient(180deg,#00110a,#000);
-color:#00ff88;
-position:relative;
-overflow:hidden;
 }
 
 /* STEP */
@@ -179,7 +173,7 @@ opacity:0.15;
 pointer-events:none;
 }
 
-/* STEP CARD */
+/* STEP POPUP */
 #stepOverlay{
 position:fixed;
 inset:0;
@@ -223,20 +217,7 @@ color:#00ff88;
 
 <body>
 
-<div id="uiLayer">
-<div class="top-ui">
-<div class="top-btn" data-page="home"><img src="poyo.png">포요</div>
-<div class="top-btn" data-overlay="memory">⭐ 추억</div>
-<div class="top-btn" data-overlay="game">🎮 게임</div>
-</div>
-
-<div class="volume">
-🔊 <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
-</div>
-
-<div class="dots" id="dots"></div>
-</div>
-
+<!-- INTRO -->
 <div id="intro">
 <video id="introVideo" autoplay muted playsinline>
 <source src="video2.mp4">
@@ -252,6 +233,7 @@ color:#00ff88;
 
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
+<!-- MAIN -->
 <div id="main">
 <div id="pages">
 
@@ -260,24 +242,22 @@ color:#00ff88;
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
 
-<div class="page tv-static">
-
+<div class="page">
 <div class="signal-box">
 <div class="step active" data-step="1">STEP 1<div class="content">9 Years : Still On-Air</div></div>
 <div class="step locked" data-step="2">STEP 2<div class="content">LOCKED</div></div>
 <div class="step locked" data-step="3">STEP 3<div class="content">LOCKED</div></div>
 </div>
-
 </div>
 
 <div class="page gradient"></div>
 <div class="page gradient"></div>
-
 <div class="page gradient"></div>
 
 </div>
 </div>
 
+<!-- STEP -->
 <div id="stepOverlay">
 <div id="stepCard">
 <div id="yearCounter">0</div>
@@ -285,54 +265,53 @@ color:#00ff88;
 </div>
 </div>
 
+<!-- UI -->
+<div id="uiLayer">
+<div class="top-ui">
+<div class="top-btn">포요</div>
+<div class="top-btn">⭐ 추억</div>
+<div class="top-btn">🎮 게임</div>
+</div>
+
+<div class="volume">
+🔊 <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
+</div>
+
+<div class="dots" id="dots"></div>
+</div>
+
 <script>
-const introVideo=document.getElementById("introVideo");
-const title=document.getElementById("title");
-const btn=document.getElementById("enterBtn");
-const skipBtn=document.getElementById("skipBtn");
-const mainBgm=document.getElementById("mainBgm");
+
 const pages=document.querySelectorAll(".page");
 const dots=document.getElementById("dots");
 const uiLayer=document.getElementById("uiLayer");
 
 let index=0;
-let shown=false;
+
+/* intro */
+const introVideo=document.getElementById("introVideo");
+const title=document.getElementById("title");
+const btn=document.getElementById("enterBtn");
+const skipBtn=document.getElementById("skipBtn");
+const mainBgm=document.getElementById("mainBgm");
 
 window.addEventListener("click",()=>{
 introVideo.muted=false;
-introVideo.volume=mainBgm.volume;
 introVideo.play().catch(()=>{});
 },{once:true});
 
-function introLoop(){
-if(introVideo.currentTime>=103 && !shown){
-shown=true;
-title.style.opacity=1;
-title.style.visibility="visible";
-btn.style.opacity=1;
-btn.style.visibility="visible";
-}
-requestAnimationFrame(introLoop);
-}
-introLoop();
-
 function enter(){
-introVideo.pause();
-introVideo.currentTime=0;
-introVideo.muted=true;
-
-move(0);
-
 document.getElementById("intro").style.display="none";
 document.getElementById("main").style.display="block";
 uiLayer.style.display="block";
-
 mainBgm.play().catch(()=>{});
+move(0);
 }
 
 skipBtn.onclick=enter;
 btn.onclick=enter;
 
+/* dots */
 for(let i=0;i<5;i++){
 let d=document.createElement("div");
 d.className="dot";
@@ -340,18 +319,21 @@ d.onclick=()=>move(i);
 dots.appendChild(d);
 }
 
+/* ================= FIXED MOVE (핵심 안정화) ================= */
 function move(i){
 index=i;
+
 pages.forEach((p,idx)=>{
 p.style.position="absolute";
 p.style.top="0";
 p.style.left="0";
 p.style.width="100%";
+p.style.height="100vh";
 p.style.transform=`translateY(${(idx-index)*100}vh)`;
-p.classList.toggle("active",idx===index);
 });
-document.querySelectorAll(".dot").forEach((d,i)=>{
-d.classList.toggle("active",i===index);
+
+document.querySelectorAll(".dot").forEach((d,i2)=>{
+d.classList.toggle("active",i2===index);
 });
 }
 
@@ -364,70 +346,83 @@ move(index);
 /* ================= STEP ================= */
 
 const steps=document.querySelectorAll(".step");
-const stepOverlay=document.getElementById("stepOverlay");
+const overlay=document.getElementById("stepOverlay");
 const counter=document.getElementById("yearCounter");
-const stepContent=document.getElementById("stepContent");
+const content=document.getElementById("stepContent");
 
 const stops=[365,730,1095,1461,1826,2191,2556,2922,3287];
 
 const messages=[
-"어색했던 첫 방송, 우리만의 시작점.",
-"작은 채팅 하나에도 밤새 설레던 시간.",
-"서로에게 익숙해지기 시작한 순간.",
-"오늘도 어김없이 이어지는 우리 시간.",
-"새로운 대화가 자연스러워진 관계.",
-"말하지 않아도 편안한 사이.",
-"함께라서 가능했던 순간들.",
-"앞으로가 더 기대되는 이유.",
-"새로운 페이지를 함께 써가는 중"
+"어색했던 우리들의 첫 만남",
+"작은 채팅 하나에도 설레던 시간",
+"서로에게 익숙해지던 순간",
+"일상이 되어버린 우리 시간",
+"자연스러운 대화의 시작",
+"말하지 않아도 편안한 사이",
+"함께라서 가능했던 순간들",
+"앞으로 더 기대되는 이유",
+"새로운 기록의 시작"
 ];
 
+/* STEP1 (느리게 수정) */
 function runStep1(){
 let num=0;
 let idx=0;
 
-function animateTo(target){
+function go(target){
 
 function loop(){
-num+=1;
+num += 0.6; // 🔥 더 느림
 
 if(num>=target){
 num=target;
 counter.innerText=num.toLocaleString();
 
-stepContent.innerText=
-`${stops[idx]}일 / ${idx+1}주년 : ${messages[idx]}`;
+content.innerText =
+`${idx+1}주년 : ${messages[idx]}`;
 
 idx++;
 if(idx>=stops.length) return;
 
-setTimeout(()=>animateTo(stops[idx]),800);
+setTimeout(()=>go(stops[idx]),1100);
 return;
 }
 
-counter.innerText=num.toLocaleString();
-setTimeout(loop,25);
+counter.innerText=Math.floor(num).toLocaleString();
+setTimeout(loop,40);
 }
 
 loop();
 }
 
-animateTo(stops[0]);
+go(stops[0]);
 }
 
+/* STEP CLICK */
 steps.forEach((step,i)=>{
 step.addEventListener("click",()=>{
 
 if(step.classList.contains("locked")) return;
 
-stepOverlay.classList.add("show");
+overlay.classList.add("show");
 
+/* STEP1 */
 if(step.dataset.step==="1"){
 runStep1();
 }
-else{
-stepContent.innerText=step.querySelector(".content").innerText.replace("LOCKED","");
+
+/* STEP2 */
+if(step.dataset.step==="2"){
 counter.innerText="";
+content.innerText=
+"The Origin : 첫 번째 로그 (3,287일 전, 포요 방송의 첫 시작)";
+}
+
+/* STEP3 */
+if(step.dataset.step==="3"){
+counter.innerText="";
+content.innerText=
+"[ 3단계: NEXT LOGGING ]\n다시 새롭게 시작될 페이지, 당신과 함께 채워갈 내일의 기록";
 }
 
 steps.forEach(s=>s.classList.remove("active"));
@@ -441,11 +436,15 @@ steps[i+1].querySelector(".content").innerText="OPEN";
 });
 });
 
-stepOverlay.addEventListener("click",(e)=>{
-if(e.target===stepOverlay){
-stepOverlay.classList.remove("show");
+overlay.addEventListener("click",(e)=>{
+if(e.target===overlay){
+overlay.classList.remove("show");
 }
 });
+
+/* init */
+window.addEventListener("load",()=>move(0));
+
 </script>
 
 </body>
