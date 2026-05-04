@@ -9,8 +9,8 @@
 
 <style>
 @font-face {
-font-family:'Jalnan';
-src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+font-family: 'Jalnan';
+src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
 }
 
 html,body{
@@ -20,18 +20,9 @@ font-family:'Fredoka',sans-serif;
 overflow:hidden;
 }
 
-/* ================= INTRO ================= */
-#intro{
-position:fixed;
-inset:0;
-z-index:9999;
-}
-
-#intro video{
-width:100%;
-height:100%;
-object-fit:cover;
-}
+/* INTRO */
+#intro{position:fixed;inset:0;z-index:9999;}
+#intro video{width:100%;height:100%;object-fit:cover;}
 
 #introText{
 position:absolute;
@@ -71,14 +62,10 @@ right:20px;
 z-index:100000;
 }
 
-/* ================= MAIN ================= */
-#main{
-position:fixed;
-inset:0;
-display:none;
-}
+/* MAIN */
+#main{position:fixed;inset:0;display:none;}
 
-/* ================= UI ================= */
+/* UI */
 #uiLayer{
 position:fixed;
 inset:0;
@@ -100,16 +87,6 @@ padding:14px 24px;
 background:rgba(255,255,255,0.18);
 backdrop-filter:blur(14px);
 border-radius:999px;
-}
-
-.top-btn{
-display:flex;
-align-items:center;
-gap:10px;
-padding:10px 18px;
-font-weight:900;
-font-size:1.1rem;
-cursor:pointer;
 }
 
 .volume{position:fixed;top:20px;right:20px;}
@@ -135,11 +112,8 @@ background:#b8f2e6;
 opacity:1;
 }
 
-/* ================= PAGES ================= */
-#pages{
-height:100vh;
-position:relative;
-}
+/* PAGES */
+#pages{height:100vh;position:relative;}
 
 .page{
 height:100vh;
@@ -147,18 +121,17 @@ display:flex;
 justify-content:center;
 align-items:center;
 flex-direction:column;
-transition:transform .7s ease, opacity .7s ease;
+transition:transform .6s ease, opacity .6s ease;
 opacity:0.3;
 }
 
 .page.active{opacity:1;}
 
-/* ================= GRADIENT ================= */
 .gradient{
 background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
-/* ================= PAGE 1 (복구) ================= */
+/* PAGE1 */
 .main-title{
 font-size:5rem;
 font-weight:900;
@@ -170,7 +143,7 @@ font-size:2rem;
 font-family:'Jalnan';
 }
 
-/* ================= PAGE 2 (복구 핵심) ================= */
+/* PAGE2 */
 .signal-box{
 margin-top:10px;
 text-align:center;
@@ -184,7 +157,6 @@ padding:20px;
 border:1px solid rgba(0,255,136,0.4);
 cursor:pointer;
 opacity:0.3;
-transition:0.3s;
 }
 
 .step.active{
@@ -198,19 +170,58 @@ opacity:0.15;
 pointer-events:none;
 }
 
-/* ================= PAGE 5 (복구 고정) ================= */
-.page5-text{
-font-size:2rem;
+/* STEP */
+#stepOverlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.5);
+display:flex;
+justify-content:center;
+align-items:center;
+opacity:0;
+pointer-events:none;
+transition:0.3s;
+z-index:1000;
+}
+
+#stepOverlay.show{
+opacity:1;
+pointer-events:auto;
+}
+
+#stepCard{
+background:#000;
+border:1px solid #00ff88;
+padding:50px;
+min-width:500px;
+max-width:700px;
 text-align:center;
+}
+
+#yearCounter{
+font-size:4rem;
+margin-bottom:20px;
+color:#00ff88;
+}
+
+#stepContent{
+font-size:1.6rem;
 line-height:1.6;
-font-family:'Jalnan';
+color:#00ff88;
+}
+
+/* PAGE5 */
+.page5-text{
+text-align:center;
+font-size:3rem;
+font-weight:900;
+line-height:1.5;
 }
 </style>
 </head>
 
 <body>
 
-<!-- INTRO -->
 <div id="intro">
 <video id="introVideo" autoplay muted playsinline>
 <source src="video2.mp4">
@@ -226,17 +237,14 @@ font-family:'Jalnan';
 
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
-<!-- MAIN -->
 <div id="main">
 <div id="pages">
 
-<!-- PAGE 1 (복구 완료) -->
 <div class="page active">
 <div class="main-title">POYO 9TH ANNIVERSARY</div>
 <div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
 
-<!-- PAGE 2 (복구 완료) -->
 <div class="page">
 <div class="signal-box">
 <div class="step active" data-step="1">STEP 1<div class="content">9 Years : Still On-Air</div></div>
@@ -245,11 +253,9 @@ font-family:'Jalnan';
 </div>
 </div>
 
-<!-- PAGE 3~4 -->
 <div class="page gradient"></div>
 <div class="page gradient"></div>
 
-<!-- PAGE 5 (복구 완료 핵심) -->
 <div class="page gradient">
 <div class="page5-text">
 아직 끝이 아니에요 ✨<br>
@@ -261,7 +267,6 @@ font-family:'Jalnan';
 </div>
 </div>
 
-<!-- STEP -->
 <div id="stepOverlay">
 <div id="stepCard">
 <div id="yearCounter"></div>
@@ -269,7 +274,6 @@ font-family:'Jalnan';
 </div>
 </div>
 
-<!-- UI -->
 <div id="uiLayer">
 <div class="top-ui">
 <div class="top-btn">포요</div>
@@ -278,7 +282,7 @@ font-family:'Jalnan';
 </div>
 
 <div class="volume">
-🔊 <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
+<input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
 </div>
 
 <div class="dots" id="dots"></div>
@@ -286,13 +290,11 @@ font-family:'Jalnan';
 
 <script>
 
+let index=0;
 const pages=document.querySelectorAll(".page");
 const dots=document.getElementById("dots");
 const uiLayer=document.getElementById("uiLayer");
 
-let index=0;
-
-/* INTRO */
 const introVideo=document.getElementById("introVideo");
 const title=document.getElementById("title");
 const btn=document.getElementById("enterBtn");
@@ -306,21 +308,16 @@ introVideo.play().catch(()=>{});
 
 function enter(){
 introVideo.pause();
-introVideo.currentTime=0;
-
 document.getElementById("intro").style.display="none";
 document.getElementById("main").style.display="block";
 uiLayer.style.display="block";
-
-setTimeout(()=>mainBgm.play().catch(()=>{}),300);
-
+mainBgm.play().catch(()=>{});
 move(0);
 }
 
 skipBtn.onclick=enter;
 btn.onclick=enter;
 
-/* DOTS */
 for(let i=0;i<5;i++){
 let d=document.createElement("div");
 d.className="dot";
@@ -328,21 +325,11 @@ d.onclick=()=>move(i);
 dots.appendChild(d);
 }
 
-/* SCROLL */
 function move(i){
 index=i;
-
 pages.forEach((p,idx)=>{
 p.style.position="absolute";
-p.style.top="0";
-p.style.left="0";
-p.style.width="100%";
-p.style.height="100vh";
 p.style.transform=`translateY(${(idx-index)*100}vh)`;
-});
-
-document.querySelectorAll(".dot").forEach((d,i2)=>{
-d.classList.toggle("active",i2===index);
 });
 }
 
