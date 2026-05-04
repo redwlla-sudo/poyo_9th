@@ -269,6 +269,20 @@ font-family:'NeoDunggeunGothicPro',sans-serif;
 overflow:hidden;
 }
 
+#stepCard.step1-card{
+min-width:560px;
+max-width:720px;
+min-height:210px;
+padding:44px 54px;
+}
+
+#stepCard.step2-card{
+min-width:620px;
+max-width:820px;
+min-height:320px;
+padding:52px 58px;
+}
+
 #yearCounter{
 font-size:4rem;
 margin-bottom:20px;
@@ -286,7 +300,7 @@ text-align:center;
 .step2-stage{
 position:relative;
 width:100%;
-min-height:300px;
+min-height:320px;
 display:flex;
 justify-content:center;
 align-items:center;
@@ -313,11 +327,12 @@ top:50%;
 left:50%;
 transform:translate(-50%,-50%);
 opacity:0;
-font-size:1.45rem;
-line-height:1.8;
+font-size:1.38rem;
+line-height:1.85;
 white-space:normal;
-animation:originMessageIn .8s ease forwards;
-animation-delay:1.9s;
+animation:
+originMessageIn .8s ease forwards 1.9s,
+originMessageOut .8s ease forwards 5.7s;
 }
 
 @keyframes originMessageIn{
@@ -325,34 +340,53 @@ animation-delay:1.9s;
 100%{opacity:1;transform:translate(-50%,-50%);}
 }
 
+@keyframes originMessageOut{
+0%{opacity:1;transform:translate(-50%,-50%);}
+100%{opacity:0;transform:translate(-58%,-50%);}
+}
+
 .origin-layout{
 position:absolute;
 inset:0;
 display:grid;
-grid-template-columns:1fr 1px 1fr;
+grid-template-columns:190px 1fr;
 gap:28px;
 align-items:center;
 opacity:0;
 animation:originLayoutIn .8s ease forwards;
-animation-delay:4.7s;
+animation-delay:6.7s;
 }
 
 @keyframes originLayoutIn{
-0%{opacity:0;transform:translateX(30px);}
+0%{opacity:0;transform:translateX(-20px);}
 100%{opacity:1;transform:translateX(0);}
 }
 
 .origin-left{
-font-size:1.2rem;
-line-height:1.7;
-text-align:center;
+height:180px;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
-.origin-line{
-width:1px;
-height:170px;
+.origin-left-line{
+position:relative;
+width:150px;
+height:1px;
 background:#00ff88;
-opacity:.7;
+opacity:.75;
+}
+
+.origin-left-line::before{
+content:"";
+position:absolute;
+left:-10px;
+top:50%;
+transform:translateY(-50%);
+width:8px;
+height:22px;
+background:#00ff88;
+animation:cursorBlink .7s infinite;
 }
 
 .origin-right{
@@ -635,6 +669,7 @@ showOverlay(overlay);
 
 const steps=document.querySelectorAll(".step");
 const stepOverlay=document.getElementById("stepOverlay");
+const stepCard=document.getElementById("stepCard");
 const counter=document.getElementById("yearCounter");
 const stepContent=document.getElementById("stepContent");
 
@@ -698,6 +733,7 @@ counter.style.display="block";
 counter.innerText="";
 stepContent.innerHTML="";
 stepContent.className="";
+stepCard.classList.remove("step1-card","step2-card");
 }
 
 function playTypeTick(){
@@ -736,10 +772,12 @@ stepOverlay.classList.add("show");
 const data=stepData[stepNum];
 
 if(data.type==="count"){
+stepCard.classList.add("step1-card");
 runStepCount(data);
 }
 
 if(data.type==="origin"){
+stepCard.classList.add("step2-card");
 runStep2Origin();
 }
 
@@ -797,14 +835,12 @@ stepContent.innerHTML=
 '<div class="origin-number">10,000</div>'+
 '<div class="origin-message">'+
 '잊고 있었던, 우리들의 첫 번째 페이지.<br>'+
-'서툴게 적었던 만 명이라는 꿈,<br>'+
-'그 작았던 숫자가 지금 우리를 여기까지 데려왔습니다.'+
+'서툴게 적었던 만 명이라는 꿈, 그 작았던 숫자가 지금 우리를 여기까지 데려왔습니다.'+
 '</div>'+
 '<div class="origin-layout">'+
 '<div class="origin-left">'+
-'잊고 있었던,<br>우리들의 첫 번째 페이지.'+
+'<div class="origin-left-line"></div>'+
 '</div>'+
-'<div class="origin-line"></div>'+
 '<div class="origin-right" id="originTyping"></div>'+
 '</div>';
 
@@ -826,7 +862,7 @@ stepState.typeTimer=null;
 target.innerHTML+='<span class="cursor">.</span>';
 }
 },70);
-},5400);
+},7600);
 }
 
 function unlockCurrentStep(stepNum){
