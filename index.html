@@ -315,6 +315,8 @@ width:100%;
 text-align:center;
 padding:40px;
 }
+
+.hide-dots .dots{display:none;}
 </style>
 </head>
 
@@ -322,8 +324,15 @@ padding:40px;
 
 <div id="uiLayer">
 <div class="top-ui">
-<div class="top-btn"><img src="poyo.png">포요</div>
+<div class="top-btn" data-page="home"><img src="poyo.png">포요</div>
+<div class="top-btn" data-overlay="memory">⭐ 추억</div>
+<div class="top-btn" data-overlay="game">🎮 게임</div>
 </div>
+
+<div class="volume">
+🔊 <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
+</div>
+
 <div class="dots" id="dots"></div>
 </div>
 
@@ -370,14 +379,34 @@ SIGNAL DETECTED
 </div>
 </div>
 
+<div class="page gradient"></div>
+<div class="page gradient"></div>
+
+<div class="page gradient">
+<div class="page5-text">
+아직 끝이 아니에요 ✨<br>
+더 많은 추억과 즐거움이 기다리고 있어요<br>
+상단에서 계속 이어가 보세요
 </div>
 </div>
 
+</div>
+</div>
+
+<!-- STEP CARD -->
 <div id="stepOverlay">
 <div id="stepCard">
 <div id="yearCounter">0</div>
 <div id="stepContent"></div>
 </div>
+</div>
+
+<div id="memory" class="overlay">
+<div class="overlay-content"><h1>⭐ 추억 페이지</h1></div>
+</div>
+
+<div id="game" class="overlay">
+<div class="overlay-content"><h1>🎮 게임 페이지</h1></div>
 </div>
 
 <script>
@@ -428,17 +457,30 @@ mainBgm.play().catch(()=>{});
 skipBtn.onclick=enter;
 btn.onclick=enter;
 
+for(let i=0;i<5;i++){
+let d=document.createElement("div");
+d.className="dot";
+d.onclick=()=>move(i);
+dots.appendChild(d);
+}
+
 function move(i){
 index=i;
 pages.forEach((p,idx)=>{
 p.style.position="absolute";
+p.style.top="0";
+p.style.left="0";
+p.style.width="100%";
 p.style.transform=`translateY(${(idx-index)*100}vh)`;
 p.classList.toggle("active",idx===index);
+});
+document.querySelectorAll(".dot").forEach((d,i)=>{
+d.classList.toggle("active",i===index);
 });
 }
 
 window.addEventListener("wheel",(e)=>{
-if(e.deltaY>0 && index<pages.length-1) index++;
+if(e.deltaY>0 && index<4) index++;
 if(e.deltaY<0 && index>0) index--;
 move(index);
 });
@@ -469,7 +511,7 @@ let idx=0;
 
 function animateTo(target){
 function loop(){
-num+=6;  // ✅ 속도만 수정
+num+=20;
 if(num>=target){
 num=target;
 counter.innerText=num.toLocaleString();
