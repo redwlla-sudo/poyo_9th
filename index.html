@@ -48,10 +48,181 @@ position:fixed;top:20px;right:20px;z-index:100000;
 
 /* MAIN */
 #main{position:fixed;inset:0;display:none;}
+
+/* UI */
+#uiLayer{
+position:fixed;inset:0;
+z-index:2147483647;
+pointer-events:none;
+display:none;
+}
+
+.top-ui,.volume,.dots{pointer-events:auto;}
+
+.top-ui{
+position:fixed;top:20px;left:50%;
+transform:translateX(-50%);
+display:flex;gap:18px;
+padding:14px 24px;
+background:rgba(255,255,255,0.18);
+backdrop-filter:blur(14px);
+border-radius:999px;
+}
+
+.top-btn{
+display:flex;align-items:center;
+gap:10px;padding:10px 18px;
+font-weight:900;font-size:1.1rem;
+cursor:pointer;
+}
+
+.volume{position:fixed;top:20px;right:20px;}
+
+.dots{
+position:fixed;right:20px;
+top:50%;transform:translateY(-50%);
+}
+
+.dot{
+width:10px;height:10px;margin:10px 0;
+border-radius:50%;background:#000;opacity:.3;
+}
+
+.dot.active{background:#b8f2e6;opacity:1;}
+
+/* PAGES */
+#pages{height:100vh;position:relative;}
+
+.page{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+transition:transform .6s ease, opacity .6s ease;
+opacity:0.3;
+}
+
+.page.active{opacity:1;}
+
+.gradient{
+background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+}
+
+.tv-static{
+background:linear-gradient(180deg,#00110a,#000);
+color:#00ff88;
+position:relative;
+overflow:hidden;
+}
+
+.tv-static h1{
+display:flex;
+align-items:center;
+gap:10px;
+font-size:1.8rem;
+opacity:0.5;
+}
+
+.logo{height:28px;}
+
+.binary-bg{
+position:absolute;
+top:0;left:0;
+width:100%;height:200%;
+color:#00ff88;
+opacity:0.07;
+animation:binaryMove 20s linear infinite;
+}
+
+@keyframes binaryMove{
+from{transform:translateY(0);}
+to{transform:translateY(-50%);}
+}
+
+/* STEP */
+.step{
+margin:15px auto;
+padding:20px;
+border:1px solid #00ff88;
+cursor:pointer;
+opacity:0.3;
+}
+
+.step.active{
+opacity:1;
+border:2px solid #00ff88;
+}
+
+.step.locked{
+opacity:0.15;
+pointer-events:none;
+}
+
+/* STEP CARD */
+#stepOverlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.5);
+display:flex;
+justify-content:center;
+align-items:center;
+opacity:0;
+pointer-events:none;
+transition:0.3s;
+z-index:1000;
+}
+
+#stepOverlay.show{
+opacity:1;
+pointer-events:auto;
+}
+
+#stepCard{
+background:#000;
+border:1px solid #00ff88;
+padding:50px;
+min-width:500px;
+text-align:center;
+color:#00ff88;
+}
+
+#yearCounter{
+font-size:4rem;
+margin-bottom:20px;
+}
+
+/* OVERLAY */
+.overlay{
+position:fixed;inset:0;
+z-index:9999999;
+display:none;
+background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+}
+
+.overlay.show{
+display:flex;
+}
 </style>
 </head>
 
 <body>
+
+<!-- UI -->
+<div id="uiLayer">
+<div class="top-ui">
+<div class="top-btn" data-page="home">포요</div>
+<div class="top-btn" data-overlay="memory">⭐ 추억</div>
+<div class="top-btn" data-overlay="game">🎮 게임</div>
+</div>
+
+<div class="volume">
+🔊 <input type="range" min="0" max="1" step="0.01"
+oninput="mainBgm.volume=this.value; introVideo.volume=this.value;">
+</div>
+
+<div class="dots" id="dots"></div>
+</div>
 
 <!-- INTRO -->
 <div id="intro">
@@ -69,51 +240,149 @@ position:fixed;top:20px;right:20px;z-index:100000;
 
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
+<!-- MAIN -->
+<div id="main">
+<div id="pages">
+
+<div class="page active">
+<h1>POYO 9TH ANNIVERSARY</h1>
+</div>
+
+<div class="page tv-static">
+<div class="binary-bg">010101010101010101010101</div>
+
+<h1><img src="img.png" class="logo"> SIGNAL DETECTED</h1>
+
+<div class="step active" data-step="1">STEP 1<div>LOCKED</div></div>
+<div class="step locked" data-step="2">STEP 2<div>LOCKED</div></div>
+<div class="step locked" data-step="3">STEP 3<div>LOCKED</div></div>
+
+</div>
+
+<div class="page gradient"></div>
+<div class="page gradient"></div>
+<div class="page gradient">END</div>
+
+</div>
+</div>
+
+<!-- STEP CARD -->
+<div id="stepOverlay">
+<div id="stepCard">
+<div id="yearCounter">0</div>
+<div id="stepContent"></div>
+</div>
+</div>
+
 <script>
-const introVideo = document.getElementById("introVideo");
-const title = document.getElementById("title");
-const btn = document.getElementById("enterBtn");
-const skipBtn = document.getElementById("skipBtn");
-const mainBgm = document.getElementById("mainBgm");
+const introVideo=document.getElementById("introVideo");
+const title=document.getElementById("title");
+const btn=document.getElementById("enterBtn");
+const skipBtn=document.getElementById("skipBtn");
+const mainBgm=document.getElementById("mainBgm");
+const main=document.getElementById("main");
+const ui=document.getElementById("uiLayer");
 
-let shown = false;
+let shown=false;
 
-/* 🔥 첫 클릭 시 음소거 해제 */
+/* 인트로 사운드 */
 window.addEventListener("click",()=>{
 introVideo.muted=false;
-introVideo.play().catch(()=>{});
+introVideo.play();
 },{once:true});
 
-/* 🔥 103초 후 텍스트 등장 */
-function introLoop(){
-if(introVideo.currentTime >= 103 && !shown){
-shown = true;
-
-title.style.opacity = 1;
-title.style.visibility = "visible";
-
-btn.style.opacity = 1;
-btn.style.visibility = "visible";
+/* 103초 */
+function loop(){
+if(introVideo.currentTime>=103 && !shown){
+shown=true;
+title.style.opacity=1;
+btn.style.opacity=1;
+title.style.visibility="visible";
+btn.style.visibility="visible";
 }
-requestAnimationFrame(introLoop);
+requestAnimationFrame(loop);
 }
-introLoop();
+loop();
 
-/* 🔥 입장 / 스킵 */
+/* 입장 */
 function enter(){
-introVideo.pause();
-introVideo.currentTime = 0;
-introVideo.muted = true;
+document.getElementById("intro").style.display="none";
+main.style.display="block";
+ui.style.display="block";
 
-document.getElementById("intro").style.display = "none";
-
-/* BGM 시작 */
-mainBgm.volume = introVideo.volume;
-mainBgm.play().catch(()=>{});
+mainBgm.volume=introVideo.volume;
+mainBgm.play();
 }
 
-skipBtn.onclick = enter;
-btn.onclick = enter;
+skipBtn.onclick=enter;
+btn.onclick=enter;
+
+/* STEP */
+const steps=document.querySelectorAll(".step");
+const overlay=document.getElementById("stepOverlay");
+const counter=document.getElementById("yearCounter");
+const content=document.getElementById("stepContent");
+
+const stops=[365,730,1095,1461,1826,2191,2556,2922,3287];
+
+const texts=[
+"1주년 365일 시작",
+"2주년 730일",
+"3주년 1095일",
+"4주년 1461일",
+"5주년 1826일",
+"6주년 2191일",
+"7주년 2556일",
+"8주년 2922일",
+"9주년 3287일"
+];
+
+function run(){
+let num=0;
+let i=0;
+
+function go(target){
+function step(){
+num+=5;
+if(num>=target){
+num=target;
+counter.innerText=num;
+content.innerText=texts[i];
+i++;
+if(i<stops.length){
+setTimeout(()=>go(stops[i]),800);
+}
+return;
+}
+counter.innerText=num;
+requestAnimationFrame(step);
+}
+step();
+}
+go(stops[0]);
+}
+
+steps.forEach((s,i)=>{
+s.onclick=()=>{
+if(s.classList.contains("locked"))return;
+
+overlay.classList.add("show");
+
+if(i===0){
+run();
+steps[1].classList.remove("locked");
+}
+if(i===1){
+steps[2].classList.remove("locked");
+}
+}
+});
+
+overlay.onclick=(e)=>{
+if(e.target===overlay){
+overlay.classList.remove("show");
+}
+};
 </script>
 
 </body>
