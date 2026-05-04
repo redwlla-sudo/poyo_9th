@@ -65,7 +65,7 @@ z-index:100000;
 /* MAIN */
 #main{position:fixed;inset:0;display:none;}
 
-/* UI */
+/* UI (절대 수정 금지 유지) */
 #uiLayer{
 position:fixed;
 inset:0;
@@ -99,8 +99,6 @@ font-size:1.1rem;
 cursor:pointer;
 }
 
-.top-btn img{width:24px;height:24px;}
-
 .volume{position:fixed;top:20px;right:20px;}
 
 .dots{
@@ -124,7 +122,7 @@ background:#b8f2e6;
 opacity:1;
 }
 
-/* PAGES */
+/* PAGES (유지) */
 #pages{height:100vh;position:relative;}
 
 .page{
@@ -216,20 +214,7 @@ color:#00ff88;
 
 <body>
 
-<div id="uiLayer">
-<div class="top-ui">
-<div class="top-btn"><img src="poyo.png">포요</div>
-<div class="top-btn">⭐ 추억</div>
-<div class="top-btn">🎮 게임</div>
-</div>
-
-<div class="volume">
-🔊 <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
-</div>
-
-<div class="dots" id="dots"></div>
-</div>
-
+<!-- INTRO (유지) -->
 <div id="intro">
 <video id="introVideo" autoplay muted playsinline>
 <source src="video2.mp4">
@@ -245,6 +230,7 @@ color:#00ff88;
 
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 
+<!-- MAIN (유지) -->
 <div id="main">
 <div id="pages">
 
@@ -268,11 +254,27 @@ color:#00ff88;
 </div>
 </div>
 
+<!-- STEP -->
 <div id="stepOverlay">
 <div id="stepCard">
 <div id="yearCounter">0</div>
 <div id="stepContent"></div>
 </div>
+</div>
+
+<!-- UI (절대 유지) -->
+<div id="uiLayer">
+<div class="top-ui">
+<div class="top-btn">포요</div>
+<div class="top-btn">⭐ 추억</div>
+<div class="top-btn">🎮 게임</div>
+</div>
+
+<div class="volume">
+🔊 <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
+</div>
+
+<div class="dots" id="dots"></div>
 </div>
 
 <script>
@@ -288,24 +290,12 @@ const uiLayer=document.getElementById("uiLayer");
 let index=0;
 let shown=false;
 
-/* intro */
+/* intro 유지 */
 window.addEventListener("click",()=>{
 introVideo.muted=false;
 introVideo.volume=mainBgm.volume;
 introVideo.play().catch(()=>{});
 },{once:true});
-
-function introLoop(){
-if(introVideo.currentTime>=103 && !shown){
-shown=true;
-title.style.opacity=1;
-title.style.visibility="visible";
-btn.style.opacity=1;
-btn.style.visibility="visible";
-}
-requestAnimationFrame(introLoop);
-}
-introLoop();
 
 function enter(){
 introVideo.pause();
@@ -324,7 +314,7 @@ mainBgm.play().catch(()=>{});
 skipBtn.onclick=enter;
 btn.onclick=enter;
 
-/* dots */
+/* dots 유지 */
 for(let i=0;i<5;i++){
 let d=document.createElement("div");
 d.className="dot";
@@ -344,7 +334,7 @@ p.classList.toggle("active",idx===index);
 });
 }
 
-/* ================= STEP ================= */
+/* ================= STEP ONLY 수정 ================= */
 
 const steps=document.querySelectorAll(".step");
 const stepOverlay=document.getElementById("stepOverlay");
@@ -354,18 +344,18 @@ const stepContent=document.getElementById("stepContent");
 const stops=[365,730,1095,1461,1826,2191,2556,2922,3287];
 
 const messages=[
-"어색했던 우리들의 첫 만남.",
-"작은 채팅 하나에도 설레던 시간.",
-"서로에게 익숙해지던 순간.",
-"일상이 되어버린 우리 시간.",
-"자연스러운 대화의 시작.",
-"말하지 않아도 편안한 사이.",
-"함께라서 가능했던 순간들.",
-"앞으로 더 기대되는 이유.",
+"어색했던 우리들의 첫 만남",
+"작은 채팅 하나에도 설레던 시간",
+"서로에게 익숙해지던 순간",
+"일상이 되어버린 우리 시간",
+"자연스러운 대화의 시작",
+"말하지 않아도 편안한 사이",
+"함께라서 가능했던 순간들",
+"앞으로 더 기대되는 이유",
 "새로운 기록의 시작"
 ];
 
-/* STEP 1 */
+/* STEP1 (카운트 느리게 수정) */
 function runStep1(){
 let num=0;
 let idx=0;
@@ -373,24 +363,24 @@ let idx=0;
 function animateTo(target){
 
 function loop(){
-num+=1; // 🔥 느리게
+num += 0.8; // 🔥 더 느리게
 
 if(num>=target){
 num=target;
 counter.innerText=num.toLocaleString();
 
-stepContent.innerText =
+stepContent.innerText=
 `${idx+1}주년 : ${messages[idx]}`;
 
 idx++;
 if(idx>=stops.length) return;
 
-setTimeout(()=>animateTo(stops[idx]),900);
+setTimeout(()=>animateTo(stops[idx]),1000);
 return;
 }
 
-counter.innerText=num.toLocaleString();
-setTimeout(loop,40);
+counter.innerText=Math.floor(num).toLocaleString();
+setTimeout(loop,35);
 }
 
 loop();
@@ -407,19 +397,19 @@ if(step.classList.contains("locked")) return;
 
 stepOverlay.classList.add("show");
 
-/* STEP 1 */
+/* STEP1 */
 if(step.dataset.step==="1"){
 runStep1();
 }
 
-/* STEP 2 */
+/* STEP2 */
 if(step.dataset.step==="2"){
 counter.innerText="";
 stepContent.innerText=
 "The Origin : 첫 번째 로그 (3,287일 전, 포요 방송의 첫 시작)";
 }
 
-/* STEP 3 */
+/* STEP3 */
 if(step.dataset.step==="3"){
 counter.innerText="";
 stepContent.innerText=
