@@ -262,9 +262,11 @@ background:#000;
 border:1px solid #00ff88;
 padding:50px;
 min-width:500px;
-max-width:700px;
+max-width:760px;
+min-height:260px;
 text-align:center;
 font-family:'NeoDunggeunGothicPro',sans-serif;
+overflow:hidden;
 }
 
 #yearCounter{
@@ -278,6 +280,97 @@ font-size:1.6rem;
 line-height:1.6;
 color:#00ff88;
 text-align:center;
+}
+
+/* STEP2 POPUP */
+.step2-stage{
+position:relative;
+width:100%;
+min-height:300px;
+display:flex;
+justify-content:center;
+align-items:center;
+color:#00ff88;
+text-align:center;
+}
+
+.origin-number{
+font-size:5rem;
+font-weight:900;
+letter-spacing:2px;
+animation:numberLift 1.2s ease forwards;
+animation-delay:.8s;
+}
+
+@keyframes numberLift{
+0%{transform:translateY(0);opacity:1;}
+100%{transform:translateY(-130px);opacity:0;}
+}
+
+.origin-message{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+opacity:0;
+font-size:1.45rem;
+line-height:1.8;
+white-space:normal;
+animation:originMessageIn .8s ease forwards;
+animation-delay:1.9s;
+}
+
+@keyframes originMessageIn{
+0%{opacity:0;transform:translate(-50%,-42%);}
+100%{opacity:1;transform:translate(-50%,-50%);}
+}
+
+.origin-layout{
+position:absolute;
+inset:0;
+display:grid;
+grid-template-columns:1fr 1px 1fr;
+gap:28px;
+align-items:center;
+opacity:0;
+animation:originLayoutIn .8s ease forwards;
+animation-delay:4.7s;
+}
+
+@keyframes originLayoutIn{
+0%{opacity:0;transform:translateX(30px);}
+100%{opacity:1;transform:translateX(0);}
+}
+
+.origin-left{
+font-size:1.2rem;
+line-height:1.7;
+text-align:center;
+}
+
+.origin-line{
+width:1px;
+height:170px;
+background:#00ff88;
+opacity:.7;
+}
+
+.origin-right{
+font-size:1rem;
+line-height:1.9;
+text-align:left;
+white-space:pre-line;
+}
+
+.cursor{
+display:inline-block;
+margin-left:2px;
+animation:cursorBlink .7s infinite;
+}
+
+@keyframes cursorBlink{
+0%,45%{opacity:1;}
+46%,100%{opacity:0;}
 }
 
 /* 5페이지 */
@@ -549,7 +642,9 @@ let stepState={
 unlocked:1,
 running:false,
 rafId:null,
-timerId:null
+timerId:null,
+typeTimer:null,
+typeAudio:null
 };
 
 const stepData={
@@ -562,7 +657,7 @@ messages:[
 "2주년 : 작은 채팅 하나에도 밤새 설레던,<br>서로에게 스며들기 시작한 시간.",
 "3주년 : 특별한 날이 아니어도 방송 알람 하나에,<br>습관처럼 모여드는 우리.",
 "4주년 : 오늘도 어김없이 찾아온, 우리만의 당연한 저녁.",
-"5주년 : 함께한 시간이 벌써 이만큼,<br> 여전히 새로운 우리의 대화.",
+"5주년 : 함께한 시간이 벌써 이만큼,<br>여전히 새로운 우리의 대화.",
 "6주년 : 말하지 않아도 다 아는 편안한 사이.",
 "7주년 : 함께라서 가능했던 행운 같은 순간들.",
 "8주년 : 지나온 날보다 앞으로가 더 기대되는 이유.",
@@ -570,7 +665,7 @@ messages:[
 ]
 },
 2:{
-type:"empty",
+type:"origin",
 unlockText:"[ The Origin : 첫 번째 로그 ] (3,287일 전, 포요님의 치지직 첫 데뷔)"
 },
 3:{
@@ -591,11 +686,43 @@ if(stepState.timerId){
 clearTimeout(stepState.timerId);
 stepState.timerId=null;
 }
+
+if(stepState.typeTimer){
+clearInterval(stepState.typeTimer);
+stepState.typeTimer=null;
+}
 }
 
 function resetStepPopup(){
+counter.style.display="block";
 counter.innerText="";
 stepContent.innerHTML="";
+stepContent.className="";
+}
+
+function playTypeTick(){
+try{
+const AudioCtx=window.AudioContext || window.webkitAudioContext;
+if(!AudioCtx) return;
+
+if(!stepState.typeAudio){
+stepState.typeAudio=new AudioCtx();
+}
+
+const ctx=stepState.typeAudio;
+const osc=ctx.createOscillator();
+const gain=ctx.createGain();
+
+osc.type="square";
+osc.frequency.value=900;
+gain.gain.value=0.025;
+
+osc.connect(gain);
+gain.connect(ctx.destination);
+
+osc.start();
+osc.stop(ctx.currentTime+0.025);
+}catch(e){}
 }
 
 function openStep(stepNum){
@@ -610,6 +737,10 @@ const data=stepData[stepNum];
 
 if(data.type==="count"){
 runStepCount(data);
+}
+
+if(data.type==="origin"){
+runStep2Origin();
 }
 
 if(data.type==="empty"){
@@ -656,6 +787,46 @@ loop();
 }
 
 animateTo(data.stops[0]);
+}
+
+function runStep2Origin(){
+counter.style.display="none";
+
+stepContent.className="step2-stage";
+stepContent.innerHTML=
+'<div class="origin-number">10,000</div>'+
+'<div class="origin-message">'+
+'잊고 있었던, 우리들의 첫 번째 페이지.<br>'+
+'서툴게 적었던 만 명이라는 꿈,<br>'+
+'그 작았던 숫자가 지금 우리를 여기까지 데려왔습니다.'+
+'</div>'+
+'<div class="origin-layout">'+
+'<div class="origin-left">'+
+'잊고 있었던,<br>우리들의 첫 번째 페이지.'+
+'</div>'+
+'<div class="origin-line"></div>'+
+'<div class="origin-right" id="originTyping"></div>'+
+'</div>';
+
+stepState.timerId=setTimeout(()=>{
+const target=document.getElementById("originTyping");
+if(!target) return;
+
+const text='다음 단계에서\n10주년에도 포요와 함께할\n포동이들과의 작은 약속을 적어주세요.';
+let i=0;
+
+stepState.typeTimer=setInterval(()=>{
+if(i<text.length){
+target.innerHTML+=text[i]==="\n" ? "<br>" : text[i];
+playTypeTick();
+i++;
+}else{
+clearInterval(stepState.typeTimer);
+stepState.typeTimer=null;
+target.innerHTML+='<span class="cursor">.</span>';
+}
+},70);
+},5400);
 }
 
 function unlockCurrentStep(stepNum){
