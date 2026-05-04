@@ -13,82 +13,229 @@ font-family: 'Jalnan';
 src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
 }
 
-html,body{margin:0;padding:0;font-family:'Fredoka',sans-serif;overflow:hidden;}
+html,body{
+margin:0;
+padding:0;
+font-family:'Fredoka',sans-serif;
+overflow:hidden;
+}
 
+/* INTRO */
 #intro{position:fixed;inset:0;z-index:9999;}
 #intro video{width:100%;height:100%;object-fit:cover;}
 
-#introText{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+#introText{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+}
 
 #title{
-font-size:5rem;font-weight:900;opacity:0;visibility:hidden;
+font-size:5rem;
+font-weight:900;
+opacity:0;
+visibility:hidden;
 background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
--webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:1s;
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+transition:1s;
 }
 
 #enterBtn{
-margin-top:20px;padding:18px 60px;border-radius:40px;font-size:1.6rem;
-font-weight:800;opacity:0;visibility:hidden;
-background:linear-gradient(45deg,#cdb4ff,#b8f2e6);transition:1s;
+margin-top:20px;
+padding:18px 60px;
+border-radius:40px;
+font-size:1.6rem;
+font-weight:800;
+opacity:0;
+visibility:hidden;
+background:linear-gradient(45deg,#cdb4ff,#b8f2e6);
+transition:1s;
 }
 
-#skipBtn{position:fixed;top:20px;right:20px;z-index:100000;}
+#skipBtn{
+position:fixed;
+top:20px;
+right:20px;
+z-index:100000;
+}
 
+/* MAIN */
 #main{position:fixed;inset:0;display:none;}
 
-#uiLayer{position:fixed;inset:0;z-index:2147483647;pointer-events:none;display:none;}
+/* UI */
+#uiLayer{
+position:fixed;
+inset:0;
+z-index:2147483647;
+pointer-events:none;
+display:none;
+}
+
 .top-ui,.volume,.dots{pointer-events:auto;}
 
 .top-ui{
-position:fixed;top:20px;left:50%;transform:translateX(-50%);
-display:flex;gap:18px;padding:14px 24px;
-background:rgba(255,255,255,0.18);backdrop-filter:blur(14px);border-radius:999px;
+position:fixed;
+top:20px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+gap:18px;
+padding:14px 24px;
+background:rgba(255,255,255,0.18);
+backdrop-filter:blur(14px);
+border-radius:999px;
 }
 
-.top-btn{display:flex;align-items:center;gap:10px;padding:10px 18px;font-weight:900;cursor:pointer;}
+.top-btn{
+display:flex;
+align-items:center;
+gap:10px;
+padding:10px 18px;
+font-weight:900;
+font-size:1.1rem;
+cursor:pointer;
+}
+
 .top-btn img{width:24px;height:24px;}
 
 .volume{position:fixed;top:20px;right:20px;}
 
-.dots{position:fixed;right:20px;top:50%;transform:translateY(-50%);}
-.dot{width:10px;height:10px;margin:10px 0;border-radius:50%;background:#000;opacity:.3;}
-.dot.active{background:#b8f2e6;opacity:1;}
+.dots{
+position:fixed;
+right:20px;
+top:50%;
+transform:translateY(-50%);
+}
 
+.dot{
+width:10px;
+height:10px;
+margin:10px 0;
+border-radius:50%;
+background:#000;
+opacity:.3;
+}
+
+.dot.active{
+background:#b8f2e6;
+opacity:1;
+}
+
+/* PAGES */
 #pages{height:100vh;position:relative;}
-.page{height:100vh;display:flex;justify-content:center;align-items:center;flex-direction:column;opacity:.3;}
+
+.page{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+transition:transform .6s ease, opacity .6s ease;
+opacity:0.3;
+}
+
 .page.active{opacity:1;}
 
-.gradient{background:linear-gradient(135deg,#d9cfff,#b8f2e6);}
-
-.tv-static{background:linear-gradient(180deg,#00110a,#000);color:#00ff88;}
-
-.logo{height:28px;width:auto;}
-
-.signal-box{width:80%;max-width:600px;}
-
-.step{margin:15px auto;padding:20px;border:1px solid rgba(0,255,136,0.4);cursor:pointer;opacity:.3;}
-.step.active{opacity:1;border:2px solid #00ff88;}
-.step.locked{opacity:.15;pointer-events:none;}
-
-#stepOverlay{
-position:fixed;inset:0;background:rgba(0,0,0,0.5);
-display:flex;justify-content:center;align-items:center;
-opacity:0;pointer-events:none;transition:.3s;
+.gradient{
+background:linear-gradient(135deg,#d9cfff,#b8f2e6);
 }
 
-#stepOverlay.show{opacity:1;pointer-events:auto;}
+.tv-static{
+background:linear-gradient(180deg,#00110a,#000);
+color:#00ff88;
+position:relative;
+overflow:hidden;
+}
+
+/* STEP */
+.signal-box{
+margin-top:10px;
+text-align:center;
+width:80%;
+max-width:600px;
+z-index:1;
+}
+
+.step{
+margin:15px auto;
+padding:20px;
+border:1px solid rgba(0,255,136,0.4);
+cursor:pointer;
+opacity:0.3;
+transition:0.3s;
+}
+
+.step.active{
+opacity:1;
+border:2px solid #00ff88;
+transform:scale(1.05);
+}
+
+.step.locked{
+opacity:0.15;
+pointer-events:none;
+}
+
+/* STEP CARD */
+#stepOverlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.5);
+display:flex;
+justify-content:center;
+align-items:center;
+opacity:0;
+pointer-events:none;
+transition:0.3s;
+z-index:1000;
+}
+
+#stepOverlay.show{
+opacity:1;
+pointer-events:auto;
+}
 
 #stepCard{
-background:#000;border:1px solid #00ff88;padding:50px;
-min-width:500px;text-align:center;
+background:#000;
+border:1px solid #00ff88;
+padding:50px;
+min-width:500px;
+max-width:700px;
+text-align:center;
 }
 
-#yearCounter{font-size:4rem;color:#00ff88;}
-#stepContent{font-size:1.6rem;color:#00ff88;}
+#yearCounter{
+font-size:4rem;
+margin-bottom:20px;
+color:#00ff88;
+}
+
+#stepContent{
+font-size:1.6rem;
+line-height:1.6;
+color:#00ff88;
+}
 </style>
 </head>
 
 <body>
+
+<div id="uiLayer">
+<div class="top-ui">
+<div class="top-btn" data-page="home">포요</div>
+<div class="top-btn" data-overlay="memory">⭐ 추억</div>
+<div class="top-btn" data-overlay="game">🎮 게임</div>
+</div>
+
+<div class="volume">
+🔊 <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
+</div>
+
+<div class="dots" id="dots"></div>
+</div>
 
 <div id="intro">
 <video id="introVideo" autoplay muted playsinline>
@@ -110,26 +257,16 @@ min-width:500px;text-align:center;
 
 <div class="page active">
 <div class="main-title">POYO 9TH ANNIVERSARY</div>
+<div class="sub-title">포동이들과 함께 쌓아온 9년의 시간</div>
 </div>
 
 <div class="page tv-static">
-<h1><img src="img.png" class="logo"> SIGNAL DETECTED</h1>
+<h1>SIGNAL DETECTED</h1>
 
 <div class="signal-box">
-<div class="step active" data-step="1">
-STEP 1
-<div class="content">[ 9 Years : Still On-Air ] - (3,287일의 기록)</div>
-</div>
-
-<div class="step locked" data-step="2">
-STEP 2
-<div class="content">LOCKED</div>
-</div>
-
-<div class="step locked" data-step="3">
-STEP 3
-<div class="content">LOCKED</div>
-</div>
+<div class="step active" data-step="1">STEP 1<div class="content">[ 9 Years : Still On-Air ] (3,287일의 기록)</div></div>
+<div class="step locked" data-step="2">STEP 2<div class="content">LOCKED</div></div>
+<div class="step locked" data-step="3">STEP 3<div class="content">LOCKED</div></div>
 </div>
 </div>
 
@@ -145,44 +282,63 @@ STEP 3
 
 <script>
 const steps=document.querySelectorAll(".step");
-const overlay=document.getElementById("stepOverlay");
+const stepOverlay=document.getElementById("stepOverlay");
 const counter=document.getElementById("yearCounter");
-const content=document.getElementById("stepContent");
+const stepContent=document.getElementById("stepContent");
+
+const stops=[365,730,1095,1461,1826,2191,2556,2922,3287];
+
+const messages=[
+"1주년 : 어색했던 첫 방송, 우리만의 시작점.",
+"2주년 : 작은 채팅 하나에도 밤새 설레던 시간.",
+"3주년 : 습관처럼 모여드는 우리.",
+"4주년 : 당연한 저녁.",
+"5주년 : 여전히 새로운 대화.",
+"6주년 : 편안한 사이.",
+"7주년 : 행운 같은 순간들.",
+"8주년 : 더 기대되는 이유.",
+"9주년 : 포동이들과 함께 채워갈 내일"
+];
 
 function runStep1(){
-let n=0;
+let num=0;
+let idx=0;
+
+function animateTo(target){
 function loop(){
-n+=6;
-if(n>=3287){
-n=3287;
-counter.innerText=n.toLocaleString();
+num+=6; // 속도 감소
+
+if(num>=target){
+num=target;
+counter.innerText=num.toLocaleString();
+stepContent.innerText=messages[idx];
+
+idx++;
+if(idx>=stops.length) return;
+
+setTimeout(()=>animateTo(stops[idx]),1000);
 return;
 }
-counter.innerText=n.toLocaleString();
+
+counter.innerText=num.toLocaleString();
 requestAnimationFrame(loop);
 }
 loop();
 }
-
-steps.forEach((step,i)=>{
-step.onclick=()=>{
-
-if(step.classList.contains("locked")) return;
-
-overlay.classList.add("show");
-
-counter.innerText="0";
-content.innerText="";
-
-/* STEP1만 카운트 */
-if(step.dataset.step==="1"){
-runStep1();
+animateTo(stops[0]);
 }
 
-/* STEP2,3은 내용 없음 */
-if(step.dataset.step==="2" || step.dataset.step==="3"){
+steps.forEach((step,i)=>{
+step.addEventListener("click",()=>{
+if(step.classList.contains("locked")) return;
+
+stepOverlay.classList.add("show");
+
+if(step.dataset.step==="1"){
+runStep1();
+}else{
 counter.innerText="";
-content.innerText="";
+stepContent.innerText="";
 }
 
 steps.forEach(s=>s.classList.remove("active"));
@@ -191,22 +347,23 @@ step.classList.add("active");
 /* 해금 로직 */
 if(i===0){
 steps[1].classList.remove("locked");
-steps[1].querySelector(".content").innerText=
+steps[1].querySelector(".content").innerText =
 "[ The Origin : 첫 번째 로그 ] (3,287일 전, 포요님의 첫 시작)";
 }
 
 if(i===1){
 steps[2].classList.remove("locked");
-steps[2].querySelector(".content").innerText=
+steps[2].querySelector(".content").innerText =
 '[ 3단계: NEXT LOGGING ] "다시 새롭게 시작될 페이지, 포동이들과 함께 채워갈 내일의 기록"';
 }
-
-};
+});
 });
 
-overlay.onclick=(e)=>{
-if(e.target===overlay) overlay.classList.remove("show");
-};
+stepOverlay.addEventListener("click",(e)=>{
+if(e.target===stepOverlay){
+stepOverlay.classList.remove("show");
+}
+});
 </script>
 
 </body>
