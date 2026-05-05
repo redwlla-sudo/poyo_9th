@@ -808,6 +808,20 @@ dots.appendChild(d);
 
 function move(i){
 index=i;
+
+if(stepBgmStarted){
+stepBgmStarted = false; // ⭐ 추가
+
+fadeAudio(stepBgm, stepBgm.volume, 0, 1200, "step", ()=>{
+stepBgm.pause();
+});
+
+mainBgm.volume = 0;
+mainBgm.play();
+
+fadeAudio(mainBgm, 0, 0.35, 1200, "main");
+}
+
 pages.forEach((p,idx)=>{
 p.style.position="absolute";
 p.style.top="0";
@@ -816,6 +830,7 @@ p.style.width="100%";
 p.style.transform=`translateY(${(idx-index)*100}vh)`;
 p.classList.toggle("active",idx===index);
 });
+   
 document.querySelectorAll(".dot").forEach((d,i)=>{
 d.classList.toggle("active",i===index);
 });
