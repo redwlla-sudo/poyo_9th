@@ -808,22 +808,6 @@ dots.appendChild(d);
 
 function move(i){
 index=i;
-
-if(step3Finished && stepBgmStarted){
-
-step3Finished = false;
-stepBgmStarted = false;
-
-fadeAudio(stepBgm, stepBgm.volume, 0, 1200, "step", ()=>{
-stepBgm.pause();
-});
-
-mainBgm.volume = 0;
-mainBgm.play();
-
-fadeAudio(mainBgm, 0, 0.35, 1200, "main");
-}
-   
 pages.forEach((p,idx)=>{
 p.style.position="absolute";
 p.style.top="0";
@@ -832,7 +816,6 @@ p.style.width="100%";
 p.style.transform=`translateY(${(idx-index)*100}vh)`;
 p.classList.toggle("active",idx===index);
 });
-   
 document.querySelectorAll(".dot").forEach((d,i)=>{
 d.classList.toggle("active",i===index);
 });
@@ -887,9 +870,7 @@ main:null,
 step:null
 };
 
-let stepState={ 
-   
-let step3Finished = false;
+let stepState={
 unlocked:1,
 running:false,
 rafId:null,
@@ -989,7 +970,6 @@ if(!stepBgm) return;
 
 /* Enter 즉시 1분 58초로 점프 */
 setStepBgmTime(118);
-stepBgm.volume = 0;
 stepBgm.play().catch(()=>{});
 
 /* 2초 뒤 텍스트 페이드아웃 + 2분 00초 하이라이트 시작 */
@@ -1239,8 +1219,7 @@ if(submitted) return;
 if(input.value.trim().length===0) return;
 
 submitted=true;
-step3Finished = true;
-   
+
 startFinalStepBgm(bg,final,blackout,write);
 }
 });
