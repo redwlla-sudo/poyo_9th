@@ -809,6 +809,7 @@ dots.appendChild(d);
 function move(i){
 index=i;
 
+/* STEP3 완료 후 실제 페이지 이동 시: STEP 브금 fade-out + 메인 브금 fade-in */
 if(window.stepAudioShouldReturnToMain && window.stepAudioTransitionToMain){
 window.stepAudioShouldReturnToMain=false;
 window.stepAudioTransitionToMain();
@@ -1302,9 +1303,9 @@ stepOverlay.classList.remove("show");
 stopStepAnimation();
 resetStepPopup();
 
-/* STEP3가 끝난 뒤에는 팝업을 닫아도 음악 유지 */
+/* STEP3 완료 후에는 팝업을 닫아도 STEP 브금 유지 */
 if(!step3Finished && !window.stepAudioShouldReturnToMain){
-/* STEP3 완료 전에는 기존처럼 끊지 않음. 음악은 STEP 흐름 유지 */
+/* STEP 흐름 중에는 음악 유지 */
 }
 }
 });
