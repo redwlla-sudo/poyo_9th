@@ -746,7 +746,7 @@ let shown=false;
 let audioMuted=false;
 
 mainBgm.muted=false;
-mainBgm.volume=0.35;
+mainBgm.volume=0.30;
 
 window.addEventListener("click",()=>{
 introVideo.muted=false;
@@ -778,7 +778,7 @@ uiLayer.style.display="block";
 move(0);
 
 mainBgm.muted=false;
-mainBgm.volume=0.35;
+mainBgm.volume=0.30;
 mainBgm.play().catch(()=>{});
 }
 
@@ -976,10 +976,14 @@ stepBgm.play().catch(()=>{});
 function startFinalStepBgm(bg,final,blackout,write){
 if(!stepBgm) return;
 
+/* Enter 즉시 1분 58초로 점프 */
 setStepBgmTime(118);
-stepBgm.volume=0;
 stepBgm.play().catch(()=>{});
 
+/* 텍스트 입력 시 STEP 브금이 뚝 끊기지 않게 페이드아웃 */
+fadeAudio(stepBgm,stepBgm.volume,0,800,"step");
+
+/* 2초 뒤 텍스트 페이드아웃 + 2분 00초 하이라이트 시작 */
 stepState.promiseTimer=setTimeout(()=>{
 if(write) write.classList.add("fade-out");
 
@@ -1033,7 +1037,7 @@ step3Finished=false;
 mainBgm.muted=false;
 mainBgm.volume=0;
 mainBgm.play().catch(()=>{});
-fadeAudio(mainBgm,0,0.35,1300,"main");
+fadeAudio(mainBgm,0,0.30,1300,"main");
 };
 
 function stopStepAnimation(){
