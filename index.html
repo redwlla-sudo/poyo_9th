@@ -808,6 +808,12 @@ dots.appendChild(d);
 
 function move(i){
 index=i;
+
+if(window.stepAudioShouldReturnToMain && window.stepAudioTransitionToMain){
+window.stepAudioShouldReturnToMain=false;
+window.stepAudioTransitionToMain();
+}
+
 pages.forEach((p,idx)=>{
 p.style.position="absolute";
 p.style.top="0";
@@ -865,6 +871,8 @@ const counter=document.getElementById("yearCounter");
 const stepContent=document.getElementById("stepContent");
 
 let stepBgmStarted=false;
+let step3Finished=false;
+
 let fadeFrames={
 main:null,
 step:null
@@ -968,8 +976,9 @@ stepBgm.play().catch(()=>{});
 function startFinalStepBgm(bg,final,blackout,write){
 if(!stepBgm) return;
 
-/* Enter 즉시 1분 58초로 점프 */
+/* Enter 즉시 1분 58초로 점프 + 볼륨 0 */
 setStepBgmTime(118);
+stepBgm.volume=0;
 stepBgm.play().catch(()=>{});
 
 /* 2초 뒤 텍스트 페이드아웃 + 2분 00초 하이라이트 시작 */
@@ -985,13 +994,14 @@ if(bg) bg.classList.add("show");
 if(final) final.classList.add("show");
 if(blackout) blackout.classList.remove("show");
 
+step3Finished=true;
+window.stepAudioShouldReturnToMain=true;
+
 fadeAudio(stepBgm,0,0.50,2000,"step");
 },2000);
 }
 
-function stopStepBgm(){
-if(!stepBgmStarted) return;
-
+function stopStepBgmImmediately(){
 if(fadeFrames.main){
 cancelAnimationFrame(fadeFrames.main);
 fadeFrames.main=null;
@@ -1005,12 +1015,28 @@ fadeFrames.step=null;
 stepBgm.pause();
 stepBgm.currentTime=0;
 stepBgm.volume=0;
-
 stepBgmStarted=false;
-
-mainBgm.volume=0.35;
-mainBgm.play().catch(()=>{});
+step3Finished=false;
+window.stepAudioShouldReturnToMain=false;
 }
+
+window.stepAudioShouldReturnToMain=false;
+
+window.stepAudioTransitionToMain=function(){
+if(!stepBgmStarted) return;
+
+fadeAudio(stepBgm,stepBgm.volume,0,1300,"step",()=>{
+stepBgm.pause();
+stepBgm.currentTime=0;
+stepBgm.volume=0;
+stepBgmStarted=false;
+step3Finished=false;
+});
+
+mainBgm.volume=0;
+mainBgm.play().catch(()=>{});
+fadeAudio(mainBgm,0,0.35,1300,"main");
+};
 
 function stopStepAnimation(){
 stepState.running=false;
@@ -1272,15 +1298,13 @@ unlockNextStep(stepNum);
 
 stepOverlay.addEventListener("click",(e)=>{
 if(e.target===stepOverlay){
-const activeStep=document.querySelector(".step.active");
-const wasStep3=activeStep && activeStep.dataset.step==="3";
-
 stepOverlay.classList.remove("show");
 stopStepAnimation();
 resetStepPopup();
 
-if(wasStep3){
-stopStepBgm();
+/* STEP3가 끝난 뒤에는 팝업을 닫아도 음악 유지 */
+if(!step3Finished && !window.stepAudioShouldReturnToMain){
+/* STEP3 완료 전에는 기존처럼 끊지 않음. 음악은 STEP 흐름 유지 */
 }
 }
 });
