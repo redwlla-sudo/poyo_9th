@@ -745,6 +745,7 @@ let index=0;
 let shown=false;
 let audioMuted=false;
 
+mainBgm.muted=false;
 mainBgm.volume=0.35;
 
 window.addEventListener("click",()=>{
@@ -776,6 +777,7 @@ uiLayer.style.display="block";
 
 move(0);
 
+mainBgm.muted=false;
 mainBgm.volume=0.35;
 mainBgm.play().catch(()=>{});
 }
@@ -809,7 +811,6 @@ dots.appendChild(d);
 function move(i){
 index=i;
 
-/* STEP3 완료 후 실제 페이지 이동 시: STEP 브금 fade-out + 메인 브금 fade-in */
 if(window.stepAudioShouldReturnToMain && window.stepAudioTransitionToMain){
 window.stepAudioShouldReturnToMain=false;
 window.stepAudioTransitionToMain();
@@ -955,7 +956,6 @@ if(!stepBgm || stepBgmStarted) return;
 
 stepBgmStarted=true;
 
-/* STEP1 클릭: 메인 브금 1.5초 fade-out */
 fadeAudio(mainBgm,mainBgm.volume,0,1500,"main",()=>{
 mainBgm.pause();
 
@@ -963,7 +963,6 @@ setStepBgmTime(40);
 stepBgm.volume=0;
 stepBgm.play().catch(()=>{});
 
-/* 메인 브금이 0이 되면 STEP 브금 1.5초 fade-in → 40% */
 fadeAudio(stepBgm,0,0.40,1500,"step");
 });
 }
@@ -977,16 +976,13 @@ stepBgm.play().catch(()=>{});
 function startFinalStepBgm(bg,final,blackout,write){
 if(!stepBgm) return;
 
-/* Enter 즉시 1분 58초로 점프 + 볼륨 0 */
 setStepBgmTime(118);
 stepBgm.volume=0;
 stepBgm.play().catch(()=>{});
 
-/* 2초 뒤 텍스트 페이드아웃 + 2분 00초 하이라이트 시작 */
 stepState.promiseTimer=setTimeout(()=>{
 if(write) write.classList.add("fade-out");
 
-/* 2분 00초부터 배경/문장 페이드인과 함께 볼륨 0 → 50% */
 setStepBgmTime(120);
 stepBgm.volume=0;
 stepBgm.play().catch(()=>{});
@@ -1034,6 +1030,7 @@ stepBgmStarted=false;
 step3Finished=false;
 });
 
+mainBgm.muted=false;
 mainBgm.volume=0;
 mainBgm.play().catch(()=>{});
 fadeAudio(mainBgm,0,0.35,1300,"main");
