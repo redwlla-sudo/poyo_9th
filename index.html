@@ -976,29 +976,29 @@ stepBgm.play().catch(()=>{});
 function startFinalStepBgm(bg,final,blackout,write){
 if(!stepBgm) return;
 
-/* Enter 즉시 1분 58초로 점프 */
-setStepBgmTime(118);
-stepBgm.play().catch(()=>{});
+/* Enter 순간: 현재 음악 부드럽게 줄이기 */
+fadeAudio(stepBgm,stepBgm.volume,0,1200,"step");
 
-/* 텍스트 입력 시 STEP 브금이 뚝 끊기지 않게 페이드아웃 */
-fadeAudio(stepBgm,stepBgm.volume,0,800,"step");
-
-/* 2초 뒤 텍스트 페이드아웃 + 2분 00초 하이라이트 시작 */
+/* 2초 뒤 실행 */
 stepState.promiseTimer=setTimeout(()=>{
+
 if(write) write.classList.add("fade-out");
 
+/* ⭐ 2분(120초)부터 시작 */
 setStepBgmTime(120);
 stepBgm.volume=0;
 stepBgm.play().catch(()=>{});
 
+/* 배경 + 문장 등장 */
 if(bg) bg.classList.add("show");
 if(final) final.classList.add("show");
 if(blackout) blackout.classList.remove("show");
 
-step3Finished=true;
-window.stepAudioShouldReturnToMain=true;
-
+/* ⭐ STEP 브금 다시 서서히 올라오기 */
 fadeAudio(stepBgm,0,0.50,2000,"step");
+
+step3Finished=true;
+
 },2000);
 }
 
@@ -1304,9 +1304,20 @@ stepOverlay.classList.remove("show");
 stopStepAnimation();
 resetStepPopup();
 
-/* STEP3 완료 후에는 팝업을 닫아도 STEP 브금 유지 */
-if(!step3Finished && !window.stepAudioShouldReturnToMain){
-/* STEP 흐름 중에는 음악 유지 */
+/* STEP3 팝업을 닫으면 STEP 브금 fade-out 후 메인 브금 fade-in */
+if(step3Finished){
+fadeAudio(stepBgm,stepBgm.volume,0,1300,"step",()=>{
+stepBgm.pause();
+stepBgm.currentTime=0;
+stepBgm.volume=0;
+stepBgmStarted=false;
+step3Finished=false;
+
+mainBgm.muted=false;
+mainBgm.volume=0;
+mainBgm.play().catch(()=>{});
+fadeAudio(mainBgm,0,0.30,1300,"main");
+});
 }
 }
 });
