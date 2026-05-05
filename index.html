@@ -473,6 +473,20 @@ inset:0;
 background:rgba(0,0,0,.38);
 }
 
+.step3-blackout{
+position:absolute;
+inset:-56px -64px;
+background:#000;
+opacity:0;
+z-index:4;
+pointer-events:none;
+transition:opacity 0.25s ease;
+}
+
+.step3-blackout.show{
+opacity:1;
+}
+
 .step3-write{
 position:relative;
 z-index:2;
@@ -480,7 +494,7 @@ width:100%;
 display:flex;
 flex-direction:column;
 align-items:center;
-transition:opacity 2s ease;
+transition:opacity 0.8s ease;
 }
 
 .step3-write.fade-out{
@@ -606,7 +620,7 @@ padding:40px;
 </div>
 
 <div class="volume">
-🔊 <input type="range" min="0" max="1" step="0.01" oninput="mainBgm.volume=this.value">
+🔊 <input type="range" min="0" max="1" step="0.01" value="1" oninput="mainBgm.volume=this.value">
 </div>
 
 <div class="dots" id="dots"></div>
@@ -821,6 +835,8 @@ const stepContent=document.getElementById("stepContent");
 const stepBgm=document.getElementById("stepBgm");
 
 let stepBgmStarted=false;
+let stepFinalMode=false;
+let stepFadeFrame=null;
 
 let stepState={
 unlocked:1,
@@ -859,26 +875,94 @@ unlockText:"[ 3단계: NEXT LOGGING ]<br>\"다시 새롭게 시작될 페이지,
 }
 };
 
-function startStepBgm(){
-if(stepBgmStarted) return;
+function setStepBgmTime(seconds){
+if(!stepBgm) return;
+try{
+stepBgm.currentTime=seconds;
+}catch(e){}
+}
+
+function startStepBgmBuildUp(){
 if(!stepBgm) return;
 
 stepBgmStarted=true;
-mainBgm.volume=0.12;
-stepBgm.volume=0.45;
+stepFinalMode=false;
+
+mainBgm.pause();
+stepBgm.volume=0.35;
+setStepBgmTime(84);
 stepBgm.play().catch(()=>{});
+}
+
+function setStepBgmFocus(){
+if(!stepBgm) return;
+
+stepBgm.volume=0.20;
+
+/* STEP3 약속 입력 구간은 2분 00초대부터 */
+if(stepBgm.currentTime < 118 || stepBgm.currentTime > 130){
+setStepBgmTime(120);
+}
+
+stepBgm.play().catch(()=>{});
+}
+
+function fadeStepBgm(from,to,duration){
+if(!stepBgm) return;
+
+if(stepFadeFrame){
+cancelAnimationFrame(stepFadeFrame);
+stepFadeFrame=null;
+}
+
+const start=performance.now();
+
+function animate(now){
+const progress=Math.min((now-start)/duration,1);
+stepBgm.volume=from+(to-from)*progress;
+
+if(progress<1){
+stepFadeFrame=requestAnimationFrame(animate);
+}else{
+stepBgm.volume=to;
+stepFadeFrame=null;
+}
+}
+
+stepBgm.volume=from;
+stepFadeFrame=requestAnimationFrame(animate);
+}
+
+function startFinalStepBgm(){
+if(!stepBgm) return;
+
+stepFinalMode=true;
+setStepBgmTime(131);
+stepBgm.volume=0.20;
+stepBgm.play().catch(()=>{});
+
+/* 2초 동안 20% → 80% 빠른 fade-up */
+fadeStepBgm(0.20,0.80,2000);
 }
 
 function stopStepBgm(){
 if(!stepBgmStarted) return;
-if(!stepBgm) return;
+
+if(stepFadeFrame){
+cancelAnimationFrame(stepFadeFrame);
+stepFadeFrame=null;
+}
 
 stepBgm.pause();
 stepBgm.currentTime=0;
+stepBgm.volume=0.45;
+
 stepBgmStarted=false;
+stepFinalMode=false;
 
 const volumeInput=document.querySelector('.volume input');
 mainBgm.volume=volumeInput ? volumeInput.value : 1;
+mainBgm.play().catch(()=>{});
 }
 
 function stopStepAnimation(){
@@ -946,8 +1030,8 @@ resetStepPopup();
 
 stepOverlay.classList.add("show");
 
-if(stepNum===1){
-startStepBgm();
+if(stepNum===1 && !stepBgmStarted){
+startStepBgmBuildUp();
 }
 
 const data=stepData[stepNum];
@@ -964,6 +1048,7 @@ runStep2Origin();
 
 if(data.type==="promise"){
 stepCard.classList.add("step3-card");
+setStepBgmFocus();
 runStep3Promise();
 }
 }
@@ -1057,6 +1142,7 @@ counter.style.display="none";
 stepContent.className="step3-stage";
 stepContent.innerHTML=
 '<div class="step3-bg" id="step3Bg"></div>'+
+'<div class="step3-blackout" id="step3Blackout"></div>'+
 '<div class="step3-write" id="step3Write">'+
 '<div class="step3-title">10주년에도 포요와 함께할<br>우리들의 작은 약속을 적어주세요.</div>'+
 '<div class="step3-line-wrap">'+
@@ -1070,6 +1156,7 @@ stepContent.innerHTML=
 const input=document.getElementById("promiseInput");
 const write=document.getElementById("step3Write");
 const bg=document.getElementById("step3Bg");
+const blackout=document.getElementById("step3Blackout");
 const final=document.getElementById("step3Final");
 
 let submitted=false;
@@ -1085,19 +1172,19 @@ if(submitted) return;
 if(input.value.trim().length===0) return;
 
 submitted=true;
-   
-setTimeout(()=>{
-write.classList.add("fade-out");
 
-setTimeout(()=>{
-bg.classList.add("show");
+/* 엔터 순간: 2:11부터 재생 + 2초 fade-up 시작 */
+startFinalStepBgm();
 
-setTimeout(()=>{
-final.classList.add("show");
-},900);
+/* 2초 암전 시작 */
+if(blackout) blackout.classList.add("show");
+if(write) write.classList.add("fade-out");
 
-},1900);
-
+/* 2초 뒤: 2:13 하이라이트 타이밍에 최종 이미지/문구 등장 */
+stepState.promiseTimer=setTimeout(()=>{
+if(bg) bg.classList.add("show");
+if(final) final.classList.add("show");
+if(blackout) blackout.classList.remove("show");
 },2000);
 }
 });
