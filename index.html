@@ -108,7 +108,25 @@ cursor:pointer;
 
 .top-btn img{width:24px;height:24px;}
 
-.volume{position:fixed;top:20px;right:20px;}
+.volume{
+position:fixed;
+top:20px;
+right:20px;
+}
+
+#volumeToggle{
+width:44px;
+height:44px;
+border:none;
+border-radius:50%;
+background:rgba(255,255,255,0.22);
+backdrop-filter:blur(14px);
+font-size:1.35rem;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+}
 
 .dots{
 position:fixed;
@@ -620,7 +638,7 @@ padding:40px;
 </div>
 
 <div class="volume">
-🔊 <input type="range" min="0" max="1" step="0.01" value="0.3" oninput="mainBgm.volume=this.value">
+<button id="volumeToggle" type="button">🔊</button>
 </div>
 
 <div class="dots" id="dots"></div>
@@ -716,6 +734,8 @@ const title=document.getElementById("title");
 const btn=document.getElementById("enterBtn");
 const skipBtn=document.getElementById("skipBtn");
 const mainBgm=document.getElementById("mainBgm");
+const stepBgm=document.getElementById("stepBgm");
+const volumeToggle=document.getElementById("volumeToggle");
 const pages=document.querySelectorAll(".page");
 const dots=document.getElementById("dots");
 const uiLayer=document.getElementById("uiLayer");
@@ -723,8 +743,9 @@ const stepOverlayMain=document.getElementById("stepOverlay");
 
 let index=0;
 let shown=false;
+let audioMuted=false;
 
-mainBgm.volume=0.3;
+mainBgm.volume=0.35;
 
 window.addEventListener("click",()=>{
 introVideo.muted=false;
@@ -755,7 +776,7 @@ uiLayer.style.display="block";
 
 move(0);
 
-mainBgm.volume=0.3;
+mainBgm.volume=0.35;
 mainBgm.play().catch(()=>{});
 }
 
@@ -765,6 +786,17 @@ skipBtn.addEventListener("click", enter);
 
 if(btn){
 btn.addEventListener("click", enter);
+}
+
+if(volumeToggle){
+volumeToggle.addEventListener("click",()=>{
+audioMuted=!audioMuted;
+
+mainBgm.muted=audioMuted;
+stepBgm.muted=audioMuted;
+
+volumeToggle.textContent=audioMuted ? "🔇" : "🔊";
+});
 }
 
 for(let i=0;i<5;i++){
@@ -831,10 +863,12 @@ const stepOverlay=document.getElementById("stepOverlay");
 const stepCard=document.getElementById("stepCard");
 const counter=document.getElementById("yearCounter");
 const stepContent=document.getElementById("stepContent");
-const stepBgm=document.getElementById("stepBgm");
 
 let stepBgmStarted=false;
-let stepFadeFrame=null;
+let fadeFrames={
+main:null,
+step:null
+};
 
 let stepState={
 unlocked:1,
@@ -873,12 +907,12 @@ unlockText:"[ 3단계: NEXT LOGGING ]<br>\"다시 새롭게 시작될 페이지,
 }
 };
 
-function fadeAudio(audio,from,to,duration,after){
+function fadeAudio(audio,from,to,duration,key,after){
 if(!audio) return;
 
-if(stepFadeFrame){
-cancelAnimationFrame(stepFadeFrame);
-stepFadeFrame=null;
+if(fadeFrames[key]){
+cancelAnimationFrame(fadeFrames[key]);
+fadeFrames[key]=null;
 }
 
 const start=performance.now();
@@ -889,15 +923,15 @@ const progress=Math.min((now-start)/duration,1);
 audio.volume=from+(to-from)*progress;
 
 if(progress<1){
-stepFadeFrame=requestAnimationFrame(animate);
+fadeFrames[key]=requestAnimationFrame(animate);
 }else{
 audio.volume=to;
-stepFadeFrame=null;
+fadeFrames[key]=null;
 if(after) after();
 }
 }
 
-stepFadeFrame=requestAnimationFrame(animate);
+fadeFrames[key]=requestAnimationFrame(animate);
 }
 
 function setStepBgmTime(seconds){
@@ -912,37 +946,34 @@ if(!stepBgm || stepBgmStarted) return;
 
 stepBgmStarted=true;
 
-fadeAudio(mainBgm,mainBgm.volume,0,1000,()=>{
+/* STEP1 클릭: 메인 브금 1.5초 fade-out */
+fadeAudio(mainBgm,mainBgm.volume,0,1500,"main",()=>{
 mainBgm.pause();
-});
 
-setStepBgmTime(84);
+setStepBgmTime(40);
 stepBgm.volume=0;
 stepBgm.play().catch(()=>{});
-fadeAudio(stepBgm,0,0.35,1000);
+
+/* 메인 브금이 0이 되면 STEP 브금 1.5초 fade-in → 40% */
+fadeAudio(stepBgm,0,0.40,1500,"step");
+});
 }
 
 function setStepBgmFocus(){
 if(!stepBgm) return;
-
-stepBgm.volume=0.20;
-
-if(stepBgm.currentTime < 118 || stepBgm.currentTime > 130){
-setStepBgmTime(120);
-}
-
+stepBgm.volume=0.40;
 stepBgm.play().catch(()=>{});
 }
 
 function startFinalStepBgm(bg,final,blackout){
 if(!stepBgm) return;
 
-fadeAudio(stepBgm,stepBgm.volume,0,700,()=>{
-stepBgm.pause();
-
+/* Enter 즉시 STEP 브금 0.5초만에 0으로 */
+fadeAudio(stepBgm,stepBgm.volume,0,500,"step",()=>{
 if(blackout) blackout.classList.add("show");
 
-setTimeout(()=>{
+stepState.promiseTimer=setTimeout(()=>{
+/* 1.2~1.5초 전환 공백 후 배경/문구 등장 */
 setStepBgmTime(120);
 stepBgm.volume=0;
 stepBgm.play().catch(()=>{});
@@ -951,17 +982,23 @@ if(bg) bg.classList.add("show");
 if(final) final.classList.add("show");
 if(blackout) blackout.classList.remove("show");
 
-fadeAudio(stepBgm,0,0.8,1000);
-},2000);
+/* 배경/문구 등장 동안 0% → 55% */
+fadeAudio(stepBgm,0,0.55,2000,"step");
+},1300);
 });
 }
 
 function stopStepBgm(){
 if(!stepBgmStarted) return;
 
-if(stepFadeFrame){
-cancelAnimationFrame(stepFadeFrame);
-stepFadeFrame=null;
+if(fadeFrames.main){
+cancelAnimationFrame(fadeFrames.main);
+fadeFrames.main=null;
+}
+
+if(fadeFrames.step){
+cancelAnimationFrame(fadeFrames.step);
+fadeFrames.step=null;
 }
 
 stepBgm.pause();
@@ -970,7 +1007,7 @@ stepBgm.volume=0;
 
 stepBgmStarted=false;
 
-mainBgm.volume=0.3;
+mainBgm.volume=0.35;
 mainBgm.play().catch(()=>{});
 }
 
