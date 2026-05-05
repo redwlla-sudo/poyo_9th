@@ -425,6 +425,17 @@ animation:cursorBlink .7s infinite;
 box-shadow:0 0 8px rgba(0,255,136,.55);
 }
 
+.final-cursor{
+display:inline-block;
+width:12px;
+height:1.15em;
+margin-left:8px;
+background:#00ff88;
+vertical-align:-0.16em;
+animation:cursorBlink .75s infinite;
+box-shadow:0 0 10px rgba(0,255,136,.7);
+}
+
 @keyframes cursorBlink{
 0%,45%{opacity:1;}
 46%,100%{opacity:0;}
@@ -615,6 +626,7 @@ padding:40px;
 </div>
 
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
+<audio id="stepBgm" loop src="step.bgm.mp3"></audio>
 
 <div id="main">
 <div id="pages">
@@ -685,6 +697,7 @@ STEP 3
 <div class="overlay-content"><h1>🎮 게임 페이지</h1></div>
 </div>
 
+<!-- MAIN / INTRO / SCROLL SCRIPT -->
 <script>
 const introVideo=document.getElementById("introVideo");
 const title=document.getElementById("title");
@@ -694,6 +707,7 @@ const mainBgm=document.getElementById("mainBgm");
 const pages=document.querySelectorAll(".page");
 const dots=document.getElementById("dots");
 const uiLayer=document.getElementById("uiLayer");
+const stepOverlayMain=document.getElementById("stepOverlay");
 
 let index=0;
 let shown=false;
@@ -721,18 +735,22 @@ introVideo.pause();
 introVideo.currentTime=0;
 introVideo.muted=true;
 
-move(0);
-
 document.getElementById("intro").style.display="none";
 document.getElementById("main").style.display="block";
-
 uiLayer.style.display="block";
+
+move(0);
 
 mainBgm.play().catch(()=>{});
 }
 
-skipBtn.onclick=enter;
-btn.onclick=enter;
+if(skipBtn){
+skipBtn.addEventListener("click", enter);
+}
+
+if(btn){
+btn.addEventListener("click", enter);
+}
 
 for(let i=0;i<5;i++){
 let d=document.createElement("div");
@@ -757,7 +775,7 @@ d.classList.toggle("active",i===index);
 }
 
 window.addEventListener("wheel",(e)=>{
-if(stepOverlay.classList.contains("show")) return;
+if(stepOverlayMain && stepOverlayMain.classList.contains("show")) return;
 
 if(e.deltaY>0 && index<4) index++;
 if(e.deltaY<0 && index>0) index--;
@@ -791,16 +809,18 @@ showOverlay(overlay);
 }
 });
 });
+</script>
 
-/* =========================
-   STEP 독립 시스템
-========================= */
-
+<!-- STEP ONLY SCRIPT -->
+<script>
 const steps=document.querySelectorAll(".step");
 const stepOverlay=document.getElementById("stepOverlay");
 const stepCard=document.getElementById("stepCard");
 const counter=document.getElementById("yearCounter");
 const stepContent=document.getElementById("stepContent");
+const stepBgm=document.getElementById("stepBgm");
+
+let stepBgmStarted=false;
 
 let stepState={
 unlocked:1,
@@ -838,6 +858,28 @@ type:"promise",
 unlockText:"[ 3단계: NEXT LOGGING ]<br>\"다시 새롭게 시작될 페이지,<br>포동이들과 함께 채워갈 내일의 기록\""
 }
 };
+
+function startStepBgm(){
+if(stepBgmStarted) return;
+if(!stepBgm) return;
+
+stepBgmStarted=true;
+mainBgm.volume=0.12;
+stepBgm.volume=0.45;
+stepBgm.play().catch(()=>{});
+}
+
+function stopStepBgm(){
+if(!stepBgmStarted) return;
+if(!stepBgm) return;
+
+stepBgm.pause();
+stepBgm.currentTime=0;
+stepBgmStarted=false;
+
+const volumeInput=document.querySelector('.volume input');
+mainBgm.volume=volumeInput ? volumeInput.value : 1;
+}
 
 function stopStepAnimation(){
 stepState.running=false;
@@ -903,6 +945,10 @@ stopStepAnimation();
 resetStepPopup();
 
 stepOverlay.classList.add("show");
+
+if(stepNum===1){
+startStepBgm();
+}
 
 const data=stepData[stepNum];
 
@@ -1018,7 +1064,7 @@ stepContent.innerHTML=
 '</div>'+
 '</div>'+
 '<div class="step3-final" id="step3Final">'+
-'<div class="step3-final-text">우리들의 기록은 계속됩니다.</div>'+
+'<div class="step3-final-text">우리들의 기록은 계속됩니다.<span class="final-cursor"></span></div>'+
 '</div>';
 
 const input=document.getElementById("promiseInput");
@@ -1026,7 +1072,7 @@ const write=document.getElementById("step3Write");
 const bg=document.getElementById("step3Bg");
 const final=document.getElementById("step3Final");
 
-let submitted = false;
+let submitted=false;
    
 if(input){
 input.focus();
@@ -1035,20 +1081,17 @@ input.addEventListener("keydown",(e)=>{
 if(e.key==="Enter"){
 e.preventDefault();
 
-if(submitted) return;   // ⭐ 중복 방지
+if(submitted) return;
 if(input.value.trim().length===0) return;
 
-submitted = true;
+submitted=true;
    
-/* ⭐ 핵심: 엔터 누른 뒤 2초 후 시작 */
 setTimeout(()=>{
 write.classList.add("fade-out");
 
-/* 배경 등장 */
 setTimeout(()=>{
 bg.classList.add("show");
 
-/* 마지막 문장 등장 */
 setTimeout(()=>{
 final.classList.add("show");
 },900);
@@ -1107,9 +1150,16 @@ unlockNextStep(stepNum);
 
 stepOverlay.addEventListener("click",(e)=>{
 if(e.target===stepOverlay){
+const activeStep=document.querySelector(".step.active");
+const wasStep3=activeStep && activeStep.dataset.step==="3";
+
 stepOverlay.classList.remove("show");
 stopStepAnimation();
 resetStepPopup();
+
+if(wasStep3){
+stopStepBgm();
+}
 }
 });
 </script>
