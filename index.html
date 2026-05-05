@@ -512,7 +512,7 @@ width:100%;
 display:flex;
 flex-direction:column;
 align-items:center;
-transition:opacity 0.8s ease;
+transition:opacity 2s ease;
 }
 
 .step3-write.fade-out{
@@ -965,15 +965,18 @@ stepBgm.volume=0.40;
 stepBgm.play().catch(()=>{});
 }
 
-function startFinalStepBgm(bg,final,blackout){
+function startFinalStepBgm(bg,final,blackout,write){
 if(!stepBgm) return;
 
-/* Enter 즉시 STEP 브금 0.5초만에 0으로 */
-fadeAudio(stepBgm,stepBgm.volume,0,500,"step",()=>{
-if(blackout) blackout.classList.add("show");
+/* Enter 즉시 1분 58초로 점프 */
+setStepBgmTime(118);
+stepBgm.play().catch(()=>{});
 
+/* 2초 뒤 텍스트 페이드아웃 + 2분 00초 하이라이트 시작 */
 stepState.promiseTimer=setTimeout(()=>{
-/* 1.2~1.5초 전환 공백 후 배경/문구 등장 */
+if(write) write.classList.add("fade-out");
+
+/* 2분 00초부터 배경/문장 페이드인과 함께 볼륨 0 → 50% */
 setStepBgmTime(120);
 stepBgm.volume=0;
 stepBgm.play().catch(()=>{});
@@ -982,10 +985,8 @@ if(bg) bg.classList.add("show");
 if(final) final.classList.add("show");
 if(blackout) blackout.classList.remove("show");
 
-/* 배경/문구 등장 동안 0% → 55% */
-fadeAudio(stepBgm,0,0.55,2000,"step");
-},1300);
-});
+fadeAudio(stepBgm,0,0.50,2000,"step");
+},2000);
 }
 
 function stopStepBgm(){
@@ -1219,8 +1220,7 @@ if(input.value.trim().length===0) return;
 
 submitted=true;
 
-if(write) write.classList.add("fade-out");
-startFinalStepBgm(bg,final,blackout);
+startFinalStepBgm(bg,final,blackout,write);
 }
 });
 }
