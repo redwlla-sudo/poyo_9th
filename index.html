@@ -1014,7 +1014,7 @@ stepContent.innerHTML=
 '<div class="step3-write" id="step3Write">'+
 '<div class="step3-title">10주년에도 포요와 함께할<br>우리들의 작은 약속을 적어주세요.</div>'+
 '<div class="step3-line-wrap">'+
-'<textarea id="promiseInput" maxlength="42" placeholder="여기에 약속을 적어주세요"></textarea>'+
+'<textarea id="promiseInput" maxlength="42" placeholder="여기에 약속을 적고 Enter를 눌러주세요"></textarea>'+
 '</div>'+
 '</div>'+
 '<div class="step3-final" id="step3Final">'+
@@ -1026,37 +1026,36 @@ const write=document.getElementById("step3Write");
 const bg=document.getElementById("step3Bg");
 const final=document.getElementById("step3Final");
 
+let submitted = false;
+   
 if(input){
 input.focus();
-
-const finishPromise=()=>{
-if(stepState.promiseTimer) return;
-
-stepState.promiseTimer=setTimeout(()=>{
-if(write) write.classList.add("fade-out");
-
-setTimeout(()=>{
-if(bg) bg.classList.add("show");
-
-setTimeout(()=>{
-if(final) final.classList.add("show");
-},900);
-},1900);
-},2000);
-};
-
-input.addEventListener("input",()=>{
-if(input.value.trim().length>0){
-finishPromise();
-}
-});
 
 input.addEventListener("keydown",(e)=>{
 if(e.key==="Enter"){
 e.preventDefault();
-if(input.value.trim().length>0){
-finishPromise();
-}
+
+if(submitted) return;   // ⭐ 중복 방지
+if(input.value.trim().length===0) return;
+
+submitted = true;
+   
+/* ⭐ 핵심: 엔터 누른 뒤 2초 후 시작 */
+setTimeout(()=>{
+write.classList.add("fade-out");
+
+/* 배경 등장 */
+setTimeout(()=>{
+bg.classList.add("show");
+
+/* 마지막 문장 등장 */
+setTimeout(()=>{
+final.classList.add("show");
+},900);
+
+},1900);
+
+},2000);
 }
 });
 }
