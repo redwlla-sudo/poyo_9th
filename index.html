@@ -620,7 +620,7 @@ padding:40px;
 </div>
 
 <div class="volume">
-🔊 <input type="range" min="0" max="1" step="0.01" value="1" oninput="mainBgm.volume=this.value">
+🔊 <input type="range" min="0" max="1" step="0.01" value="0.3" oninput="mainBgm.volume=this.value">
 </div>
 
 <div class="dots" id="dots"></div>
@@ -695,7 +695,6 @@ STEP 3
 </div>
 </div>
 
-<!-- STEP CARD -->
 <div id="stepOverlay">
 <div id="stepCard">
 <div id="yearCounter">0일</div>
@@ -711,7 +710,6 @@ STEP 3
 <div class="overlay-content"><h1>🎮 게임 페이지</h1></div>
 </div>
 
-<!-- MAIN / INTRO / SCROLL SCRIPT -->
 <script>
 const introVideo=document.getElementById("introVideo");
 const title=document.getElementById("title");
@@ -725,6 +723,8 @@ const stepOverlayMain=document.getElementById("stepOverlay");
 
 let index=0;
 let shown=false;
+
+mainBgm.volume=0.3;
 
 window.addEventListener("click",()=>{
 introVideo.muted=false;
@@ -755,6 +755,7 @@ uiLayer.style.display="block";
 
 move(0);
 
+mainBgm.volume=0.3;
 mainBgm.play().catch(()=>{});
 }
 
@@ -796,7 +797,6 @@ if(e.deltaY<0 && index>0) index--;
 move(index);
 });
 
-/* overlay */
 function showOverlay(id){
 document.body.classList.add("hide-dots");
 document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
@@ -825,7 +825,6 @@ showOverlay(overlay);
 });
 </script>
 
-<!-- STEP ONLY SCRIPT -->
 <script>
 const steps=document.querySelectorAll(".step");
 const stepOverlay=document.getElementById("stepOverlay");
@@ -835,7 +834,6 @@ const stepContent=document.getElementById("stepContent");
 const stepBgm=document.getElementById("stepBgm");
 
 let stepBgmStarted=false;
-let stepFinalMode=false;
 let stepFadeFrame=null;
 
 let stepState={
@@ -875,6 +873,33 @@ unlockText:"[ 3단계: NEXT LOGGING ]<br>\"다시 새롭게 시작될 페이지,
 }
 };
 
+function fadeAudio(audio,from,to,duration,after){
+if(!audio) return;
+
+if(stepFadeFrame){
+cancelAnimationFrame(stepFadeFrame);
+stepFadeFrame=null;
+}
+
+const start=performance.now();
+audio.volume=from;
+
+function animate(now){
+const progress=Math.min((now-start)/duration,1);
+audio.volume=from+(to-from)*progress;
+
+if(progress<1){
+stepFadeFrame=requestAnimationFrame(animate);
+}else{
+audio.volume=to;
+stepFadeFrame=null;
+if(after) after();
+}
+}
+
+stepFadeFrame=requestAnimationFrame(animate);
+}
+
 function setStepBgmTime(seconds){
 if(!stepBgm) return;
 try{
@@ -883,15 +908,18 @@ stepBgm.currentTime=seconds;
 }
 
 function startStepBgmBuildUp(){
-if(!stepBgm) return;
+if(!stepBgm || stepBgmStarted) return;
 
 stepBgmStarted=true;
-stepFinalMode=false;
 
+fadeAudio(mainBgm,mainBgm.volume,0,1000,()=>{
 mainBgm.pause();
-stepBgm.volume=0.35;
+});
+
 setStepBgmTime(84);
+stepBgm.volume=0;
 stepBgm.play().catch(()=>{});
+fadeAudio(stepBgm,0,0.35,1000);
 }
 
 function setStepBgmFocus(){
@@ -899,7 +927,6 @@ if(!stepBgm) return;
 
 stepBgm.volume=0.20;
 
-/* STEP3 약속 입력 구간은 2분 00초대부터 */
 if(stepBgm.currentTime < 118 || stepBgm.currentTime > 130){
 setStepBgmTime(120);
 }
@@ -907,42 +934,26 @@ setStepBgmTime(120);
 stepBgm.play().catch(()=>{});
 }
 
-function fadeStepBgm(from,to,duration){
+function startFinalStepBgm(bg,final,blackout){
 if(!stepBgm) return;
 
-if(stepFadeFrame){
-cancelAnimationFrame(stepFadeFrame);
-stepFadeFrame=null;
-}
+fadeAudio(stepBgm,stepBgm.volume,0,700,()=>{
+stepBgm.pause();
 
-const start=performance.now();
+if(blackout) blackout.classList.add("show");
 
-function animate(now){
-const progress=Math.min((now-start)/duration,1);
-stepBgm.volume=from+(to-from)*progress;
-
-if(progress<1){
-stepFadeFrame=requestAnimationFrame(animate);
-}else{
-stepBgm.volume=to;
-stepFadeFrame=null;
-}
-}
-
-stepBgm.volume=from;
-stepFadeFrame=requestAnimationFrame(animate);
-}
-
-function startFinalStepBgm(){
-if(!stepBgm) return;
-
-stepFinalMode=true;
-setStepBgmTime(131);
-stepBgm.volume=0.20;
+setTimeout(()=>{
+setStepBgmTime(120);
+stepBgm.volume=0;
 stepBgm.play().catch(()=>{});
 
-/* 2초 동안 20% → 80% 빠른 fade-up */
-fadeStepBgm(0.20,0.80,2000);
+if(bg) bg.classList.add("show");
+if(final) final.classList.add("show");
+if(blackout) blackout.classList.remove("show");
+
+fadeAudio(stepBgm,0,0.8,1000);
+},2000);
+});
 }
 
 function stopStepBgm(){
@@ -955,13 +966,11 @@ stepFadeFrame=null;
 
 stepBgm.pause();
 stepBgm.currentTime=0;
-stepBgm.volume=0.45;
+stepBgm.volume=0;
 
 stepBgmStarted=false;
-stepFinalMode=false;
 
-const volumeInput=document.querySelector('.volume input');
-mainBgm.volume=volumeInput ? volumeInput.value : 1;
+mainBgm.volume=0.3;
 mainBgm.play().catch(()=>{});
 }
 
@@ -1030,7 +1039,7 @@ resetStepPopup();
 
 stepOverlay.classList.add("show");
 
-if(stepNum===1 && !stepBgmStarted){
+if(stepNum===1){
 startStepBgmBuildUp();
 }
 
@@ -1173,19 +1182,8 @@ if(input.value.trim().length===0) return;
 
 submitted=true;
 
-/* 엔터 순간: 2:11부터 재생 + 2초 fade-up 시작 */
-startFinalStepBgm();
-
-/* 2초 암전 시작 */
-if(blackout) blackout.classList.add("show");
 if(write) write.classList.add("fade-out");
-
-/* 2초 뒤: 2:13 하이라이트 타이밍에 최종 이미지/문구 등장 */
-stepState.promiseTimer=setTimeout(()=>{
-if(bg) bg.classList.add("show");
-if(final) final.classList.add("show");
-if(blackout) blackout.classList.remove("show");
-},2000);
+startFinalStepBgm(bg,final,blackout);
 }
 });
 }
