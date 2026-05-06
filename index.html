@@ -662,6 +662,22 @@ padding:40px;
   z-index:20;
 }
 
+@keyframes bookPop{
+  from{
+    opacity:0;
+    transform:
+    translate(-50%,-50%)
+    scale(.7);
+  }
+
+  to{
+    opacity:1;
+    transform:
+    translate(-50%,-50%)
+    scale(1);
+  }
+}
+
 .guestbook-input-box input{
   width:520px;
 
@@ -1417,6 +1433,65 @@ fadeAudio(mainBgm,0,0.30,1300,"main");
 }
 });
 </script>
+const guestInput =
+document.getElementById(
+"guestMessageInput"
+);
+
+const guestBtn =
+document.getElementById(
+"guestMessageBtn"
+);
+
+const guestStage =
+document.getElementById(
+"guestbookStage"
+);
+
+function createGuestBook(){
+
+  const text =
+  guestInput.value.trim();
+
+  if(!text) return;
+
+  const book =
+  document.createElement("div");
+
+  book.className =
+  "guestbook-book";
+
+  book.innerText = text;
+
+  guestStage.appendChild(book);
+
+  guestInput.value = "";
+
+  setTimeout(()=>{
+    book.remove();
+  },3000);
+
+}
+
+guestBtn.addEventListener(
+"click",
+createGuestBook
+);
+
+guestInput.addEventListener(
+"keydown",
+function(e){
+
+if(e.key==="Enter"){
+createGuestBook();
+}
+
+}
+);
+</script>
+
+</body>
+</html>
 
 </body>
 </html>
