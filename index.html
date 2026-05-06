@@ -677,131 +677,50 @@ padding:40px;
 #promiseChalkText,
 .guestbook-postit{
   font-family:'SchoolSafeStoneWall', sans-serif;
-} 
+}
   
-/* guestbook css */
-.library-page{
-  position:relative;
-  background:url("poyo_background.png") no-repeat center center/cover;
-}
-
-#guestbook-module{
-  position:relative;
-  width:100%;
-  height:100%;
-  z-index:5;
-}
-
-#guestbookStage{
-  position:absolute;
-  inset:0;
-}
-
-.guestbook-input-box{
-  position:absolute;
-  left:50%;
-  bottom:7%;
-
-  transform:translateX(-50%);
-
-  display:flex;
-  gap:16px;
-
-  padding:22px 26px;
-
-  background:rgba(255,255,255,0.88);
-
-  border-radius:24px;
-
-  z-index:20;
-}
-
-.guestbook-input-box input{
-  width:720px;
-
-  padding:24px;
-
-  border:none;
-  outline:none;
-
-  border-radius:16px;
-
-  font-size:1.4rem;
-}
-
-.guestbook-input-box button{
-  border:none;
-
-  padding:18px 24px;
-
-  border-radius:16px;
-
-  cursor:pointer;
-
-  font-weight:800;
-
-  font-size:1rem;
-
-  background:
-  linear-gradient(
-    135deg,
-    #c9b7ff,
-    #9fffe0
-  );
-}
-
-/* 포스트잇 */
 .guestbook-postit{
   position:absolute;
 
-  left:8%;
-  bottom:22%;
+  width:300px;
+  min-height:220px;
+  max-height:260px;
 
-  width:320px;
-  min-height:240px;
-
-  padding:24px 20px 20px;
+  padding:30px 24px 24px;
 
   color:#4a372b;
-
   font-family:'SchoolSafeStoneWall', sans-serif;
 
-  font-size:1.25rem;
-  line-height:1.45;
+  font-size:1.55rem;
+  line-height:1.35;
   text-align:center;
 
   border-radius:8px 8px 16px 16px;
-
   box-shadow:0 14px 28px rgba(0,0,0,.3);
 
   display:flex;
   align-items:center;
   justify-content:center;
 
-  transform:scale(.45) rotate(-8deg);
+  white-space:pre-line;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+  overflow:hidden;
 
   opacity:0;
-
   z-index:15;
-
   pointer-events:none;
 }
 
 .guestbook-postit::before{
   content:"";
-
   position:absolute;
-
   top:9px;
   left:50%;
-
   transform:translateX(-50%);
-
   width:58px;
   height:14px;
-
   border-radius:999px;
-
   background:rgba(255,255,255,.55);
 }
 
@@ -809,36 +728,15 @@ padding:40px;
   animation:postitPop .45s ease forwards;
 }
 
-.guestbook-postit.fly{
-  animation:postitFly .9s ease forwards;
-}
-
 @keyframes postitPop{
   from{
     opacity:0;
-    transform:scale(.35) rotate(-14deg);
+    transform:scale(.35) rotate(-10deg);
   }
 
   to{
     opacity:1;
-    transform:scale(1) rotate(-5deg);
-  }
-}
-
-@keyframes postitFly{
-  from{
-    opacity:1;
-  }
-
-  to{
-    opacity:1;
-
-    left:var(--target-x);
-    top:var(--target-y);
-
-    bottom:auto;
-
-    transform:scale(.82) rotate(var(--rotate));
+    transform:scale(1) rotate(var(--rotate));
   }
 }
    
@@ -928,7 +826,7 @@ STEP 3
         id="guestMessageInput"
         type="text"
         maxlength="40"
-        placeholder="포요님에게 메시지를 남겨주세요"
+        placeholder="포요님에게 9주년 축하 메시지를 남겨주세요"
       />
 
       <button type="button" id="guestMessageBtn">
@@ -1597,8 +1495,59 @@ const postitColors = [
   "#ffe0b5"
 ];
 
+const postitSlots = [
+  { x:10, y:15 },
+  { x:38, y:15 },
+  { x:66, y:15 },
+  { x:18, y:39 },
+  { x:48, y:39 },
+  { x:72, y:39 },
+  { x:10, y:63 },
+  { x:38, y:63 },
+  { x:66, y:63 },
+  { x:48, y:72 }
+];
+
 let postitList = [];
+let usedSlots = [];
+
 const MAX_POSTITS = 10;
+
+function formatPostitText(text){
+  const limit = 12;
+  let result = "";
+  let line = "";
+
+  for(const char of text){
+    line += char;
+
+    if(line.length >= limit){
+      result += line + "\n";
+      line = "";
+    }
+  }
+
+  result += line;
+
+  return result.trim();
+}
+
+function getAvailableSlot(){
+  if(usedSlots.length >= postitSlots.length){
+    usedSlots = [];
+  }
+
+  const available = postitSlots
+    .map((slot, index)=>({ slot, index }))
+    .filter(item => !usedSlots.includes(item.index));
+
+  const picked =
+    available[Math.floor(Math.random() * available.length)];
+
+  usedSlots.push(picked.index);
+
+  return picked.slot;
+}
 
 function createGuestBook(){
   const text = guestInput.value.trim();
@@ -1606,10 +1555,18 @@ function createGuestBook(){
 
   const postit = document.createElement("div");
   postit.className = "guestbook-postit";
-  postit.textContent = text;
+  postit.textContent = formatPostitText(text);
 
-  const color = postitColors[Math.floor(Math.random() * postitColors.length)];
+  const color =
+    postitColors[Math.floor(Math.random() * postitColors.length)];
+
+  const slot = getAvailableSlot();
+  const rotate = (Math.random() * 10 - 5).toFixed(1) + "deg";
+
   postit.style.background = color;
+  postit.style.left = slot.x + "%";
+  postit.style.top = slot.y + "%";
+  postit.style.setProperty("--rotate", rotate);
 
   guestStage.appendChild(postit);
   guestInput.value = "";
@@ -1618,37 +1575,28 @@ function createGuestBook(){
     postit.classList.add("show");
   },30);
 
-  setTimeout(()=>{
-    const randomX = Math.random() * 38 + 52;
-    const randomY = Math.random() * 58 + 12;
-    const rotate = (Math.random() * 16 - 8).toFixed(1) + "deg";
+  postitList.push(postit);
 
-    postit.style.setProperty("--target-x", randomX + "%");
-    postit.style.setProperty("--target-y", randomY + "%");
-    postit.style.setProperty("--rotate", rotate);
+  if(postitList.length > MAX_POSTITS){
+    const oldPostit = postitList.shift();
 
-    postit.classList.remove("show");
-    postit.classList.add("fly");
+    oldPostit.style.transition =
+      "opacity .35s ease, transform .35s ease";
 
-    postitList.push(postit);
+    oldPostit.style.opacity = "0";
+    oldPostit.style.transform = "scale(.5) rotate(-8deg)";
 
-    if(postitList.length > MAX_POSTITS){
-      const oldPostit = postitList.shift();
-      oldPostit.style.transition = "opacity .35s ease, transform .35s ease";
-      oldPostit.style.opacity = "0";
-      oldPostit.style.transform = "scale(.5) rotate(-8deg)";
-
-      setTimeout(()=>{
-        oldPostit.remove();
-      },350);
-    }
-  },900);
+    setTimeout(()=>{
+      oldPostit.remove();
+    },350);
+  }
 }
 
 guestBtn.addEventListener("click", createGuestBook);
 
 guestInput.addEventListener("keydown", function(e){
   if(e.key === "Enter"){
+    e.preventDefault();
     createGuestBook();
   }
 });
