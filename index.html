@@ -626,10 +626,34 @@ padding:40px;
 
 .hide-dots .dots{display:none;}
 
-/* 여기부터 붙여넣기 */
+/* 분필 글씨 */
+#promiseChalkText{
+  position:absolute;
+  left:50%;
+  top:22%;
+  transform:translateX(-50%);
+
+  width:70%;
+  text-align:center;
+
+  font-family:'NeoDunggeunGothicPro',sans-serif;
+  font-size:2rem;
+  line-height:1.6;
+  color:rgba(245,255,235,.9);
+
+  text-shadow:
+    0 0 2px rgba(255,255,255,.7),
+    1px 1px 0 rgba(255,255,255,.15);
+
+  opacity:.9;
+  z-index:8;
+  pointer-events:none;
+}
+
+/* guestbook css */
 .library-page{
   position:relative;
-  background:url("poyo_liberary.png") no-repeat center center/cover;
+  background:url("poyo_background.png") no-repeat center center/cover;
 }
    #guestbook-module{
   position:relative;
@@ -874,6 +898,7 @@ STEP 3
   <div id="guestbook-module">
 
     <div id="guestbookStage"></div>
+    <div id="promiseChalkText"></div>
 
     <div class="guestbook-input-box">
       <input
@@ -1440,13 +1465,17 @@ e.preventDefault();
 if(submitted) return;
 if(input.value.trim().length===0) return;
 
+const promiseText = input.value.trim();
+localStorage.setItem("poyoPromiseText", promiseText);
+
+const chalkText = document.getElementById("promiseChalkText");
+if(chalkText){
+  chalkText.textContent = promiseText;
+}
+
 submitted=true;
 
 startFinalStepBgm(bg,final,blackout,write);
-}
-});
-}
-}
 
 function unlockCurrentStep(stepNum){
 const currentStep=steps[stepNum-1];
@@ -1532,6 +1561,21 @@ const guestStage =
 document.getElementById(
 "guestbookStage"
 );
+
+const savedPromiseText =
+localStorage.getItem(
+"poyoPromiseText"
+);
+
+const chalkText =
+document.getElementById(
+"promiseChalkText"
+);
+
+if(savedPromiseText && chalkText){
+  chalkText.textContent =
+  savedPromiseText;
+}
 
 function createGuestBook(){
 
