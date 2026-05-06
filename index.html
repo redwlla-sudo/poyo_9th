@@ -711,6 +711,74 @@ padding:40px;
     #9fffe0
   );
 }
+
+.guestbook-input-box button{
+  ...
+}
+
+/* 👇 여기부터 추가 */
+.guestbook-book{
+  position:absolute;
+
+  left:50%;
+  top:50%;
+
+  transform:translate(-50%,-50%);
+
+  width:320px;
+
+  min-height:180px;
+
+  padding:28px;
+
+  border-radius:18px;
+
+  background:
+  linear-gradient(
+    135deg,
+    #fff1c8,
+    #d7c0ff
+  );
+
+  border:3px solid rgba(92,55,35,.45);
+
+  color:#4a372b;
+
+  font-size:1.2rem;
+  font-weight:800;
+
+  text-align:center;
+  line-height:1.6;
+
+  box-shadow:
+  0 18px 40px rgba(0,0,0,.35);
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  z-index:15;
+
+  animation:bookPop .45s ease;
+}
+
+@keyframes bookPop{
+  from{
+    opacity:0;
+
+    transform:
+    translate(-50%,-50%)
+    scale(.7);
+  }
+
+  to{
+    opacity:1;
+
+    transform:
+    translate(-50%,-50%)
+    scale(1);
+  }
+}
    
 </style>
 </head>
@@ -1433,6 +1501,8 @@ fadeAudio(mainBgm,0,0.30,1300,"main");
 }
 });
 </script>
+
+<script>
 const guestInput =
 document.getElementById(
 "guestMessageInput"
@@ -1489,9 +1559,6 @@ createGuestBook();
 }
 );
 </script>
-
-</body>
-</html>
 
 </body>
 </html>
