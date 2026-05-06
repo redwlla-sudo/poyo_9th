@@ -635,17 +635,26 @@ padding:40px;
 
 /* 분필 글씨 */
 #promiseChalkText{
-  pposition:absolute;
-  left:50%;
+  position:absolute;
+
   top:50%;
-  transform:translate(-50%, -50%);
+  left:50%;
 
   width:78%;
+
+  transform:translate(-50%,-50%);
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
   text-align:center;
 
   font-family:'SchoolSafeStoneWall', sans-serif;
+
   font-size:3.2rem;
   line-height:1.45;
+
   color:rgba(245,255,235,.95);
 
   text-shadow:
@@ -653,8 +662,12 @@ padding:40px;
     2px 2px 0 rgba(255,255,255,.12);
 
   opacity:.95;
+
   z-index:8;
+
   pointer-events:none;
+
+  word-break:keep-all;
 }
 
  /* 👇 여기 추가 */
@@ -1485,7 +1498,12 @@ localStorage.setItem("poyoPromiseText", promiseText);
 
 const chalkText = document.getElementById("promiseChalkText");
 if(chalkText){
-  chalkText.textContent = promiseText;
+
+  chalkText.style.display = "flex";
+
+  chalkText.textContent =
+  promiseText;
+
 }
 
 submitted=true;
@@ -1593,8 +1611,16 @@ document.getElementById(
 );
 
 if(savedPromiseText && chalkText){
+
+  chalkText.style.display = "flex";
+
   chalkText.textContent =
   savedPromiseText;
+
+}else if(chalkText){
+
+  chalkText.style.display = "none";
+
 }
 
 function createGuestBook(){
