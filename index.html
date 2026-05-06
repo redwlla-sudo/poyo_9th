@@ -1579,25 +1579,10 @@ fadeAudio(mainBgm,0,0.30,1300,"main");
 </script>
 
 <script>
-const guestInput =
-document.getElementById(
-"guestMessageInput"
-);
-
-const guestBtn =
-document.getElementById(
-"guestMessageBtn"
-);
-
-const guestStage =
-document.getElementById(
-"guestbookStage"
-);
-
-const chalkText =
-document.getElementById(
-"promiseChalkText"
-);
+const guestInput = document.getElementById("guestMessageInput");
+const guestBtn = document.getElementById("guestMessageBtn");
+const guestStage = document.getElementById("guestbookStage");
+const chalkText = document.getElementById("promiseChalkText");
 
 if(chalkText){
   chalkText.style.display = "none";
@@ -1612,151 +1597,62 @@ const postitColors = [
   "#ffe0b5"
 ];
 
-const postitSlots = [
 let postitList = [];
-let postitIndex = 0;
-
 const MAX_POSTITS = 10;
 
 function createGuestBook(){
-
-  const text =
-  guestInput.value.trim();
-
+  const text = guestInput.value.trim();
   if(!text) return;
 
-  const postit =
-  document.createElement("div");
-
-  postit.className =
-  "guestbook-postit";
-
+  const postit = document.createElement("div");
+  postit.className = "guestbook-postit";
   postit.textContent = text;
 
-  const color =
-  postitColors[
-    Math.floor(
-      Math.random() *
-      postitColors.length
-    )
-  ];
-
-  postit.style.background =
-  color;
+  const color = postitColors[Math.floor(Math.random() * postitColors.length)];
+  postit.style.background = color;
 
   guestStage.appendChild(postit);
-
   guestInput.value = "";
 
   setTimeout(()=>{
-
-    postit.classList.add(
-      "show"
-    );
-
+    postit.classList.add("show");
   },30);
 
   setTimeout(()=>{
+    const randomX = Math.random() * 38 + 52;
+    const randomY = Math.random() * 58 + 12;
+    const rotate = (Math.random() * 16 - 8).toFixed(1) + "deg";
 
- const randomX =
-Math.random() * 38 + 52;
+    postit.style.setProperty("--target-x", randomX + "%");
+    postit.style.setProperty("--target-y", randomY + "%");
+    postit.style.setProperty("--rotate", rotate);
 
-const randomY =
-Math.random() * 58 + 12;
-
-const rotate =
-(
-  Math.random()*16-8
-).toFixed(1)+"deg";
-
-postit.style.setProperty(
-  "--target-x",
-  randomX + "%"
-);
-
-postit.style.setProperty(
-  "--target-y",
-  randomY + "%"
-);
-
-postit.style.setProperty(
-  "--rotate",
-  rotate
-);
-    (
-      Math.random()*10-5
-    ).toFixed(1)+"deg";
-
-    postit.style.setProperty(
-      "--target-x",
-      slot.x
-    );
-
-    postit.style.setProperty(
-      "--target-y",
-      slot.y
-    );
-
-    postit.style.setProperty(
-      "--rotate",
-      rotate
-    );
-
-    postit.classList.remove(
-      "show"
-    );
-
-    postit.classList.add(
-      "fly"
-    );
+    postit.classList.remove("show");
+    postit.classList.add("fly");
 
     postitList.push(postit);
 
-    if(
-      postitList.length >
-      MAX_POSTITS
-    ){
-
-      const oldPostit =
-      postitList.shift();
-
-      oldPostit.style.transition =
-      "opacity .35s ease, transform .35s ease";
-
-      oldPostit.style.opacity =
-      "0";
-
-      oldPostit.style.transform =
-      "scale(.5) rotate(-8deg)";
+    if(postitList.length > MAX_POSTITS){
+      const oldPostit = postitList.shift();
+      oldPostit.style.transition = "opacity .35s ease, transform .35s ease";
+      oldPostit.style.opacity = "0";
+      oldPostit.style.transform = "scale(.5) rotate(-8deg)";
 
       setTimeout(()=>{
         oldPostit.remove();
       },350);
-
     }
-
-    postitIndex++;
-
   },900);
-
 }
 
-guestBtn.addEventListener(
-"click",
-createGuestBook
-);
+guestBtn.addEventListener("click", createGuestBook);
 
-guestInput.addEventListener(
-"keydown",
-function(e){
-
-if(e.key==="Enter"){
-createGuestBook();
-}
-
-}
-);
+guestInput.addEventListener("keydown", function(e){
+  if(e.key === "Enter"){
+    createGuestBook();
+  }
+});
 </script>
-
+  
 </body>
 </html>
