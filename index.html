@@ -652,7 +652,7 @@ padding:40px;
 
   font-family:'SchoolSafeStoneWall', sans-serif;
 
-  font-size:3.2rem;
+  font-size:4.6rem;
   line-height:1.45;
 
   color:rgba(245,255,235,.95);
@@ -1494,7 +1494,6 @@ if(submitted) return;
 if(input.value.trim().length===0) return;
 
 const promiseText = input.value.trim();
-localStorage.setItem("poyoPromiseText", promiseText);
 
 const chalkText = document.getElementById("promiseChalkText");
 if(chalkText){
@@ -1600,29 +1599,14 @@ document.getElementById(
 "guestbookStage"
 );
 
-const savedPromiseText =
-localStorage.getItem(
-"poyoPromiseText"
-);
-
 const chalkText =
 document.getElementById(
 "promiseChalkText"
 );
 
-if(savedPromiseText && chalkText){
-
-  chalkText.style.display = "flex";
-
-  chalkText.textContent =
-  savedPromiseText;
-
-}else if(chalkText){
-
+if(chalkText){
   chalkText.style.display = "none";
-
 }
-
 function createGuestBook(){
 
   const text =
