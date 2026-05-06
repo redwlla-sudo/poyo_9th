@@ -716,67 +716,82 @@ padding:40px;
   ...
 }
 
-/* 👇 여기부터 추가 */
 .guestbook-book{
   position:absolute;
-
   left:50%;
-  top:50%;
-
-  transform:translate(-50%,-50%);
-
-  width:320px;
-
-  min-height:180px;
-
-  padding:28px;
-
-  border-radius:18px;
-
-  background:
-  linear-gradient(
-    135deg,
-    #fff1c8,
-    #d7c0ff
-  );
-
-  border:3px solid rgba(92,55,35,.45);
-
-  color:#4a372b;
-
-  font-size:1.2rem;
-  font-weight:800;
-
-  text-align:center;
-  line-height:1.6;
-
-  box-shadow:
-  0 18px 40px rgba(0,0,0,.35);
-
+  top:46%;
+  transform:translate(-50%,-50%) scale(.85);
+  width:560px;
+  height:300px;
   display:flex;
-  justify-content:center;
-  align-items:center;
-
   z-index:15;
-
-  animation:bookPop .45s ease;
+  perspective:1200px;
+  animation:openBookPop .55s ease forwards;
 }
 
-@keyframes bookPop{
+.guestbook-book::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:6%;
+  width:4px;
+  height:88%;
+  transform:translateX(-50%);
+  background:rgba(90,55,35,.35);
+  box-shadow:0 0 10px rgba(0,0,0,.15);
+  z-index:5;
+}
+
+.book-page{
+  width:50%;
+  height:100%;
+  box-sizing:border-box;
+  padding:34px 30px;
+  background:linear-gradient(135deg,#fff7dc,#f6e8bd);
+  border:2px solid rgba(105,70,38,.45);
+  box-shadow:0 18px 40px rgba(0,0,0,.32);
+  color:#4a372b;
+  font-weight:800;
+}
+
+.book-page.left{
+  border-radius:22px 6px 6px 22px;
+  background:
+    radial-gradient(circle at 20% 25%, rgba(255,255,255,.8), transparent 28%),
+    linear-gradient(135deg,#fff3cf,#ead19c);
+}
+
+.book-page.right{
+  border-radius:6px 22px 22px 6px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  line-height:1.7;
+  font-size:1.25rem;
+  word-break:keep-all;
+}
+
+.book-left-title{
+  font-size:1.1rem;
+  line-height:1.7;
+  opacity:.75;
+  text-align:center;
+  margin-top:72px;
+}
+
+.book-message{
+  max-width:220px;
+}
+
+@keyframes openBookPop{
   from{
     opacity:0;
-
-    transform:
-    translate(-50%,-50%)
-    scale(.7);
+    transform:translate(-50%,-44%) scale(.65) rotateX(10deg);
   }
-
   to{
     opacity:1;
-
-    transform:
-    translate(-50%,-50%)
-    scale(1);
+    transform:translate(-50%,-50%) scale(1) rotateX(0deg);
   }
 }
    
@@ -1528,11 +1543,21 @@ function createGuestBook(){
   const book =
   document.createElement("div");
 
-  book.className =
-  "guestbook-book";
+book.className = "guestbook-book";
 
-  book.innerText = text;
+book.innerHTML = `
+  <div class="book-page left">
+    <div class="book-left-title">
+      POYO<br>
+      9TH ANNIVERSARY<br>
+      GUEST BOOK
+    </div>
+  </div>
 
+  <div class="book-page right">
+    <div class="book-message">${text}</div>
+  </div>
+`;
   guestStage.appendChild(book);
 
   guestInput.value = "";
