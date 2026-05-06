@@ -20,6 +20,13 @@ font-weight: normal;
 font-display: swap;
 }
 
+@font-face {
+  font-family: 'SchoolSafeStoneWall';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/HakgyoansimDoldamB.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
 html,body{ background:#000;
 margin:0;
 padding:0;
@@ -628,28 +635,37 @@ padding:40px;
 
 /* 분필 글씨 */
 #promiseChalkText{
-  position:absolute;
+  pposition:absolute;
   left:50%;
-  top:22%;
-  transform:translateX(-50%);
+  top:50%;
+  transform:translate(-50%, -50%);
 
-  width:70%;
+  width:78%;
   text-align:center;
 
-  font-family:'NeoDunggeunGothicPro',sans-serif;
-  font-size:2rem;
-  line-height:1.6;
-  color:rgba(245,255,235,.9);
+  font-family:'SchoolSafeStoneWall', sans-serif;
+  font-size:3.2rem;
+  line-height:1.45;
+  color:rgba(245,255,235,.95);
 
   text-shadow:
-    0 0 2px rgba(255,255,255,.7),
-    1px 1px 0 rgba(255,255,255,.15);
+    0 0 3px rgba(255,255,255,.85),
+    2px 2px 0 rgba(255,255,255,.12);
 
-  opacity:.9;
+  opacity:.95;
   z-index:8;
   pointer-events:none;
 }
 
+ /* 👇 여기 추가 */
+.library-page,
+.library-page input,
+.library-page button,
+#promiseChalkText,
+.guestbook-postit{
+  font-family:'SchoolSafeStoneWall', sans-serif;
+} 
+  
 /* guestbook css */
 .library-page{
   position:relative;
