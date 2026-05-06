@@ -757,8 +757,8 @@ padding:40px;
   padding:30px 24px 24px;
 
   color:#4a372b;
-  font-size:1.55rem;
-  line-height:1.35;
+  font-size:1.9rem;
+  line-height:1.32;
   text-align:center;
 
   border-radius:8px 8px 16px 16px;
@@ -1562,20 +1562,23 @@ const postitColors = [
 ];
 
 const postitSlots = [
-  { x:10, y:15 },
-  { x:38, y:15 },
-  { x:66, y:15 },
-  { x:18, y:39 },
-  { x:48, y:39 },
-  { x:72, y:39 },
-  { x:10, y:63 },
-  { x:38, y:63 },
-  { x:66, y:63 },
-  { x:48, y:72 }
+  { x:7, y:13 },
+  { x:31, y:13 },
+  { x:67, y:13 },
+
+  { x:6, y:58 },
+  { x:31, y:58 },
+  { x:67, y:58 },
+
+  { x:7, y:74 },
+  { x:31, y:74 },
+  { x:56, y:74 },
+  { x:75, y:74 }
 ];
 
 let postitList = [];
 let usedSlots = [];
+let usedColors = [];
 
 const MAX_POSTITS = 10;
 
@@ -1598,6 +1601,23 @@ function formatPostitText(text){
   return result.trim();
 }
 
+function getAvailableColor(){
+  if(usedColors.length >= postitColors.length){
+    usedColors = [];
+  }
+
+  const available = postitColors.filter(
+    color => !usedColors.includes(color)
+  );
+
+  const picked =
+    available[Math.floor(Math.random() * available.length)];
+
+  usedColors.push(picked);
+
+  return picked;
+}
+
 function getAvailableSlot(){
   if(usedSlots.length >= postitSlots.length){
     usedSlots = [];
@@ -1614,7 +1634,7 @@ function getAvailableSlot(){
 
   return picked.slot;
 }
-
+  
 function createGuestBook(){
   const text = guestInput.value.trim();
   if(!text) return;
@@ -1623,8 +1643,7 @@ function createGuestBook(){
   postit.className = "guestbook-postit";
   postit.textContent = formatPostitText(text);
 
-  const color =
-    postitColors[Math.floor(Math.random() * postitColors.length)];
+  const color = getAvailableColor();
 
   const slot = getAvailableSlot();
   const rotate = (Math.random() * 10 - 5).toFixed(1) + "deg";
