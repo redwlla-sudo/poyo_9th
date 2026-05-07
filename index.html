@@ -1561,26 +1561,13 @@ const postitColors = [
   "#ffe0b5"
 ];
 
-const postitSlots = [
-  { x:7, y:13 },
-  { x:31, y:13 },
-  { x:67, y:13 },
-
-  { x:6, y:58 },
-  { x:31, y:58 },
-  { x:67, y:58 },
-
-  { x:7, y:74 },
-  { x:31, y:74 },
-  { x:56, y:74 },
-  { x:75, y:74 }
-];
-
 let postitList = [];
-let usedSlots = [];
 let usedColors = [];
 
 const MAX_POSTITS = 10;
+
+const POSTIT_W = 300;
+const POSTIT_H = 260;
 
 function formatPostitText(text){
   const limit = 12;
@@ -1597,7 +1584,6 @@ function formatPostitText(text){
   }
 
   result += line;
-
   return result.trim();
 }
 
@@ -1618,39 +1604,93 @@ function getAvailableColor(){
   return picked;
 }
 
-function getAvailableSlot(){
-  if(usedSlots.length >= postitSlots.length){
-    usedSlots = [];
+function isOverlapping(a,b){
+  return !(
+    a.x + a.w < b.x ||
+    a.x > b.x + b.w ||
+    a.y + a.h < b.y ||
+    a.y > b.y + b.h
+  );
+}
+
+function getRandomPosition(){
+  const stageRect = guestStage.getBoundingClientRect();
+
+  const padding = 40;
+
+  const inputSafeZone = {
+    x:0,
+    y:stageRect.height - 210,
+    w:stageRect.width,
+    h:210
+  };
+
+  const chalkSafeZone = {
+    x:stageRect.width * 0.22,
+    y:stageRect.height * 0.32,
+    w:stageRect.width * 0.56,
+    h:stageRect.height * 0.28
+  };
+
+  for(let i=0;i<120;i++){
+    const x =
+      Math.random() *
+      (stageRect.width - POSTIT_W - padding * 2)
+      + padding;
+
+    const y =
+      Math.random() *
+      (stageRect.height - POSTIT_H - padding * 2)
+      + padding;
+
+    const nextRect = {
+      x:x,
+      y:y,
+      w:POSTIT_W,
+      h:POSTIT_H
+    };
+
+    const hitsInput =
+      isOverlapping(nextRect,inputSafeZone);
+
+    const hitsChalk =
+      isOverlapping(nextRect,chalkSafeZone);
+
+    const hitsPostit =
+      postitList.some(item =>
+        isOverlapping(nextRect,item.rect)
+      );
+
+    if(!hitsInput && !hitsChalk && !hitsPostit){
+      return nextRect;
+    }
   }
 
-  const available = postitSlots
-    .map((slot, index)=>({ slot, index }))
-    .filter(item => !usedSlots.includes(item.index));
-
-  const picked =
-    available[Math.floor(Math.random() * available.length)];
-
-  usedSlots.push(picked.index);
-
-  return picked.slot;
+  return {
+    x:40 + Math.random() * 200,
+    y:80 + Math.random() * 120,
+    w:POSTIT_W,
+    h:POSTIT_H
+  };
 }
-  
+
 function createGuestBook(){
   const text = guestInput.value.trim();
   if(!text) return;
+
+  const position = getRandomPosition();
 
   const postit = document.createElement("div");
   postit.className = "guestbook-postit";
   postit.textContent = formatPostitText(text);
 
   const color = getAvailableColor();
-
-  const slot = getAvailableSlot();
-  const rotate = (Math.random() * 10 - 5).toFixed(1) + "deg";
+  const rotate =
+    (Math.random() * 10 - 5).toFixed(1) + "deg";
 
   postit.style.background = color;
-  postit.style.left = slot.x + "%";
-  postit.style.top = slot.y + "%";
+  postit.style.left = position.x + "px";
+  postit.style.top = position.y + "px";
   postit.style.setProperty("--rotate", rotate);
 
   guestStage.appendChild(postit);
@@ -1660,19 +1700,23 @@ function createGuestBook(){
     postit.classList.add("show");
   },30);
 
-  postitList.push(postit);
+  postitList.push({
+    el:postit,
+    rect:position
+  });
 
   if(postitList.length > MAX_POSTITS){
     const oldPostit = postitList.shift();
 
-    oldPostit.style.transition =
+    oldPostit.el.style.transition =
       "opacity .35s ease, transform .35s ease";
 
-    oldPostit.style.opacity = "0";
-    oldPostit.style.transform = "scale(.5) rotate(-8deg)";
+    oldPostit.el.style.opacity = "0";
+    oldPostit.el.style.transform =
+      "scale(.5) rotate(-8deg)";
 
     setTimeout(()=>{
-      oldPostit.remove();
+      oldPostit.el.remove();
     },350);
   }
 }
