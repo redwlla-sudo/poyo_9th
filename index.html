@@ -1562,10 +1562,9 @@ const postitColors = [
 ];
 
 let postitList = [];
-let usedColors = [];
+let colorQueue = [];
 
 const MAX_POSTITS = 10;
-
 const POSTIT_W = 300;
 const POSTIT_H = 260;
 
@@ -1587,21 +1586,19 @@ function formatPostitText(text){
   return result.trim();
 }
 
+function shuffleArray(arr){
+  return arr
+    .map(value => ({ value, sort: Math.random() }))
+    .sort((a,b)=>a.sort-b.sort)
+    .map(item=>item.value);
+}
+
 function getAvailableColor(){
-  if(usedColors.length >= postitColors.length){
-    usedColors = [];
+  if(colorQueue.length === 0){
+    colorQueue = shuffleArray([...postitColors]);
   }
 
-  const available = postitColors.filter(
-    color => !usedColors.includes(color)
-  );
-
-  const picked =
-    available[Math.floor(Math.random() * available.length)];
-
-  usedColors.push(picked);
-
-  return picked;
+  return colorQueue.shift();
 }
 
 function isOverlapping(a,b){
@@ -1616,61 +1613,78 @@ function isOverlapping(a,b){
 function getRandomPosition(){
   const stageRect = guestStage.getBoundingClientRect();
 
-  const padding = 40;
+  const zones = [
+    { x:0.05, y:0.10, w:0.26, h:0.24 },
+    { x:0.37, y:0.10, w:0.26, h:0.24 },
+    { x:0.69, y:0.10, w:0.24, h:0.24 },
 
-  const inputSafeZone = {
-    x:0,
-    y:stageRect.height - 210,
-    w:stageRect.width,
-    h:210
-  };
+    { x:0.05, y:0.56, w:0.26, h:0.18 },
+    { x:0.37, y:0.56, w:0.26, h:0.18 },
+    { x:0.69, y:0.56, w:0.24, h:0.18 },
 
-  const chalkSafeZone = {
-    x:stageRect.width * 0.22,
-    y:stageRect.height * 0.32,
-    w:stageRect.width * 0.56,
-    h:stageRect.height * 0.28
-  };
+    { x:0.05, y:0.75, w:0.26, h:0.12 },
+    { x:0.37, y:0.75, w:0.26, h:0.12 },
+    { x:0.69, y:0.75, w:0.24, h:0.12 }
+  ];
+
+  const usedZoneIndexes =
+    postitList.map(item => item.zoneIndex);
+
+  let availableZones = zones
+    .map((zone,index)=>({ zone,index }))
+    .filter(item => !usedZoneIndexes.includes(item.index));
+
+  if(availableZones.length === 0){
+    availableZones = zones.map((zone,index)=>({ zone,index }));
+  }
 
   for(let i=0;i<120;i++){
+    const pickedZone =
+      availableZones[
+        Math.floor(Math.random() * availableZones.length)
+      ];
+
+    const zone = pickedZone.zone;
+
+    const minX = stageRect.width * zone.x;
+    const minY = stageRect.height * zone.y;
+
+    const maxX =
+      minX + stageRect.width * zone.w - POSTIT_W;
+
+    const maxY =
+      minY + stageRect.height * zone.h - POSTIT_H;
+
     const x =
-      Math.random() *
-      (stageRect.width - POSTIT_W - padding * 2)
-      + padding;
+      minX + Math.random() * Math.max(20, maxX - minX);
 
     const y =
-      Math.random() *
-      (stageRect.height - POSTIT_H - padding * 2)
-      + padding;
+      minY + Math.random() * Math.max(20, maxY - minY);
 
     const nextRect = {
       x:x,
       y:y,
       w:POSTIT_W,
-      h:POSTIT_H
+      h:POSTIT_H,
+      zoneIndex:pickedZone.index
     };
-
-    const hitsInput =
-      isOverlapping(nextRect,inputSafeZone);
-
-    const hitsChalk =
-      isOverlapping(nextRect,chalkSafeZone);
 
     const hitsPostit =
       postitList.some(item =>
         isOverlapping(nextRect,item.rect)
       );
 
-    if(!hitsInput && !hitsChalk && !hitsPostit){
+    if(!hitsPostit){
       return nextRect;
     }
   }
 
   return {
-    x:40 + Math.random() * 200,
-    y:80 + Math.random() * 120,
+    x:60,
+    y:80,
     w:POSTIT_W,
-    h:POSTIT_H
+    h:POSTIT_H,
+    zoneIndex:-1
   };
 }
 
@@ -1702,7 +1716,8 @@ function createGuestBook(){
 
   postitList.push({
     el:postit,
-    rect:position
+    rect:position,
+    zoneIndex:position.zoneIndex
   });
 
   if(postitList.length > MAX_POSTITS){
