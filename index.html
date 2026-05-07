@@ -922,7 +922,8 @@ padding:40px;
   gap:14px;
 
   overflow-y:auto;
-
+  overscroll-behavior:contain;
+  
   max-height:470px;
 
   padding-right:6px;
@@ -1139,11 +1140,23 @@ let audioMuted=false;
 mainBgm.muted=false;
 mainBgm.volume=0.30;
 
-window.addEventListener("click",()=>{
-introVideo.muted=false;
-introVideo.volume=0.55;
-introVideo.play().catch(()=>{});
-},{once:true});
+window.addEventListener("wheel",(e)=>{
+const mailboxOverlay =
+document.getElementById("mailboxOverlay");
+
+if(
+  mailboxOverlay &&
+  mailboxOverlay.style.display === "flex"
+){
+  return;
+}
+
+if(stepOverlayMain && stepOverlayMain.classList.contains("show")) return;
+
+if(e.deltaY>0 && index<4) index++;
+if(e.deltaY<0 && index>0) index--;
+move(index);
+});
 
 function introLoop(){
 if(introVideo.currentTime>=103 && !shown){
