@@ -1552,7 +1552,6 @@ if(chalkText){
   chalkText.style.display = "none";
 }
 
-/* 10개 전부 다른 색 */
 const postitColors = [
   "#fff3a6",
   "#ffd1dc",
@@ -1567,7 +1566,6 @@ const postitColors = [
 ];
 
 let postitList = [];
-let slotQueue = [];
 let colorIndex = 0;
 
 const MAX_POSTITS = 10;
@@ -1592,58 +1590,46 @@ function formatPostitText(text){
   return result.trim();
 }
 
-function shuffleArray(arr){
-  return arr
-    .map(value => ({ value, sort: Math.random() }))
-    .sort((a,b)=>a.sort-b.sort)
-    .map(item=>item.value);
-}
-
-/* 색상은 10개 순서대로 돌림 = 10개까지 절대 중복 X */
 function getAvailableColor(){
   const color = postitColors[colorIndex % postitColors.length];
   colorIndex++;
   return color;
 }
 
-/* 입력창 뒤로 안 가는 10개 전용 위치 */
+/* 10개 자리: 위/아래 일렬 느낌 줄이고 흩뿌린 배치 */
 function buildSlots(){
   const stageRect = guestStage.getBoundingClientRect();
-
   const inputBox = document.querySelector(".guestbook-input-box");
   const inputRect = inputBox.getBoundingClientRect();
 
-  const stageTop = stageRect.top;
-  const inputTop = inputRect.top - stageTop;
+  const inputTop = inputRect.top - stageRect.top;
 
-  const topY = 80;
-  const bottomY = Math.max(
-    topY + POSTIT_H + 40,
-    inputTop - POSTIT_H - 35
-  );
+  const rawSlots = [
+    { x:5,  y:10 },
+    { x:26, y:18 },
+    { x:67, y:9  },
+    { x:80, y:25 },
 
-  const slots = [
-    { x:60, y:topY },
-    { x:400, y:topY },
-    { x:740, y:topY },
-    { x:1080, y:topY },
-    { x:1420, y:topY },
+    { x:6,  y:45 },
+    { x:72, y:46 },
 
-    { x:60, y:bottomY },
-    { x:400, y:bottomY },
-    { x:740, y:bottomY },
-    { x:1080, y:bottomY },
-    { x:1420, y:bottomY }
+    { x:18, y:66 },
+    { x:42, y:58 },
+    { x:63, y:68 },
+    { x:82, y:61 }
   ];
 
-  return slots.map(slot=>{
+  return rawSlots.map((slot,index)=>{
+    const px = stageRect.width * (slot.x / 100);
+    const py = stageRect.height * (slot.y / 100);
+
     const safeX = Math.min(
-      Math.max(40, slot.x),
+      Math.max(40, px),
       stageRect.width - POSTIT_W - 40
     );
 
     const safeY = Math.min(
-      Math.max(40, slot.y),
+      Math.max(40, py),
       inputTop - POSTIT_H - 35
     );
 
@@ -1651,22 +1637,54 @@ function buildSlots(){
       x:safeX,
       y:safeY,
       w:POSTIT_W,
-      h:POSTIT_H
+      h:POSTIT_H,
+      slotIndex:index
     };
   });
 }
 
 function getNextSlot(){
-  if(slotQueue.length === 0){
-    slotQueue = shuffleArray(buildSlots());
+  const slots = buildSlots();
+
+  const usedSlotIndexes = postitList.map(
+    item => item.slotIndex
+  );
+
+  const availableSlots = slots.filter(
+    slot => !usedSlotIndexes.includes(slot.slotIndex)
+  );
+
+  if(availableSlots.length === 0){
+    return slots[0];
   }
 
-  return slotQueue.shift();
+  return availableSlots[
+    Math.floor(Math.random() * availableSlots.length)
+  ];
 }
 
 function createGuestBook(){
   const text = guestInput.value.trim();
   if(!text) return;
+
+  /*
+    10개가 이미 있으면 먼저 가장 오래된 포스트잇을 제거해서
+    그 자리를 새 포스트잇이 사용할 수 있게 함
+  */
+  if(postitList.length >= MAX_POSTITS){
+    const oldPostit = postitList.shift();
+
+    oldPostit.el.style.transition =
+      "opacity .35s ease, transform .35s ease";
+
+    oldPostit.el.style.opacity = "0";
+    oldPostit.el.style.transform =
+      "scale(.5) rotate(-8deg)";
+
+    setTimeout(()=>{
+      oldPostit.el.remove();
+    },350);
+  }
 
   const position = getNextSlot();
 
@@ -1691,23 +1709,9 @@ function createGuestBook(){
 
   postitList.push({
     el:postit,
-    rect:position
+    rect:position,
+    slotIndex:position.slotIndex
   });
-
-  if(postitList.length > MAX_POSTITS){
-    const oldPostit = postitList.shift();
-
-    oldPostit.el.style.transition =
-      "opacity .35s ease, transform .35s ease";
-
-    oldPostit.el.style.opacity = "0";
-    oldPostit.el.style.transform =
-      "scale(.5) rotate(-8deg)";
-
-    setTimeout(()=>{
-      oldPostit.el.remove();
-    },350);
-  }
 }
 
 guestBtn.addEventListener("click", createGuestBook);
