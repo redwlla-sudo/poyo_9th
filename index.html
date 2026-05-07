@@ -1149,34 +1149,48 @@ introVideo.play().catch(()=>{});
 
 },{once:true});
   
+let isWheelLocked = false;
+
 window.addEventListener("wheel",(e)=>{
 
-const mailboxOverlay =
-document.getElementById("mailboxOverlay");
+  const mailboxOverlay =
+  document.getElementById("mailboxOverlay");
 
-/* 우편함 열려있으면 메인 스크롤 막기 */
-if(
-  mailboxOverlay &&
-  mailboxOverlay.style.display === "flex"
-){
-  return;
-}
+  if(
+    mailboxOverlay &&
+    mailboxOverlay.style.display === "flex"
+  ){
+    e.preventDefault();
+    return;
+  }
 
-/* STEP 팝업 열려있으면 메인 스크롤 막기 */
-if(
-  stepOverlayMain &&
-  stepOverlayMain.classList.contains("show")
-){
-  return;
-}
+  if(
+    stepOverlayMain &&
+    stepOverlayMain.classList.contains("show")
+  ){
+    e.preventDefault();
+    return;
+  }
 
-if(e.deltaY>0 && index<4) index++;
+  if(isWheelLocked) return;
 
-if(e.deltaY<0 && index>0) index--;
+  if(e.deltaY > 0 && index < 4){
+    index++;
+    move(index);
+    isWheelLocked = true;
+  }
 
-move(index);
+  if(e.deltaY < 0 && index > 0){
+    index--;
+    move(index);
+    isWheelLocked = true;
+  }
 
-});
+  setTimeout(()=>{
+    isWheelLocked = false;
+  },900);
+
+},{ passive:false });
 
 function introLoop(){
 if(introVideo.currentTime>=103 && !shown){
