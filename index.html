@@ -1141,9 +1141,11 @@ mainBgm.muted=false;
 mainBgm.volume=0.30;
 
 window.addEventListener("wheel",(e)=>{
+
 const mailboxOverlay =
 document.getElementById("mailboxOverlay");
 
+/* 우편함 열려있으면 메인 스크롤 막기 */
 if(
   mailboxOverlay &&
   mailboxOverlay.style.display === "flex"
@@ -1151,11 +1153,20 @@ if(
   return;
 }
 
-if(stepOverlayMain && stepOverlayMain.classList.contains("show")) return;
+/* STEP 팝업 열려있으면 메인 스크롤 막기 */
+if(
+  stepOverlayMain &&
+  stepOverlayMain.classList.contains("show")
+){
+  return;
+}
 
 if(e.deltaY>0 && index<4) index++;
+
 if(e.deltaY<0 && index>0) index--;
+
 move(index);
+
 });
 
 function introLoop(){
