@@ -1140,6 +1140,15 @@ let audioMuted=false;
 mainBgm.muted=false;
 mainBgm.volume=0.30;
 
+window.addEventListener("click",()=>{
+
+introVideo.muted=false;
+introVideo.volume=0.55;
+
+introVideo.play().catch(()=>{});
+
+},{once:true});
+  
 window.addEventListener("wheel",(e)=>{
 
 const mailboxOverlay =
