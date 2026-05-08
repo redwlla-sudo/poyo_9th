@@ -1151,15 +1151,37 @@ introVideo.play().catch(()=>{});
   
 let isWheelLocked = false;
 
+let isWheelLocked = false;
+
 window.addEventListener("wheel",(e)=>{
 
   const mailboxOverlay =
   document.getElementById("mailboxOverlay");
 
-  if(
+  const mailboxList =
+  document.getElementById("mailboxList");
+
+  const hiddenMailboxList =
+  document.getElementById("hiddenMailboxList");
+
+  const isMailboxOpen =
     mailboxOverlay &&
-    mailboxOverlay.style.display === "flex"
-  ){
+    mailboxOverlay.style.display === "flex";
+
+  if(isMailboxOpen){
+
+    const target = e.target;
+
+    const isInsideMailboxScroll =
+      mailboxList &&
+      mailboxList.contains(target) ||
+      hiddenMailboxList &&
+      hiddenMailboxList.contains(target);
+
+    if(isInsideMailboxScroll){
+      return;
+    }
+
     e.preventDefault();
     return;
   }
@@ -1172,71 +1194,25 @@ window.addEventListener("wheel",(e)=>{
     return;
   }
 
+  e.preventDefault();
+
   if(isWheelLocked) return;
 
+  isWheelLocked = true;
+
   if(e.deltaY > 0 && index < 4){
-    index++;
-    move(index);
-    isWheelLocked = true;
+    move(index + 1);
   }
 
   if(e.deltaY < 0 && index > 0){
-    index--;
-    move(index);
-    isWheelLocked = true;
+    move(index - 1);
   }
 
   setTimeout(()=>{
     isWheelLocked = false;
-  },900);
+  },1100);
 
 },{ passive:false });
-
-function introLoop(){
-if(introVideo.currentTime>=103 && !shown){
-shown=true;
-title.style.opacity=1;
-title.style.visibility="visible";
-btn.style.opacity=1;
-btn.style.visibility="visible";
-}
-requestAnimationFrame(introLoop);
-}
-introLoop();
-
-function enter(){
-introVideo.pause();
-introVideo.currentTime=0;
-introVideo.muted=true;
-
-document.getElementById("intro").style.display="none";
-document.getElementById("main").style.display="block";
-uiLayer.style.display="block";
-
-move(0);
-
-mainBgm.muted=false;
-mainBgm.volume=0.30;
-mainBgm.play().catch(()=>{});
-}
-
-if(skipBtn){
-skipBtn.addEventListener("click", enter);
-}
-
-if(btn){
-btn.addEventListener("click", enter);
-}
-
-if(volumeToggle){
-volumeToggle.addEventListener("click",()=>{
-audioMuted=!audioMuted;
-
-mainBgm.muted=audioMuted;
-stepBgm.muted=audioMuted;
-
-volumeToggle.textContent=audioMuted ? "🔇" : "🔊";
-});
 }
 
 for(let i=0;i<5;i++){
@@ -1426,9 +1402,16 @@ stepState.promiseTimer=setTimeout(()=>{
 if(write) write.classList.add("fade-out");
 
 /* ⭐ 2분(120초)부터 시작 */
-setStepBgmTime(120);
-stepBgm.volume=0;
-stepBgm.play().catch(()=>{});
+stepBgm.pause();
+
+stepBgm.currentTime = 120;
+stepBgm.volume = 0;
+
+const playPromise = stepBgm.play();
+
+if(playPromise){
+  playPromise.catch(()=>{});
+}
 
 /* 배경 + 문장 등장 */
 if(bg) bg.classList.add("show");
