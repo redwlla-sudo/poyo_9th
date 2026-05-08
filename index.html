@@ -766,15 +766,21 @@ padding:40px;
   border-radius:8px 8px 16px 16px;
   box-shadow:0 14px 28px rgba(0,0,0,.3);
 
-  display:flex;
-  align-items:center;
-  justify-content:center;
+display:flex;
+flex-direction:column;
 
-  white-space:pre-line;
-  word-break:keep-all;
-  overflow-wrap:break-word;
-  overflow:hidden;
+align-items:center;
+justify-content:center;
 
+text-align:center;
+
+padding-top:10px;
+box-sizing:border-box;
+
+white-space:normal;
+word-break:keep-all;
+overflow-wrap:anywhere;
+  
   opacity:0;
   z-index:15;
   pointer-events:none;
@@ -2014,21 +2020,7 @@ function checkMessage(text){
 }
 
 function formatPostitText(text){
-  const limit = 12;
-  let result = "";
-  let line = "";
-
-  for(const char of text){
-    line += char;
-
-    if(line.length >= limit){
-      result += line + "\n";
-      line = "";
-    }
-  }
-
-  result += line;
-  return result.trim();
+  return text;
 }
 
 function getAvailableColor(){
