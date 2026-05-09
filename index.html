@@ -9,6 +9,13 @@
 
 <style>
 @font-face {
+  font-family: 'SuperMario256';
+  src: url('fonts/SuperMario256.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+  
+@font-face {
 font-family: 'Jalnan';
 src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
 }
@@ -1185,44 +1192,31 @@ overflow-wrap:anywhere;
 }
 
 .game-vs{
+  font-family:'SuperMario256';
   font-size:6.5rem;
   font-weight:900;
-  color:#fff;
-  text-shadow:
-    0 0 12px #c9b7ff,
-    0 0 28px #9fffe0;
+
+  display:flex;
+  align-items:center;
+  gap:8px;
+
   z-index:5;
 }
 
-.game-score-box{
-  position:absolute;
-  bottom:34px;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  gap:28px;
-  font-size:1.5rem;
-  font-weight:900;
-  z-index:5;
-}  
-
-#gameCountdownOverlay{
-  position:absolute;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:50;
-
-  font-size:16rem;
-  font-weight:900;
-  color:#52ff8f;
-
-  background:rgba(0,0,0,.35);
+.game-v{
+  color:#ff3b30;
 
   text-shadow:
-    0 0 20px #c9b7ff,
-    0 0 40px #9fffe0;
+    0 0 10px rgba(255,59,48,.9),
+    0 0 22px rgba(255,59,48,.7);
+}
+
+.game-s{
+  color:#3b82ff;
+
+  text-shadow:
+    0 0 10px rgba(59,130,255,.9),
+    0 0 22px rgba(59,130,255,.7);
 }
 
 #suddenNotice{
@@ -1305,6 +1299,17 @@ overflow-wrap:anywhere;
 .game-result-card h2{
   font-size:3.5rem;
   margin:0 0 18px;
+
+  background:linear-gradient(
+  90deg,
+  #ff3b30,
+  #ffe44d,
+  #52ff8f,
+  #3b82ff
+);
+
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
 
 #gameFinalScore{
@@ -1543,7 +1548,10 @@ STEP 3
       <img id="leftThumb" src="">
     </button>
 
-    <div class="game-vs">VS</div>
+<div class="game-vs">
+  <span class="game-v">V</span>
+  <span class="game-s">S</span>
+</div>
 
     <button class="game-choice" id="rightChoice">
       <img id="rightThumb" src="">
@@ -1936,14 +1944,28 @@ function startCountdown(){
 
   const countdownTimer = setInterval(()=>{
     count--;
+    
+if(count > 0){
+  gameCountdownOverlay.textContent = count;
 
-    if(count > 0){
-      gameCountdownOverlay.textContent = count;
-      return;
-    }
+  if(count === 3){
+    gameCountdownOverlay.style.color = "#52ff8f";
+  }
+
+  if(count === 2){
+    gameCountdownOverlay.style.color = "#ffe44d";
+  }
+
+  if(count === 1){
+    gameCountdownOverlay.style.color = "#ff4f6d";
+  }
+
+  return;
+}
 
     clearInterval(countdownTimer);
     gameCountdownOverlay.textContent = "START!";
+    gameCountdownOverlay.style.color = "#52ff8f";
 
     setTimeout(()=>{
       gameCountdownOverlay.style.display = "none";
@@ -1992,6 +2014,18 @@ function updateGameHud(){
   gameQuestionTimeEl.textContent = `⏱ ${gameQuestionTime}초`;
   gameScoreEl.textContent = `⭐ ${gameScore}점`;
   gameComboEl.textContent = `🔥 ${gameCombo} COMBO`;
+
+  const randomColors = [
+  "#ff4f6d",
+  "#52ff8f",
+  "#ffe44d",
+  "#3b82ff",
+  "#c084ff",
+  "#ff9f43"
+];
+
+gameScoreEl.style.color =
+  randomColors[Math.floor(Math.random() * randomColors.length)];
 }
 
 function nextQuestion(){
