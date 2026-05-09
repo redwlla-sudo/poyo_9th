@@ -1176,6 +1176,9 @@ overflow-wrap:anywhere;
   background:#111;
   box-shadow:0 20px 50px rgba(0,0,0,.45);
   transition:.2s;
+
+  display:flex;
+  flex-direction:column;
 }
 
 .game-choice:hover{
@@ -1219,6 +1222,42 @@ overflow-wrap:anywhere;
     0 0 22px rgba(59,130,255,.7);
 }
 
+#gameCountdownOverlay{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:80;
+
+  font-family:'SuperMario256';
+  font-size:16rem;
+  font-weight:900;
+  color:#52ff8f;
+
+  background:rgba(0,0,0,.35);
+
+  text-shadow:
+    0 0 20px #52ff8f,
+    0 0 45px #9fffe0;
+}
+
+.thumb-hint{
+  display:none;
+  padding:12px 0 14px;
+
+  font-size:1.3rem;
+  font-weight:900;
+  color:#ffe44d;
+
+  background:rgba(0,0,0,.72);
+
+  text-align:center;
+
+  text-shadow:
+    0 0 10px rgba(255,228,77,.8);
+}
+  
 #suddenNotice{
   position:absolute;
   inset:0;
@@ -1544,9 +1583,10 @@ STEP 3
 
   <div class="game-vs-area">
 
-    <button class="game-choice" id="leftChoice">
-      <img id="leftThumb" src="">
-    </button>
+  <button class="game-choice" id="leftChoice">
+  <img id="leftThumb" src="">
+  <div class="thumb-hint" id="leftHint"></div>
+</button>
 
 <div class="game-vs">
   <span class="game-v">V</span>
@@ -1554,8 +1594,9 @@ STEP 3
 </div>
 
     <button class="game-choice" id="rightChoice">
-      <img id="rightThumb" src="">
-    </button>
+  <img id="rightThumb" src="">
+  <div class="thumb-hint" id="rightHint"></div>
+</button>
 
   </div>
 
@@ -1815,6 +1856,8 @@ const leftThumb = document.getElementById("leftThumb");
 const rightThumb = document.getElementById("rightThumb");
 const leftChoice = document.getElementById("leftChoice");
 const rightChoice = document.getElementById("rightChoice");
+const leftHint = document.getElementById("leftHint");
+const rightHint = document.getElementById("rightHint");
 
 const gameTotalTimeEl = document.getElementById("gameTotalTime");
 const gameQuestionTimeEl = document.getElementById("gameQuestionTime");
@@ -2086,6 +2129,11 @@ function setNormalQuestion(){
   gameQuestionText.innerHTML =
     `조회수가 더 높은 썸네일은?`;
 
+  leftHint.style.display = "none";
+  rightHint.style.display = "none";
+  leftHint.textContent = "";
+  rightHint.textContent = "";
+
   questionStartTime = Date.now();
   updateGameHud();
 }
@@ -2096,13 +2144,17 @@ function setSuddenQuestion(){
 
   if(currentQuestionType === "older"){
     gameQuestionText.innerHTML =
-      `⚡ 더 먼저 업로드된 영상은?<br>
-      <small>왼쪽 ${formatViews(currentLeft.views)} / 오른쪽 ${formatViews(currentRight.views)}</small>`;
+      `⚡ 더 먼저 업로드된 영상은?`;
   }else{
     gameQuestionText.innerHTML =
-      `⚡ 더 늦게 업로드된 영상은?<br>
-      <small>왼쪽 ${formatViews(currentLeft.views)} / 오른쪽 ${formatViews(currentRight.views)}</small>`;
+      `⚡ 더 늦게 업로드된 영상은?`;
   }
+
+  leftHint.style.display = "block";
+  rightHint.style.display = "block";
+
+  leftHint.textContent = formatViews(currentLeft.views);
+  rightHint.textContent = formatViews(currentRight.views);
 
   questionStartTime = Date.now();
   updateGameHud();
