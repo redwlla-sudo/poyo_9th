@@ -968,6 +968,134 @@ overflow-wrap:anywhere;
   color:#ffd9e8;
   margin-bottom:12px;
 }
+
+.game-overlay{
+  background:#050505;
+  overflow:hidden;
+}
+
+.game-start-screen{
+  position:relative;
+  width:100%;
+  height:100vh;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  overflow:hidden;
+}
+
+.game-bg-left,
+.game-bg-right{
+  position:absolute;
+  top:0;
+
+  width:50%;
+  height:100%;
+
+  background-size:cover;
+  background-position:center;
+
+  filter:blur(6px) brightness(.35);
+
+  transform:scale(1.08);
+}
+
+.game-bg-left{
+  left:0;
+}
+
+.game-bg-right{
+  right:0;
+}
+
+.game-dark{
+  position:absolute;
+  inset:0;
+
+  background:
+  radial-gradient(circle,
+  rgba(0,0,0,.15),
+  rgba(0,0,0,.75));
+
+  z-index:1;
+}
+
+.game-start-content{
+  position:relative;
+  z-index:5;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+
+  text-align:center;
+}
+
+  .game-title{
+  font-size:4rem;
+  font-weight:900;
+
+  color:white;
+
+  margin-bottom:24px;
+
+  text-shadow:
+  0 0 18px rgba(201,183,255,.9),
+  0 0 30px rgba(159,255,224,.45);
+}
+
+.game-desc{
+  color:white;
+
+  font-size:1.2rem;
+  line-height:1.8;
+
+  opacity:.9;
+
+  margin-bottom:34px;
+}
+
+#gameNickname{
+  width:360px;
+
+  padding:18px 20px;
+
+  border:none;
+  outline:none;
+
+  border-radius:18px;
+
+  font-size:1.1rem;
+  text-align:center;
+
+  margin-bottom:20px;
+
+  background:rgba(255,255,255,.92);
+}
+
+#gameStartBtn{
+  border:none;
+
+  padding:18px 36px;
+
+  border-radius:18px;
+
+  cursor:pointer;
+
+  font-size:1.1rem;
+  font-weight:900;
+
+  background:
+  linear-gradient(135deg,#c9b7ff,#9fffe0);
+
+  transition:.25s;
+}
+
+#gameStartBtn:hover{
+  transform:scale(1.05);
+}
   
 </style>
 </head>
@@ -1122,10 +1250,45 @@ STEP 3
 <div class="overlay-content"><h1>⭐ 추억 페이지</h1></div>
 </div>
 
-<div id="game" class="overlay">
-<div class="overlay-content"><h1>🎮 게임 페이지</h1></div>
-</div>
+<div id="game" class="overlay game-overlay">
 
+  <div class="game-start-screen">
+
+    <div class="game-bg-left"></div>
+    <div class="game-bg-right"></div>
+
+    <div class="game-dark"></div>
+
+    <div class="game-start-content">
+
+      <div class="game-title">
+        포요 썸네일 조회수 게임
+      </div>
+
+      <div class="game-desc">
+        제한시간 90초 동안<br>
+        더 조회수가 높은 썸네일을 맞혀보세요!<br><br>
+
+        ⚡ 돌발 문제 등장 시 +3점!
+      </div>
+
+      <input
+        type="text"
+        id="gameNickname"
+        maxlength="12"
+        placeholder="닉네임 입력"
+      >
+
+      <button id="gameStartBtn">
+        게임 시작
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+  
 <script>
 const introVideo=document.getElementById("introVideo");
 const title=document.getElementById("title");
@@ -1280,9 +1443,20 @@ window.addEventListener("wheel",(e)=>{
 },{passive:false});
 
 function showOverlay(id){
+
   document.body.classList.add("hide-dots");
-  document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
-  document.getElementById(id).classList.add("show");
+
+  document
+  .querySelectorAll(".overlay")
+  .forEach(o=>o.classList.remove("show"));
+
+  document
+  .getElementById(id)
+  .classList.add("show");
+
+  if(id === "game"){
+    setupGameStartBackground();
+  }
 }
 
 function hideOverlays(){
@@ -1305,6 +1479,32 @@ document.querySelectorAll(".top-btn").forEach(btn=>{
     }
   });
 });
+
+/* 👇 여기 추가 */
+const gameThumbCount = 34;
+
+function randomThumbnail(){
+  return Math.floor(Math.random() * gameThumbCount) + 1;
+}
+
+function setupGameStartBackground(){
+
+  let left = randomThumbnail();
+  let right = randomThumbnail();
+
+  while(left === right){
+    right = randomThumbnail();
+  }
+
+  document.querySelector(".game-bg-left")
+  .style.backgroundImage =
+  `url(thumbnail${left}.jpg)`;
+
+  document.querySelector(".game-bg-right")
+  .style.backgroundImage =
+  `url(thumbnail${right}.jpg)`;
+}
+
 </script>
 
 <script>
