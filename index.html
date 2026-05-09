@@ -1096,6 +1096,97 @@ overflow-wrap:anywhere;
 #gameStartBtn:hover{
   transform:scale(1.05);
 }
+
+.game-play-screen{
+  display:none;
+  position:relative;
+  width:100%;
+  height:100vh;
+  background:radial-gradient(circle,#1b1430,#050505);
+  overflow:hidden;
+  color:white;
+}
+
+.game-hud{
+  position:absolute;
+  top:28px;
+  left:34px;
+  right:34px;
+  display:flex;
+  justify-content:space-between;
+  font-size:1.5rem;
+  font-weight:900;
+  z-index:5;
+}
+
+#gameQuestionText{
+  position:absolute;
+  top:110px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:2.4rem;
+  font-weight:900;
+  text-align:center;
+  text-shadow:0 0 18px rgba(159,255,224,.6);
+  z-index:5;
+}
+
+.game-vs-area{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:52px;
+}
+
+.game-choice{
+  width:40vw;
+  max-width:640px;
+  aspect-ratio:16/9;
+  border:none;
+  border-radius:26px;
+  overflow:hidden;
+  cursor:pointer;
+  background:#111;
+  box-shadow:0 20px 50px rgba(0,0,0,.45);
+  transition:.2s;
+}
+
+.game-choice:hover{
+  transform:scale(1.035);
+  box-shadow:0 0 34px rgba(159,255,224,.5);
+}
+
+.game-choice img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  background:#000;
+  display:block;
+}
+
+.game-vs{
+  font-size:5rem;
+  font-weight:900;
+  color:#fff;
+  text-shadow:
+    0 0 12px #c9b7ff,
+    0 0 28px #9fffe0;
+  z-index:5;
+}
+
+.game-score-box{
+  position:absolute;
+  bottom:34px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:28px;
+  font-size:1.5rem;
+  font-weight:900;
+  z-index:5;
+}  
   
 </style>
 </head>
@@ -1283,11 +1374,44 @@ STEP 3
         게임 시작
       </button>
 
-    </div>
+      </div>
+
+  </div> <!-- game-start-screen 끝 -->
+
+<!-- 👇 여기 추가 -->
+<div class="game-play-screen" id="gamePlayScreen">
+
+  <div class="game-hud">
+    <div id="gameTotalTime">⏰ 90초</div>
+    <div id="gameQuestionTime">⏱ 8초</div>
+  </div>
+
+  <div id="gameQuestionText">
+    조회수가 더 높은 썸네일은?
+  </div>
+
+  <div class="game-vs-area">
+
+    <button class="game-choice" id="leftChoice">
+      <img id="leftThumb" src="">
+    </button>
+
+    <div class="game-vs">VS</div>
+
+    <button class="game-choice" id="rightChoice">
+      <img id="rightThumb" src="">
+    </button>
 
   </div>
 
+  <div class="game-score-box">
+    <span id="gameScore">⭐ 0점</span>
+    <span id="gameCombo">🔥 0 COMBO</span>
+  </div>
+
 </div>
+
+</div> <!-- game overlay 끝 -->
   
 <script>
 const introVideo=document.getElementById("introVideo");
@@ -1505,6 +1629,236 @@ function setupGameStartBackground(){
   `url(thumbnail${right}.jpg)`;
 }
 
+const gameStartBtn = document.getElementById("gameStartBtn");
+const gameNickname = document.getElementById("gameNickname");
+const gameStartScreen = document.querySelector(".game-start-screen");
+const gamePlayScreen = document.getElementById("gamePlayScreen");
+
+const leftThumb = document.getElementById("leftThumb");
+const rightThumb = document.getElementById("rightThumb");
+const leftChoice = document.getElementById("leftChoice");
+const rightChoice = document.getElementById("rightChoice");
+
+const gameTotalTimeEl = document.getElementById("gameTotalTime");
+const gameQuestionTimeEl = document.getElementById("gameQuestionTime");
+const gameQuestionText = document.getElementById("gameQuestionText");
+const gameScoreEl = document.getElementById("gameScore");
+const gameComboEl = document.getElementById("gameCombo");
+
+let gameScore = 0;
+let gameCombo = 0;
+let gameTotalTime = 90;
+let gameQuestionTime = 8;
+
+let currentLeft = null;
+let currentRight = null;
+let gameTimer = null;
+let questionTimer = null;
+
+const suddenNumbers = [2,3,4,5,7,8,13,17,23,31];
+
+const thumbnailData = [
+  { id:1, views:32,736, date:"2026-01-28" },
+  { id:2, views:82,720, date:"2026-03-14" },
+  { id:3, views:23,281, date:"2026-04-22" },
+  { id:4, views:121,614, date:"2026-04-28" },
+  { id:5, views:188,445, date:"2026-02-28" },
+  { id:6, views:9,899, date:"2026-01-21" },
+  { id:7, views:13,304, date:"2026-01-21" },
+  { id:8, views:99,612, date:"2026-01-01" },
+  { id:9, views:45,329, date:"2025-12-28" },
+  { id:10, views:75,085, date:"2023-05-28" },
+  { id:11, views:3,428, date:"2022-09-21" },
+  { id:12, views:4,063, date:"2026-01-06" },
+  { id:13, views:54,783, date:"2026-04-04" },
+  { id:14, views:52,552, date:"2025-11-07" },
+  { id:15, views:3,287, date:"2025-11-14" },
+  { id:16, views:11,435, date:"2025-10-01" },
+  { id:17, views:76,202, date:"2025-08-27" },
+  { id:18, views:154,059, date:"2025-08-21" },
+  { id:19, views:27,506, date:"2025-10-01" },
+  { id:20, views:4,365, date:"2023-06-17" },
+  { id:21, views:12,605, date:"2023-01-28" },
+  { id:22, views:12,665, date:"2022-09-03" },
+  { id:23, views:20,302, date:"2025-09-16" },
+  { id:24, views:54,396, date:"2025-09-25" },
+  { id:25, views:80,466, date:"2025-10-24" },
+  { id:26, views:88,820, date:"2025-12-16" },
+  { id:27, views:74,611, date:"2026-02-05" },
+  { id:28, views:8,491, date:"2021-08-16" },
+  { id:29, views:34,585, date:"2023-02-05" },
+  { id:30, views:77,318, date:"2025-09-08" },
+  { id:31, views:76,250, date:"2021-10-02" },
+  { id:32, views:34,494, date:"2022-01-22" },
+  { id:33, views:99,626, date:"2021-10-02" },
+  { id:34, views:16,711, date:"2023-04-12" },
+];
+
+let currentQuestionType = "views";
+let questionStartTime = 0;
+
+function formatViews(num){
+  if(num >= 10000){
+    return (num / 10000).toFixed(1).replace(".0","") + "만회";
+  }
+  return num.toLocaleString() + "회";
+}
+
+function startGame(){
+  const nick = gameNickname.value.trim();
+
+  if(!nick){
+    alert("닉네임을 입력해주세요.");
+    return;
+  }
+
+  gameScore = 0;
+  gameCombo = 0;
+  gameTotalTime = 90;
+
+  gameStartScreen.style.display = "none";
+  gamePlayScreen.style.display = "block";
+
+  updateGameHud();
+  nextQuestion();
+
+  clearInterval(gameTimer);
+
+  gameTimer = setInterval(()=>{
+    gameTotalTime--;
+    updateGameHud();
+
+    if(gameTotalTime <= 0){
+      endGame();
+    }
+  },1000);
+}
+
+function updateGameHud(){
+  gameTotalTimeEl.textContent = `⏰ ${gameTotalTime}초`;
+  gameScoreEl.textContent = `⭐ ${gameScore}점`;
+  gameComboEl.textContent = `🔥 ${gameCombo} COMBO`;
+}
+
+function nextQuestion(){
+  clearInterval(questionTimer);
+
+  let leftIndex = Math.floor(Math.random() * thumbnailData.length);
+  let rightIndex = Math.floor(Math.random() * thumbnailData.length);
+
+  while(leftIndex === rightIndex){
+    rightIndex = Math.floor(Math.random() * thumbnailData.length);
+  }
+
+  currentLeft = thumbnailData[leftIndex];
+  currentRight = thumbnailData[rightIndex];
+
+  leftThumb.src = `thumbnail${currentLeft.id}.jpg`;
+  rightThumb.src = `thumbnail${currentRight.id}.jpg`;
+
+  const isSudden =
+    suddenNumbers.includes(currentLeft.id) ||
+    suddenNumbers.includes(currentRight.id);
+
+  if(isSudden){
+    currentQuestionType = Math.random() < 0.5 ? "older" : "newer";
+    gameQuestionTime = 8;
+
+    if(currentQuestionType === "older"){
+      gameQuestionText.innerHTML =
+        `⚡ 더 먼저 업로드된 영상은?<br>
+        <small>왼쪽 ${formatViews(currentLeft.views)} / 오른쪽 ${formatViews(currentRight.views)}</small>`;
+    }else{
+      gameQuestionText.innerHTML =
+        `⚡ 더 늦게 업로드된 영상은?<br>
+        <small>왼쪽 ${formatViews(currentLeft.views)} / 오른쪽 ${formatViews(currentRight.views)}</small>`;
+    }
+
+  }else{
+    currentQuestionType = "views";
+    gameQuestionTime = 6;
+
+    gameQuestionText.innerHTML =
+      `조회수가 더 높은 썸네일은?<br>
+      <small>왼쪽 ${currentLeft.date} / 오른쪽 ${currentRight.date}</small>`;
+  }
+
+  questionStartTime = Date.now();
+
+  gameQuestionTimeEl.textContent = `⏱ ${gameQuestionTime}초`;
+
+  questionTimer = setInterval(()=>{
+    gameQuestionTime--;
+    gameQuestionTimeEl.textContent = `⏱ ${gameQuestionTime}초`;
+
+    if(gameQuestionTime <= 0){
+      wrongAnswer();
+    }
+  },1000);
+}
+
+function chooseAnswer(side){
+  clearInterval(questionTimer);
+
+  let correctSide = "left";
+  const leftDate = new Date(currentLeft.date);
+  const rightDate = new Date(currentRight.date);
+
+  if(currentQuestionType === "views"){
+    correctSide =
+      currentLeft.views > currentRight.views ? "left" : "right";
+  }
+
+  if(currentQuestionType === "older"){
+    correctSide =
+      leftDate < rightDate ? "left" : "right";
+  }
+
+  if(currentQuestionType === "newer"){
+    correctSide =
+      leftDate > rightDate ? "left" : "right";
+  }
+
+  if(side === correctSide){
+    if(currentQuestionType === "views"){
+      gameScore += 1;
+    }else{
+      gameScore += 3;
+
+      const elapsed = (Date.now() - questionStartTime) / 1000;
+
+      if(elapsed <= 3){
+        gameScore += 1;
+      }
+    }
+
+    gameCombo++;
+  }else{
+    gameCombo = 0;
+  }
+
+  updateGameHud();
+  nextQuestion();
+}
+
+function wrongAnswer(){
+  clearInterval(questionTimer);
+  gameCombo = 0;
+  updateGameHud();
+  nextQuestion();
+}
+
+function endGame(){
+  clearInterval(gameTimer);
+  clearInterval(questionTimer);
+
+  alert(`게임 종료!\n최종 점수: ${gameScore}점`);
+}
+
+gameStartBtn.addEventListener("click", startGame);
+leftChoice.addEventListener("click",()=>chooseAnswer("left"));
+rightChoice.addEventListener("click",()=>chooseAnswer("right"));
+  
 </script>
 
 <script>
