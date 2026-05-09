@@ -1124,11 +1124,18 @@ overflow-wrap:anywhere;
   top:110px;
   left:50%;
   transform:translateX(-50%);
-  font-size:2.4rem;
+  font-size:3rem;
   font-weight:900;
   text-align:center;
   text-shadow:0 0 18px rgba(159,255,224,.6);
   z-index:5;
+}
+
+#gameQuestionText small{
+  display:block;
+  margin-top:12px;
+  font-size:1.35rem;
+  opacity:.9;
 }
 
 .game-vs-area{
@@ -1141,8 +1148,8 @@ overflow-wrap:anywhere;
 }
 
 .game-choice{
-  width:40vw;
-  max-width:640px;
+  width:43vw;
+  max-width:760px;
   aspect-ratio:16/9;
   border:none;
   border-radius:26px;
@@ -1167,7 +1174,7 @@ overflow-wrap:anywhere;
 }
 
 .game-vs{
-  font-size:5rem;
+  font-size:6.5rem;
   font-weight:900;
   color:#fff;
   text-shadow:
@@ -1226,6 +1233,35 @@ overflow-wrap:anywhere;
     0 0 36px #9fffe0;
 }
 
+#answerEffect{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:65;
+
+  font-size:9rem;
+  font-weight:900;
+
+  background:rgba(0,0,0,.18);
+  pointer-events:none;
+}
+
+#answerEffect.correct{
+  color:#52ff8f;
+  text-shadow:
+    0 0 18px rgba(82,255,143,.9),
+    0 0 44px rgba(82,255,143,.6);
+}
+
+#answerEffect.wrong{
+  color:#ff4f6d;
+  text-shadow:
+    0 0 18px rgba(255,79,109,.9),
+    0 0 44px rgba(255,79,109,.6);
+}
+  
 #gameResultScreen{
   position:absolute;
   inset:0;
@@ -1514,6 +1550,8 @@ STEP 3
   ⚡ 돌발 문제!
 </div>
 
+<div id="answerEffect"></div>
+  
 <div id="gameResultScreen">
   <div class="game-result-card">
     <h2>GAME OVER</h2>
@@ -1768,6 +1806,7 @@ const gameResultScreen = document.getElementById("gameResultScreen");
 const gameFinalScore = document.getElementById("gameFinalScore");
 const rankBtn = document.getElementById("rankBtn");
 const retryGameBtn = document.getElementById("retryGameBtn");
+const answerEffect = document.getElementById("answerEffect");
 
 let gameScore = 0;
 let gameCombo = 0;
@@ -1783,7 +1822,9 @@ let gameTimer = null;
 let questionTimer = null;
 let isGameRunning = false;
 let isQuestionPaused = false;
-
+let suddenCount = 0;
+let lastQuestionWasSudden = false;
+  
 const suddenNumbers = [2,3,4,5,7,8,13,17,23,31];
 
 const thumbnailData = [
@@ -1847,6 +1888,8 @@ function resetGameState(){
 
   isGameRunning = false;
   isQuestionPaused = false;
+  suddenCount = 0;
+  lastQuestionWasSudden = false;
 
   gameResultScreen.style.display = "none";
   suddenNotice.style.display = "none";
@@ -1955,13 +1998,21 @@ function nextQuestion(){
   leftThumb.src = `thumbnail${currentLeft.id}.jpg`;
   rightThumb.src = `thumbnail${currentRight.id}.jpg`;
 
-  const isSudden =
+  const canBeSudden =
     suddenNumbers.includes(currentLeft.id) ||
     suddenNumbers.includes(currentRight.id);
 
-  if(isSudden){
+  const shouldBeSudden =
+    canBeSudden &&
+    suddenCount < 5 &&
+    !lastQuestionWasSudden;
+
+  if(shouldBeSudden){
+    suddenCount++;
+    lastQuestionWasSudden = true;
     showSuddenNotice();
   }else{
+    lastQuestionWasSudden = false;
     setNormalQuestion();
     startQuestionTimer();
   }
@@ -1985,8 +2036,7 @@ function setNormalQuestion(){
   gameQuestionTime = 6;
 
   gameQuestionText.innerHTML =
-    `조회수가 더 높은 썸네일은?<br>
-    <small>왼쪽 ${currentLeft.date} / 오른쪽 ${currentRight.date}</small>`;
+    `조회수가 더 높은 썸네일은?`;
 
   questionStartTime = Date.now();
   updateGameHud();
@@ -2008,6 +2058,70 @@ function setSuddenQuestion(){
 
   questionStartTime = Date.now();
   updateGameHud();
+}
+
+function playCorrectSound(){
+  try{
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AudioCtx();
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(680, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1100, ctx.currentTime + 0.12);
+
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    osc.stop(ctx.currentTime + 0.18);
+  }catch(e){}
+}
+
+function playWrongSound(){
+  try{
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AudioCtx();
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = "square";
+    osc.frequency.setValueAtTime(220, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(90, ctx.currentTime + 0.16);
+
+    gain.gain.setValueAtTime(0.07, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    osc.stop(ctx.currentTime + 0.2);
+  }catch(e){}
+}
+
+function showAnswerEffect(isCorrect){
+  answerEffect.className = isCorrect ? "correct" : "wrong";
+  answerEffect.textContent = isCorrect ? "○" : "×";
+  answerEffect.style.display = "flex";
+
+  if(isCorrect){
+    playCorrectSound();
+  }else{
+    playWrongSound();
+  }
+
+  setTimeout(()=>{
+    answerEffect.style.display = "none";
+    answerEffect.className = "";
+    nextQuestion();
+  },450);
 }
 
 function chooseAnswer(side){
@@ -2052,8 +2166,8 @@ function chooseAnswer(side){
     gameCombo = 0;
   }
 
-  updateGameHud();
-  nextQuestion();
+   updateGameHud();
+   showAnswerEffect(side === correctSide);
 }
 
 function wrongAnswer(){
@@ -2063,7 +2177,7 @@ function wrongAnswer(){
 
   gameCombo = 0;
   updateGameHud();
-  nextQuestion();
+  showAnswerEffect(false);
 }
 
 function endGame(){
