@@ -1142,8 +1142,10 @@ overflow-wrap:anywhere;
   top:110px;
   left:50%;
   transform:translateX(-50%);
-  font-size:3rem;
+  font-size:4.2rem;
   font-weight:900;
+  line-height:1.2;
+  
   text-align:center;
   text-shadow:0 0 18px rgba(159,255,224,.6);
   z-index:5;
@@ -1246,8 +1248,10 @@ overflow-wrap:anywhere;
   display:none;
   padding:12px 0 14px;
 
-  font-size:1.3rem;
+  font-size:2rem;
   font-weight:900;
+  letter-spacing:1px;
+  
   color:#ffe44d;
 
   background:rgba(0,0,0,.72);
@@ -2153,8 +2157,11 @@ function setSuddenQuestion(){
   leftHint.style.display = "block";
   rightHint.style.display = "block";
 
-  leftHint.textContent = formatViews(currentLeft.views);
-  rightHint.textContent = formatViews(currentRight.views);
+leftHint.textContent =
+  `조회수 : ${formatViews(currentLeft.views)}`;
+
+rightHint.textContent =
+  `조회수 : ${formatViews(currentRight.views)}`;
 
   questionStartTime = Date.now();
   updateGameHud();
