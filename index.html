@@ -1187,6 +1187,100 @@ overflow-wrap:anywhere;
   font-weight:900;
   z-index:5;
 }  
+
+#gameCountdownOverlay{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:50;
+
+  font-size:8rem;
+  font-weight:900;
+  color:white;
+
+  background:rgba(0,0,0,.35);
+
+  text-shadow:
+    0 0 20px #c9b7ff,
+    0 0 40px #9fffe0;
+}
+
+#suddenNotice{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:55;
+
+  font-size:5rem;
+  font-weight:900;
+  color:white;
+
+  background:rgba(0,0,0,.55);
+
+  text-shadow:
+    0 0 18px #ffdf7e,
+    0 0 36px #9fffe0;
+}
+
+#gameResultScreen{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:70;
+
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(10px);
+}
+
+.game-result-card{
+  width:520px;
+  padding:44px 38px;
+  border-radius:30px;
+
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.22);
+
+  text-align:center;
+  color:white;
+
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+}
+
+.game-result-card h2{
+  font-size:3.5rem;
+  margin:0 0 18px;
+}
+
+#gameFinalScore{
+  font-size:1.7rem;
+  font-weight:900;
+  margin-bottom:30px;
+}
+
+.game-result-buttons{
+  display:flex;
+  justify-content:center;
+  gap:16px;
+}
+
+.game-result-buttons button{
+  border:none;
+  border-radius:16px;
+  padding:16px 24px;
+
+  cursor:pointer;
+
+  font-size:1rem;
+  font-weight:900;
+
+  background:linear-gradient(135deg,#c9b7ff,#9fffe0);
+}
   
 </style>
 </head>
@@ -1313,7 +1407,9 @@ STEP 3
     
 
 </div>
+    
 </div>
+  
 </div>
 
   </div>
@@ -1357,11 +1453,12 @@ STEP 3
       </div>
 
       <div class="game-desc">
-        제한시간 90초 동안<br>
-        더 조회수가 높은 썸네일을 맞혀보세요!<br><br>
-
-        ⚡ 돌발 문제 등장 시 +3점!
-      </div>
+  전체 게임 제한시간은 90초입니다.<br>
+  일반 문제는 6초 안에 조회수가 높을 것 같은 썸네일을 맞혀주세요.<br>
+  중간에 돌발 문제가 나올 수가 있습니다.<br>
+  돌발 문제는 8초 안에 더 먼저/늦게 업로드된 영상을 맞히면 +3점!<br>
+  돌발 문제를 3초 안에 정답을 맞히면 추가 +1점!
+</div>
 
       <input
         type="text"
@@ -1405,9 +1502,29 @@ STEP 3
   </div>
 
   <div class="game-score-box">
-    <span id="gameScore">⭐ 0점</span>
-    <span id="gameCombo">🔥 0 COMBO</span>
+  <span id="gameScore">⭐ 0점</span>
+  <span id="gameCombo">🔥 0 COMBO</span>
+</div>
+
+<div id="gameCountdownOverlay">
+  3
+</div>
+
+<div id="suddenNotice">
+  ⚡ 돌발 문제!
+</div>
+
+<div id="gameResultScreen">
+  <div class="game-result-card">
+    <h2>GAME OVER</h2>
+    <p id="gameFinalScore">최종 점수: 0점</p>
+
+    <div class="game-result-buttons">
+      <button id="rankBtn">랭킹 보기</button>
+      <button id="retryGameBtn">다시하기</button>
+    </div>
   </div>
+</div>
 
 </div>
 
@@ -1645,15 +1762,27 @@ const gameQuestionText = document.getElementById("gameQuestionText");
 const gameScoreEl = document.getElementById("gameScore");
 const gameComboEl = document.getElementById("gameCombo");
 
+const gameCountdownOverlay = document.getElementById("gameCountdownOverlay");
+const suddenNotice = document.getElementById("suddenNotice");
+const gameResultScreen = document.getElementById("gameResultScreen");
+const gameFinalScore = document.getElementById("gameFinalScore");
+const rankBtn = document.getElementById("rankBtn");
+const retryGameBtn = document.getElementById("retryGameBtn");
+
 let gameScore = 0;
 let gameCombo = 0;
 let gameTotalTime = 90;
-let gameQuestionTime = 8;
+let gameQuestionTime = 6;
 
 let currentLeft = null;
 let currentRight = null;
+let currentQuestionType = "views";
+let questionStartTime = 0;
+
 let gameTimer = null;
 let questionTimer = null;
+let isGameRunning = false;
+let isQuestionPaused = false;
 
 const suddenNumbers = [2,3,4,5,7,8,13,17,23,31];
 
@@ -1691,17 +1820,39 @@ const thumbnailData = [
   { id:31, views:76250, date:"2021-10-02" },
   { id:32, views:34494, date:"2022-01-22" },
   { id:33, views:99626, date:"2021-10-02" },
-  { id:34, views:16711, date:"2023-04-12" },
+  { id:34, views:16711, date:"2023-04-12" }
 ];
-
-let currentQuestionType = "views";
-let questionStartTime = 0;
 
 function formatViews(num){
   if(num >= 10000){
     return (num / 10000).toFixed(1).replace(".0","") + "만회";
   }
+
   return num.toLocaleString() + "회";
+}
+
+function resetGameState(){
+  clearInterval(gameTimer);
+  clearInterval(questionTimer);
+
+  gameScore = 0;
+  gameCombo = 0;
+  gameTotalTime = 90;
+  gameQuestionTime = 6;
+
+  currentLeft = null;
+  currentRight = null;
+  currentQuestionType = "views";
+  questionStartTime = 0;
+
+  isGameRunning = false;
+  isQuestionPaused = false;
+
+  gameResultScreen.style.display = "none";
+  suddenNotice.style.display = "none";
+  gameCountdownOverlay.style.display = "none";
+
+  updateGameHud();
 }
 
 function startGame(){
@@ -1712,19 +1863,47 @@ function startGame(){
     return;
   }
 
-  gameScore = 0;
-  gameCombo = 0;
-  gameTotalTime = 90;
+  resetGameState();
 
   gameStartScreen.style.display = "none";
   gamePlayScreen.style.display = "block";
 
-  updateGameHud();
-  nextQuestion();
+  startCountdown();
+}
 
+function startCountdown(){
+  let count = 3;
+
+  gameCountdownOverlay.style.display = "flex";
+  gameCountdownOverlay.textContent = count;
+
+  const countdownTimer = setInterval(()=>{
+    count--;
+
+    if(count > 0){
+      gameCountdownOverlay.textContent = count;
+      return;
+    }
+
+    clearInterval(countdownTimer);
+    gameCountdownOverlay.textContent = "START!";
+
+    setTimeout(()=>{
+      gameCountdownOverlay.style.display = "none";
+      isGameRunning = true;
+      startTotalTimer();
+      nextQuestion();
+    },600);
+
+  },1000);
+}
+
+function startTotalTimer(){
   clearInterval(gameTimer);
 
   gameTimer = setInterval(()=>{
+    if(!isGameRunning || isQuestionPaused) return;
+
     gameTotalTime--;
     updateGameHud();
 
@@ -1734,13 +1913,33 @@ function startGame(){
   },1000);
 }
 
+function startQuestionTimer(){
+  clearInterval(questionTimer);
+
+  gameQuestionTimeEl.textContent = `⏱ ${gameQuestionTime}초`;
+
+  questionTimer = setInterval(()=>{
+    if(!isGameRunning || isQuestionPaused) return;
+
+    gameQuestionTime--;
+    gameQuestionTimeEl.textContent = `⏱ ${gameQuestionTime}초`;
+
+    if(gameQuestionTime <= 0){
+      wrongAnswer();
+    }
+  },1000);
+}
+
 function updateGameHud(){
   gameTotalTimeEl.textContent = `⏰ ${gameTotalTime}초`;
+  gameQuestionTimeEl.textContent = `⏱ ${gameQuestionTime}초`;
   gameScoreEl.textContent = `⭐ ${gameScore}점`;
   gameComboEl.textContent = `🔥 ${gameCombo} COMBO`;
 }
 
 function nextQuestion(){
+  if(!isGameRunning) return;
+
   clearInterval(questionTimer);
 
   let leftIndex = Math.floor(Math.random() * thumbnailData.length);
@@ -1761,43 +1960,59 @@ function nextQuestion(){
     suddenNumbers.includes(currentRight.id);
 
   if(isSudden){
-    currentQuestionType = Math.random() < 0.5 ? "older" : "newer";
-    gameQuestionTime = 8;
-
-    if(currentQuestionType === "older"){
-      gameQuestionText.innerHTML =
-        `⚡ 더 먼저 업로드된 영상은?<br>
-        <small>왼쪽 ${formatViews(currentLeft.views)} / 오른쪽 ${formatViews(currentRight.views)}</small>`;
-    }else{
-      gameQuestionText.innerHTML =
-        `⚡ 더 늦게 업로드된 영상은?<br>
-        <small>왼쪽 ${formatViews(currentLeft.views)} / 오른쪽 ${formatViews(currentRight.views)}</small>`;
-    }
-
+    showSuddenNotice();
   }else{
-    currentQuestionType = "views";
-    gameQuestionTime = 6;
-
-    gameQuestionText.innerHTML =
-      `조회수가 더 높은 썸네일은?<br>
-      <small>왼쪽 ${currentLeft.date} / 오른쪽 ${currentRight.date}</small>`;
+    setNormalQuestion();
+    startQuestionTimer();
   }
+}
 
-  questionStartTime = Date.now();
+function showSuddenNotice(){
+  isQuestionPaused = true;
+  suddenNotice.style.display = "flex";
+  suddenNotice.textContent = "⚡ 돌발 문제!";
 
-  gameQuestionTimeEl.textContent = `⏱ ${gameQuestionTime}초`;
-
-  questionTimer = setInterval(()=>{
-    gameQuestionTime--;
-    gameQuestionTimeEl.textContent = `⏱ ${gameQuestionTime}초`;
-
-    if(gameQuestionTime <= 0){
-      wrongAnswer();
-    }
+  setTimeout(()=>{
+    suddenNotice.style.display = "none";
+    isQuestionPaused = false;
+    setSuddenQuestion();
+    startQuestionTimer();
   },1000);
 }
 
+function setNormalQuestion(){
+  currentQuestionType = "views";
+  gameQuestionTime = 6;
+
+  gameQuestionText.innerHTML =
+    `조회수가 더 높은 썸네일은?<br>
+    <small>왼쪽 ${currentLeft.date} / 오른쪽 ${currentRight.date}</small>`;
+
+  questionStartTime = Date.now();
+  updateGameHud();
+}
+
+function setSuddenQuestion(){
+  currentQuestionType = Math.random() < 0.5 ? "older" : "newer";
+  gameQuestionTime = 8;
+
+  if(currentQuestionType === "older"){
+    gameQuestionText.innerHTML =
+      `⚡ 더 먼저 업로드된 영상은?<br>
+      <small>왼쪽 ${formatViews(currentLeft.views)} / 오른쪽 ${formatViews(currentRight.views)}</small>`;
+  }else{
+    gameQuestionText.innerHTML =
+      `⚡ 더 늦게 업로드된 영상은?<br>
+      <small>왼쪽 ${formatViews(currentLeft.views)} / 오른쪽 ${formatViews(currentRight.views)}</small>`;
+  }
+
+  questionStartTime = Date.now();
+  updateGameHud();
+}
+
 function chooseAnswer(side){
+  if(!isGameRunning || isQuestionPaused || !currentLeft || !currentRight) return;
+
   clearInterval(questionTimer);
 
   let correctSide = "left";
@@ -1843,21 +2058,44 @@ function chooseAnswer(side){
 
 function wrongAnswer(){
   clearInterval(questionTimer);
+
+  if(!isGameRunning) return;
+
   gameCombo = 0;
   updateGameHud();
   nextQuestion();
 }
 
 function endGame(){
+  isGameRunning = false;
+  isQuestionPaused = false;
+
   clearInterval(gameTimer);
   clearInterval(questionTimer);
 
-  alert(`게임 종료!\n최종 점수: ${gameScore}점`);
+  gameFinalScore.textContent = `최종 점수: ${gameScore}점`;
+
+  gameResultScreen.style.display = "flex";
+}
+
+function retryGame(){
+  resetGameState();
+
+  gamePlayScreen.style.display = "none";
+  gameStartScreen.style.display = "flex";
+
+  setupGameStartBackground();
 }
 
 gameStartBtn.addEventListener("click", startGame);
 leftChoice.addEventListener("click",()=>chooseAnswer("left"));
 rightChoice.addEventListener("click",()=>chooseAnswer("right"));
+
+retryGameBtn.addEventListener("click", retryGame);
+
+rankBtn.addEventListener("click",()=>{
+  alert("랭킹 기능은 Firebase 연결 후 추가할 예정입니다.");
+});
   
 </script>
 
