@@ -1924,6 +1924,8 @@ let isGameRunning = false;
 let isQuestionPaused = false;
 let suddenCount = 0;
 let lastQuestionWasSudden = false;
+let usedPairs = new Set();
+let recentIds = [];
   
 const suddenNumbers = [2,3,4,5,7,8,13,17,23,31];
 
@@ -1990,6 +1992,8 @@ function resetGameState(){
   isQuestionPaused = false;
   suddenCount = 0;
   lastQuestionWasSudden = false;
+  usedPairs.clear();
+  recentIds = [];
 
   gameResultScreen.style.display = "none";
   suddenNotice.style.display = "none";
@@ -2133,24 +2137,65 @@ function nextQuestion(){
     lastQuestionWasSudden = true;
   }else{
     let normalData = thumbnailData.filter(
-      item => !suddenNumbers.includes(item.id)
-    );
+  item =>
+    !suddenNumbers.includes(item.id) &&
+    !recentIds.includes(item.id)
+);
 
-    let leftIndex = Math.floor(Math.random() * normalData.length);
-    let rightIndex = Math.floor(Math.random() * normalData.length);
+if(normalData.length < 2){
+  recentIds = [];
+  
+  normalData = thumbnailData.filter(
+    item => !suddenNumbers.includes(item.id)
+  );
+}
 
-    while(leftIndex === rightIndex){
-      rightIndex = Math.floor(Math.random() * normalData.length);
-    }
+let validPairFound = false;
 
-    currentLeft = normalData[leftIndex];
-    currentRight = normalData[rightIndex];
+while(!validPairFound){
 
-    lastQuestionWasSudden = false;
+  let leftIndex =
+    Math.floor(Math.random() * normalData.length);
+
+  let rightIndex =
+    Math.floor(Math.random() * normalData.length);
+
+  while(leftIndex === rightIndex){
+    rightIndex =
+      Math.floor(Math.random() * normalData.length);
   }
 
+  const leftItem = normalData[leftIndex];
+  const rightItem = normalData[rightIndex];
+
+  const pairKey =
+    [leftItem.id, rightItem.id]
+    .sort((a,b)=>a-b)
+    .join("-");
+
+  if(!usedPairs.has(pairKey)){
+
+    usedPairs.add(pairKey);
+
+    currentLeft = leftItem;
+    currentRight = rightItem;
+
+    validPairFound = true;
+  }
+}
+
+  lastQuestionWasSudden = false;
+    
   leftThumb.src = getThumbSrc(currentLeft.id);
   rightThumb.src = getThumbSrc(currentRight.id);
+
+  recentIds.push(currentLeft.id);
+  recentIds.push(currentRight.id);
+
+  if(recentIds.length > 4){
+  recentIds.splice(0,2);
+}
+  
 
   if(lastQuestionWasSudden){
     showSuddenNotice();
