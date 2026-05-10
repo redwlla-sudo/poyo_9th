@@ -1800,14 +1800,18 @@ function showOverlay(id){
   .getElementById(id)
   .classList.add("show");
 
-  if(id === "game"){
-    setupGameStartBackground();
-  }
+ if(id === "game"){
+  resetGameToStart();
+}
 }
 
 function hideOverlays(){
   document.body.classList.remove("hide-dots");
   document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
+
+  resetGameState();
+  gamePlayScreen.style.display = "none";
+  gameStartScreen.style.display = "flex";
 }
 
 document.querySelectorAll(".top-btn").forEach(btn=>{
@@ -1829,6 +1833,9 @@ document.querySelectorAll(".top-btn").forEach(btn=>{
 /* 👇 여기 추가 */
 const gameThumbCount = 34;
 
+function getThumbSrc(id){
+  return `images/thumbnails/thumbnail${id}.jpg`;
+}
 function randomThumbnail(){
   return Math.floor(Math.random() * gameThumbCount) + 1;
 }
@@ -1844,11 +1851,11 @@ function setupGameStartBackground(){
 
   document.querySelector(".game-bg-left")
   .style.backgroundImage =
-  `url(thumbnail${left}.jpg)`;
+  `url(${getThumbSrc(left)})`;
 
   document.querySelector(".game-bg-right")
   .style.backgroundImage =
-  `url(thumbnail${right}.jpg)`;
+  `url(${getThumbSrc(right)})`;
 }
 
 const gameStartBtn = document.getElementById("gameStartBtn");
@@ -2016,9 +2023,11 @@ if(count > 0){
 
     setTimeout(()=>{
       gameCountdownOverlay.style.display = "none";
-      isGameRunning = true;
-      startTotalTimer();
-      nextQuestion();
+     setupGameStartBackground();
+
+isGameRunning = true;
+startTotalTimer();
+nextQuestion();
     },600);
 
   },1000);
@@ -2090,10 +2099,8 @@ function nextQuestion(){
   currentLeft = thumbnailData[leftIndex];
   currentRight = thumbnailData[rightIndex];
 
- leftThumb.src =
- `images/thumbnails/thumbnail${currentLeft.id}.jpg`;
- rightThumb.src =
-  `images/thumbnails/thumbnail${currentRight.id}.jpg`;
+ leftThumb.src = getThumbSrc(currentLeft.id);
+rightThumb.src = getThumbSrc(currentRight.id);
   
   const canBeSudden =
     suddenNumbers.includes(currentLeft.id) ||
@@ -2306,6 +2313,18 @@ function retryGame(){
 
   gamePlayScreen.style.display = "none";
   gameStartScreen.style.display = "flex";
+
+  setupGameStartBackground();
+}
+
+/* 👇 여기 추가 */
+function resetGameToStart(){
+  resetGameState();
+
+  gamePlayScreen.style.display = "none";
+  gameStartScreen.style.display = "flex";
+
+  gameNickname.value = "";
 
   setupGameStartBackground();
 }
