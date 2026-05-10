@@ -2090,9 +2090,11 @@ function nextQuestion(){
   currentLeft = thumbnailData[leftIndex];
   currentRight = thumbnailData[rightIndex];
 
-  leftThumb.src = `thumbnail${currentLeft.id}.jpg`;
-  rightThumb.src = `thumbnail${currentRight.id}.jpg`;
-
+ leftThumb.src =
+ `images/thumbnails/thumbnail${currentLeft.id}.jpg`;
+ rightThumb.src =
+  `images/thumbnails/thumbnail${currentRight.id}.jpg`;
+  
   const canBeSudden =
     suddenNumbers.includes(currentLeft.id) ||
     suddenNumbers.includes(currentRight.id);
