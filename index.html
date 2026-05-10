@@ -1361,6 +1361,30 @@ overflow-wrap:anywhere;
   margin-bottom:30px;
 }
 
+.game-score-box{
+  position:absolute;
+  left:50%;
+  bottom:34px;
+  transform:translateX(-50%);
+
+  display:flex;
+  gap:28px;
+
+  padding:14px 26px;
+  border-radius:999px;
+
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(12px);
+
+  font-size:1.6rem;
+  font-weight:900;
+
+  z-index:10;
+
+  box-shadow:
+    0 0 18px rgba(159,255,224,.35);
+}
+  
 .game-result-buttons{
   display:flex;
   justify-content:center;
@@ -2089,34 +2113,48 @@ function nextQuestion(){
 
   clearInterval(questionTimer);
 
-  let leftIndex = Math.floor(Math.random() * thumbnailData.length);
-  let rightIndex = Math.floor(Math.random() * thumbnailData.length);
-
-  while(leftIndex === rightIndex){
-    rightIndex = Math.floor(Math.random() * thumbnailData.length);
-  }
-
-  currentLeft = thumbnailData[leftIndex];
-  currentRight = thumbnailData[rightIndex];
-
- leftThumb.src = getThumbSrc(currentLeft.id);
-rightThumb.src = getThumbSrc(currentRight.id);
-  
-  const canBeSudden =
-    suddenNumbers.includes(currentLeft.id) ||
-    suddenNumbers.includes(currentRight.id);
-
-  const shouldBeSudden =
-    canBeSudden &&
+  const forceSudden =
     suddenCount < 5 &&
-    !lastQuestionWasSudden;
+    !lastQuestionWasSudden &&
+    Math.random() < 0.35;
 
-  if(shouldBeSudden){
+  if(forceSudden){
+    let leftSuddenIndex = Math.floor(Math.random() * suddenNumbers.length);
+    let rightSuddenIndex = Math.floor(Math.random() * suddenNumbers.length);
+
+    while(leftSuddenIndex === rightSuddenIndex){
+      rightSuddenIndex = Math.floor(Math.random() * suddenNumbers.length);
+    }
+
+    currentLeft = thumbnailData.find(item => item.id === suddenNumbers[leftSuddenIndex]);
+    currentRight = thumbnailData.find(item => item.id === suddenNumbers[rightSuddenIndex]);
+
     suddenCount++;
     lastQuestionWasSudden = true;
+  }else{
+    let normalData = thumbnailData.filter(
+      item => !suddenNumbers.includes(item.id)
+    );
+
+    let leftIndex = Math.floor(Math.random() * normalData.length);
+    let rightIndex = Math.floor(Math.random() * normalData.length);
+
+    while(leftIndex === rightIndex){
+      rightIndex = Math.floor(Math.random() * normalData.length);
+    }
+
+    currentLeft = normalData[leftIndex];
+    currentRight = normalData[rightIndex];
+
+    lastQuestionWasSudden = false;
+  }
+
+  leftThumb.src = getThumbSrc(currentLeft.id);
+  rightThumb.src = getThumbSrc(currentRight.id);
+
+  if(lastQuestionWasSudden){
     showSuddenNotice();
   }else{
-    lastQuestionWasSudden = false;
     setNormalQuestion();
     startQuestionTimer();
   }
