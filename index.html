@@ -1826,6 +1826,7 @@ function showOverlay(id){
   .classList.add("show");
 
  if(id === "game"){
+  setupGameStartBackground();
   resetGameToStart();
 }
 }
@@ -2381,8 +2382,6 @@ function resetGameToStart(){
   gameStartScreen.style.display = "flex";
 
   gameNickname.value = "";
-
-  setupGameStartBackground();
 }
 
 gameStartBtn.addEventListener("click", startGame);
