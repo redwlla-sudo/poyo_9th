@@ -1925,7 +1925,6 @@ let isQuestionPaused = false;
 let suddenCount = 0;
 let lastQuestionWasSudden = false;
 let usedPairs = new Set();
-let recentIds = [];
   
 const suddenNumbers = [2,3,4,5,7,8,13,17,23,31];
 
@@ -2122,80 +2121,53 @@ function nextQuestion(){
     !lastQuestionWasSudden &&
     Math.random() < 0.35;
 
-  if(forceSudden){
-    let leftSuddenIndex = Math.floor(Math.random() * suddenNumbers.length);
-    let rightSuddenIndex = Math.floor(Math.random() * suddenNumbers.length);
+  let pool = [];
 
-    while(leftSuddenIndex === rightSuddenIndex){
-      rightSuddenIndex = Math.floor(Math.random() * suddenNumbers.length);
+  if(forceSudden){
+    pool = thumbnailData.filter(item =>
+      suddenNumbers.includes(item.id)
+    );
+
+    lastQuestionWasSudden = true;
+    suddenCount++;
+  }else{
+    pool = thumbnailData.filter(item =>
+      !suddenNumbers.includes(item.id)
+    );
+
+    lastQuestionWasSudden = false;
+  }
+
+  let validPairFound = false;
+
+  while(!validPairFound){
+    let leftIndex = Math.floor(Math.random() * pool.length);
+    let rightIndex = Math.floor(Math.random() * pool.length);
+
+    while(leftIndex === rightIndex){
+      rightIndex = Math.floor(Math.random() * pool.length);
     }
 
-    currentLeft = thumbnailData.find(item => item.id === suddenNumbers[leftSuddenIndex]);
-    currentRight = thumbnailData.find(item => item.id === suddenNumbers[rightSuddenIndex]);
+    const leftItem = pool[leftIndex];
+    const rightItem = pool[rightIndex];
 
-    suddenCount++;
-    lastQuestionWasSudden = true;
-  }else{
-    let normalData = thumbnailData.filter(
-  item =>
-    !suddenNumbers.includes(item.id) &&
-    !recentIds.includes(item.id)
-);
+    const pairKey =
+      [leftItem.id, rightItem.id]
+      .sort((a,b)=>a-b)
+      .join("-");
 
-if(normalData.length < 2){
-  recentIds = [];
-  
-  normalData = thumbnailData.filter(
-    item => !suddenNumbers.includes(item.id)
-  );
-}
+    if(!usedPairs.has(pairKey)){
+      usedPairs.add(pairKey);
 
-let validPairFound = false;
+      currentLeft = leftItem;
+      currentRight = rightItem;
 
-while(!validPairFound){
-
-  let leftIndex =
-    Math.floor(Math.random() * normalData.length);
-
-  let rightIndex =
-    Math.floor(Math.random() * normalData.length);
-
-  while(leftIndex === rightIndex){
-    rightIndex =
-      Math.floor(Math.random() * normalData.length);
+      validPairFound = true;
+    }
   }
 
-  const leftItem = normalData[leftIndex];
-  const rightItem = normalData[rightIndex];
-
-  const pairKey =
-    [leftItem.id, rightItem.id]
-    .sort((a,b)=>a-b)
-    .join("-");
-
-  if(!usedPairs.has(pairKey)){
-
-    usedPairs.add(pairKey);
-
-    currentLeft = leftItem;
-    currentRight = rightItem;
-
-    validPairFound = true;
-  }
-}
-
-  lastQuestionWasSudden = false;
-    
   leftThumb.src = getThumbSrc(currentLeft.id);
   rightThumb.src = getThumbSrc(currentRight.id);
-
-  recentIds.push(currentLeft.id);
-  recentIds.push(currentRight.id);
-
-  if(recentIds.length > 4){
-  recentIds.splice(0,2);
-}
-  
 
   if(lastQuestionWasSudden){
     showSuddenNotice();
@@ -2203,8 +2175,6 @@ while(!validPairFound){
     setNormalQuestion();
     startQuestionTimer();
   }
-}
-
 }
 
 function showSuddenNotice(){
