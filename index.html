@@ -1404,6 +1404,174 @@ overflow-wrap:anywhere;
 
   background:linear-gradient(135deg,#c9b7ff,#9fffe0);
 }
+
+.memory-overlay{
+  background:#050510;
+  padding-top:0;
+  overflow-y:auto;
+  scroll-snap-type:y mandatory;
+}
+
+.memory-scene{
+  position:relative;
+  width:100%;
+  height:100vh;
+  scroll-snap-align:start;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  overflow:hidden;
+  color:white;
+}
+
+.memory-noise{
+  position:absolute;
+  inset:0;
+  background:repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,.04) 0px,
+    rgba(255,255,255,.04) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  opacity:.35;
+}
+
+.memory-date{
+  position:absolute;
+  top:38%;
+  font-size:1.8rem;
+  letter-spacing:6px;
+  color:#9fffe0;
+  text-shadow:0 0 18px rgba(159,255,224,.8);
+}
+
+.memory-title{
+  margin-top:90px;
+  font-size:3.8rem;
+  font-weight:900;
+  text-shadow:0 0 28px rgba(201,183,255,.8);
+}
+
+.memory-debut-video{
+  width:58vw;
+  max-width:900px;
+  border-radius:24px;
+  filter:brightness(.8) contrast(1.1);
+  box-shadow:0 0 40px rgba(159,255,224,.35);
+}
+
+.memory-caption{
+  position:absolute;
+  bottom:16%;
+  font-size:2rem;
+  font-weight:900;
+  color:#b8f2e6;
+}
+
+.memory-fragments{
+  background:radial-gradient(circle,#1b1430,#050510);
+}
+
+.fragment{
+  position:absolute;
+  width:260px;
+  height:146px;
+  border-radius:18px;
+  overflow:hidden;
+  opacity:.68;
+  box-shadow:0 0 24px rgba(201,183,255,.35);
+  animation:floatFragment 6s ease-in-out infinite;
+}
+
+.fragment video,
+.fragment img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.f1{left:8%; top:18%;}
+.f2{right:10%; top:22%; animation-delay:.8s;}
+.f3{left:18%; bottom:16%; animation-delay:1.4s;}
+.f4{right:18%; bottom:18%; animation-delay:2s;}
+.f5{left:50%; top:12%; animation-delay:2.6s;}
+
+@keyframes floatFragment{
+  0%,100%{transform:translateY(0) scale(1);}
+  50%{transform:translateY(-24px) scale(1.04);}
+}
+
+.memory-big-text{
+  position:relative;
+  z-index:5;
+  font-size:4rem;
+  font-weight:900;
+  text-align:center;
+  line-height:1.45;
+  text-shadow:0 0 30px rgba(159,255,224,.7);
+}
+
+.memory-emotion{
+  background:linear-gradient(135deg,#120d22,#1b1430);
+  flex-direction:column;
+  gap:34px;
+}
+
+.memory-line{
+  font-size:4.5rem;
+  font-weight:900;
+  opacity:0;
+  transform:translateY(30px);
+  animation:memoryLineIn 1s ease forwards;
+}
+
+.memory-line:nth-child(2){animation-delay:.7s;}
+.memory-line:nth-child(3){animation-delay:1.4s;}
+
+@keyframes memoryLineIn{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.memory-complete{
+  background:linear-gradient(135deg,#f6efff,#dffdf5);
+  color:#54416f;
+  flex-direction:column;
+}
+
+.memory-final-art{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:.92;
+}
+
+.memory-final-text,
+.memory-last-text{
+  position:relative;
+  z-index:3;
+  text-align:center;
+  font-weight:900;
+  text-shadow:0 0 18px rgba(255,255,255,.8);
+}
+
+.memory-final-text{
+  font-size:3.6rem;
+  line-height:1.45;
+  margin-bottom:30px;
+}
+
+.memory-last-text{
+  font-size:2.4rem;
+  line-height:1.5;
+}
   
 </style>
 </head>
@@ -1556,8 +1724,50 @@ STEP 3
 </div>
 </div>
 
-<div id="memory" class="overlay">
-<div class="overlay-content"><h1>⭐ 추억 페이지</h1></div>
+<div id="memory" class="overlay memory-overlay">
+
+  <section class="memory-scene memory-intro">
+    <div class="memory-noise"></div>
+    <div class="memory-date">2017.05.22</div>
+    <div class="memory-title">모든 시작이 있었던 날</div>
+  </section>
+
+  <section class="memory-scene memory-debut">
+    <video class="memory-debut-video" src="memory/debut.mp4" muted playsinline></video>
+    <div class="memory-caption">처음 켜졌던 작은 화면</div>
+  </section>
+
+  <section class="memory-scene memory-fragments">
+    <div class="fragment f1"><video src="memory/clip1.mp4" muted loop playsinline></video></div>
+    <div class="fragment f2"><video src="memory/clip2.mp4" muted loop playsinline></video></div>
+    <div class="fragment f3"><video src="memory/clip3.mp4" muted loop playsinline></video></div>
+    <div class="fragment f4"><img src="images/thumbnails/thumbnail1.jpg"></div>
+    <div class="fragment f5"><img src="images/thumbnails/thumbnail8.jpg"></div>
+
+    <div class="memory-big-text">
+      우리는 그렇게<br>
+      수많은 밤을 함께 보냈다
+    </div>
+  </section>
+
+  <section class="memory-scene memory-emotion">
+    <div class="memory-line">함께 웃고</div>
+    <div class="memory-line">함께 울고</div>
+    <div class="memory-line">함께 머물렀던 시간들</div>
+  </section>
+
+  <section class="memory-scene memory-complete">
+    <img class="memory-final-art" src="poyo_9th_memory.png"
+    <div class="memory-final-text">
+      우리는 그렇게<br>
+      9년이라는 시간을 함께 걸어왔다
+    </div>
+    <div class="memory-last-text">
+      그리고 이 이야기는<br>
+      지금도 계속되고 있다
+    </div>
+  </section>
+
 </div>
 
 <div id="game" class="overlay game-overlay">
@@ -1828,6 +2038,13 @@ function showOverlay(id){
  if(id === "game"){
   setupGameStartBackground();
   resetGameToStart();
+}
+  if(id === "memory"){
+  const memoryVideos = document.querySelectorAll("#memory video");
+  memoryVideos.forEach(v=>{
+    v.currentTime = 0;
+    v.play().catch(()=>{});
+  });
 }
 }
 
