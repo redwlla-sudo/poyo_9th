@@ -1593,7 +1593,8 @@ STEP 3
     <p>기억 조각들이 모여 하나의 9주년이 완성됩니다.</p>
   </div>
 </div>
-
+<div id="game" class="overlay game-overlay">
+  
   <div class="game-start-screen">
 
     <div class="game-bg-left"></div>
@@ -1862,6 +1863,8 @@ function showOverlay(id){
   resetGameToStart();
 }
 
+}
+  
 function hideOverlays(){
   document.body.classList.remove("hide-dots");
   document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
