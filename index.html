@@ -1411,149 +1411,90 @@ overflow-wrap:anywhere;
   overflow:hidden;
 }
 
-.memory-scene-01{
+.memory-fragment-stage{
   position:relative;
   width:100%;
   height:100vh;
+  overflow:hidden;
 
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
+  background:
+    radial-gradient(circle at center,
+      rgba(201,183,255,.18),
+      rgba(5,5,16,1) 68%);
+}
+
+.memory-bg-text{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+
+  z-index:1;
+
+  font-size:3.6rem;
+  font-weight:900;
+  line-height:1.45;
+  text-align:center;
 
   color:white;
-  text-align:center;
-  overflow:hidden;
 
-  background:
-    radial-gradient(circle at center,
-      rgba(159,255,224,.13),
-      rgba(5,5,16,1) 58%);
+  text-shadow:
+    0 0 18px rgba(255,255,255,.75),
+    0 0 36px rgba(159,255,224,.45);
+
+  opacity:.9;
 }
 
-.memory-noise{
+#memoryFragments{
   position:absolute;
   inset:0;
-
-  background:repeating-linear-gradient(
-    0deg,
-    rgba(255,255,255,.04) 0px,
-    rgba(255,255,255,.04) 1px,
-    transparent 1px,
-    transparent 4px
-  );
-
-  opacity:.32;
-  pointer-events:none;
+  z-index:3;
 }
 
-.memory-date{
-  position:relative;
-  z-index:2;
+.memory-piece{
+  position:absolute;
+  width:260px;
+  aspect-ratio:16/9;
 
-  font-size:1.7rem;
-  letter-spacing:7px;
-  color:#9fffe0;
-
-  margin-bottom:24px;
-
-  text-shadow:
-    0 0 12px rgba(159,255,224,.9),
-    0 0 28px rgba(159,255,224,.45);
-
-  animation:memoryFadeUp 1.2s ease forwards;
-}
-
-.memory-title{
-  position:relative;
-  z-index:2;
-
-  font-size:4.4rem;
-  font-weight:900;
-
-  text-shadow:
-    0 0 18px rgba(255,255,255,.9),
-    0 0 34px rgba(201,183,255,.7);
-
-  animation:memoryFadeUp 1.2s ease forwards;
-  animation-delay:.35s;
-  opacity:0;
-}
-
-@keyframes memoryFadeUp{
-  from{
-    opacity:0;
-    transform:translateY(24px);
-    filter:blur(8px);
-  }
-
-.memory-scene-02{
-  position:relative;
-
-  width:100%;
-  height:100vh;
-
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-
+  border-radius:18px;
   overflow:hidden;
 
-  background:
-    radial-gradient(circle at center,
-      rgba(201,183,255,.16),
-      rgba(5,5,16,1) 65%);
-}
-
-.memory-debut-wrap{
-  position:relative;
-  z-index:2;
-
-  width:62vw;
-  max-width:980px;
-
-  border-radius:28px;
-  overflow:hidden;
+  background:#000;
 
   box-shadow:
-    0 0 30px rgba(159,255,224,.18),
-    0 0 70px rgba(201,183,255,.22);
+    0 0 18px rgba(159,255,224,.25),
+    0 0 44px rgba(201,183,255,.24);
+
+  opacity:0;
+  transform:scale(.75) rotate(var(--rotate));
+
+  animation:
+    memoryPieceIn .9s ease forwards,
+    memoryFloat 4.8s ease-in-out infinite;
 }
 
-.memory-debut-video{
+.memory-piece video{
   width:100%;
+  height:100%;
+  object-fit:cover;
   display:block;
-
-  filter:
-    contrast(1.05)
-    brightness(.9)
-    saturate(.9);
 }
 
-.memory-debut-caption{
-  position:relative;
-  z-index:2;
-
-  margin-top:38px;
-
-  font-size:2rem;
-  font-weight:800;
-  letter-spacing:2px;
-
-  color:#d7fff3;
-
-  text-shadow:
-    0 0 12px rgba(159,255,224,.7);
-}
-  
+@keyframes memoryPieceIn{
   to{
-    opacity:1;
-    transform:translateY(0);
-    filter:blur(0);
+    opacity:.86;
+    transform:scale(1) rotate(var(--rotate));
   }
 }
 
+@keyframes memoryFloat{
+  0%,100%{
+    translate:0 0;
+  }
+  50%{
+    translate:0 -18px;
+  }
+}
   
 </style>
 </head>
@@ -1707,30 +1648,15 @@ STEP 3
 </div>
 
 <div id="memory" class="overlay memory-overlay">
-  <div class="memory-scene-01">
-    <div class="memory-noise"></div>
 
-    <div class="memory-date">2017.05.22</div>
-    <div class="memory-title">모든 시작이 있었던 날</div>
-  </div>
-  
-  <div class="memory-scene-02">
+  <div class="memory-fragment-stage">
 
-    <div class="memory-debut-wrap">
-
-      <video
-        class="memory-debut-video"
-        src="memory/debut.mp4"
-        muted
-        playsinline
-        controls>
-      </video>
-
+    <div class="memory-bg-text">
+      흩어진 기억들이<br>
+      하나의 9주년으로 모입니다
     </div>
 
-    <div class="memory-debut-caption">
-      처음 켜졌던 작은 화면
-    </div>
+    <div id="memoryFragments"></div>
 
   </div>
 
@@ -2006,6 +1932,72 @@ function showOverlay(id){
   resetGameToStart();
 }
 
+if(id === "memory"){
+  startMemoryFragments();
+}
+  
+}
+
+const memoryClipList = [
+  "clip/clip_2.mp4",
+  "clip/clip_3.mp4",
+  "clip/clip_1.mp4",
+  "clip/clip_6.mp4",
+  "clip/clip_7.mp4",
+  "clip/clip_8.mp4",
+  "clip/clip_9.mp4",
+  "clip/clip_10.mp4",
+  "clip/clip_11.mp4"
+];
+
+const memoryPositions = [
+  { left:"8%", top:"16%" },
+  { left:"38%", top:"10%" },
+  { left:"68%", top:"18%" },
+  { left:"14%", top:"44%" },
+  { left:"42%", top:"38%" },
+  { left:"72%", top:"46%" },
+  { left:"10%", top:"72%" },
+  { left:"39%", top:"70%" },
+  { left:"68%", top:"72%" }
+];
+
+function shuffleArray(arr){
+  return arr
+    .map(value => ({ value, sort: Math.random() }))
+    .sort((a,b)=>a.sort-b.sort)
+    .map(item=>item.value);
+}
+
+function startMemoryFragments(){
+  const container = document.getElementById("memoryFragments");
+  if(!container) return;
+
+  container.innerHTML = "";
+
+  const randomPositions = shuffleArray(memoryPositions);
+
+  memoryClipList.forEach((src, i)=>{
+    const piece = document.createElement("div");
+    piece.className = "memory-piece";
+
+    piece.style.left = randomPositions[i].left;
+    piece.style.top = randomPositions[i].top;
+    piece.style.animationDelay = `${i * 0.45}s`;
+    piece.style.setProperty("--rotate", `${Math.random() * 12 - 6}deg`);
+
+    piece.innerHTML = `
+      <video
+        src="${src}"
+        muted
+        loop
+        playsinline
+        autoplay>
+      </video>
+    `;
+
+    container.appendChild(piece);
+  });
 }
   
 function hideOverlays(){
