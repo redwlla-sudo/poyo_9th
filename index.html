@@ -1484,6 +1484,21 @@ overflow-wrap:anywhere;
   display:block;
 }
 
+.memory-piece::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:#000;
+  opacity:0;
+  transition:opacity .5s ease;
+  pointer-events:none;
+  z-index:5;
+}
+
+.memory-piece.fade-loop::after{
+  opacity:1;
+}
+
 @keyframes memoryPieceIn{
   to{
     opacity:.86;
@@ -2000,19 +2015,28 @@ piece.style.setProperty("--piece-blur", blurs[i]);
 piece.style.setProperty("--piece-z", zIndexes[i]);
 piece.style.setProperty("--rotate", `${Math.random() * 26 - 13}deg`);
 
-    piece.innerHTML = `
-      <video
-        src="${src}"
-        muted
-        loop
-        playsinline
-        autoplay>
-      </video>
-    `;
+ piece.innerHTML = `
+  <video
+    src="${src}"
+    muted
+    playsinline
+    autoplay>
+  </video>
+`;
 
-    container.appendChild(piece);
-  });
-}
+const video = piece.querySelector("video");
+
+video.addEventListener("ended",()=>{
+  piece.classList.add("fade-loop");
+
+  setTimeout(()=>{
+    video.currentTime = 0;
+    video.play().catch(()=>{});
+    piece.classList.remove("fade-loop");
+  },500);
+});
+
+container.appendChild(piece);
   
 function hideOverlays(){
   document.body.classList.remove("hide-dots");
