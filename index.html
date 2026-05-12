@@ -1616,6 +1616,27 @@ overflow-wrap:anywhere;
     translate:0 -18px;
   }
 }
+
+.memory-piece.merge-swirl{
+  animation:memoryMergeSwirl 2.6s ease-in-out forwards !important;
+}
+
+@keyframes memoryMergeSwirl{
+  0%{
+    transform:rotate(var(--rotate)) scale(1);
+  }
+
+  45%{
+    transform:
+      translate(var(--swirl-x), var(--swirl-y))
+      rotate(var(--spin))
+      scale(.92);
+  }
+
+  100%{
+    transform:rotate(0deg) scale(1);
+  }
+}
   
 </style>
 </head>
@@ -2194,13 +2215,6 @@ function startMemoryPuzzleMerge(){
     const row = Math.floor(i / 3);
 
    piece.classList.add("merge");
-
-const swirlX = (col - 1) * 90;
-const swirlY = (row - 1) * 60;
-const spin = i % 2 === 0 ? 360 : -360;
-
-piece.style.transform =
-  `translate(${swirlX}px, ${swirlY}px) rotate(${spin}deg) scale(.92)`;
 
 setTimeout(()=>{
   piece.style.left = `calc(50% - ${gridW / 2}px + ${col * tileW}px)`;
