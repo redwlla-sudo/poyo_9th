@@ -1453,7 +1453,7 @@ overflow-wrap:anywhere;
 
 .memory-piece{
   position:absolute;
-  width:var(--piece-size);
+  width:360px;
   aspect-ratio:16/9;
 
   border-radius:22px;
@@ -2105,11 +2105,11 @@ const sizes = ["440px","380px","330px","410px","350px","460px","320px","390px","
 const blurs = ["1.8px","0px","2.2px","0px","1px","2.8px","0px","1.5px","0px"];
 const zIndexes = [5,8,4,9,6,3,7,4,8];
 
-piece.style.setProperty("--piece-size", sizes[i]);
+piece.style.width = sizes[i];
 piece.style.setProperty("--piece-blur", blurs[i]);
 piece.style.setProperty("--piece-z", zIndexes[i]);
 piece.style.setProperty("--rotate", `${Math.random() * 26 - 13}deg`);
-
+    
 const puzzlePositions = [
   "0% 0%",
   "50% 0%",
@@ -2139,15 +2139,6 @@ piece.innerHTML = `
 const video = piece.querySelector("video");
 
 video.addEventListener("canplay",()=>{
-  video.currentTime = 0.05;
-  video.play().catch(()=>{});
-  piece.classList.add("ready");
-},{once:true});
-
-setTimeout(()=>{
-  picec.classList.add("ready");
-  video.play().catch(()=>{});
-} , 1200);
 
 container.appendChild(piece);
 
