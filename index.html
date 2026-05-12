@@ -1517,13 +1517,34 @@ overflow-wrap:anywhere;
     opacity 1s ease;
 }
 
+  #memoryWhiteFlash{
+  position:absolute;
+  inset:0;
+
+  background:white;
+  opacity:0;
+
+  z-index:30;
+  pointer-events:none;
+
+  transition:opacity .8s ease;
+}
+
+#memoryWhiteFlash.show{
+  opacity:1;
+}
+
+#memoryWhiteFlash.hide{
+  opacity:0;
+}
+  
 #memoryFinalArt{
   position:absolute;
   left:50%;
   top:50%;
 
-  width:780px;
-  max-width:82vw;
+  width:1180px;
+  max-width:94vw;
 
   transform:translate(-50%,-50%) scale(.96);
 
@@ -1736,6 +1757,8 @@ STEP 3
     </div>
 
     <div id="memoryFragments"></div>
+
+    <div id="memoryWhiteFlash"></div>
     
     <img id="memoryFinalArt" src="poyo_9th_memory.png" alt="포요 9주년 일러스트">
 
@@ -2058,6 +2081,17 @@ function startMemoryFragments(){
 
   container.innerHTML = "";
 
+  const finalArt = document.getElementById("memoryFinalArt");
+  const flash = document.getElementById("memoryWhiteFlash");
+
+if(finalArt){
+  finalArt.classList.remove("show");
+}
+
+if(flash){
+  flash.classList.remove("show","hide");
+}
+
   const randomPositions = shuffleArray(memoryPositions);
 
   memoryClipList.forEach((src, i)=>{
@@ -2152,14 +2186,28 @@ function startMemoryPuzzleMerge(){
   });
 
  setTimeout(()=>{
-  pieces.forEach(piece=>{
-    piece.style.display = "none";
-  });
+  const flash = document.getElementById("memoryWhiteFlash");
 
-  if(finalArt){
-    finalArt.classList.add("show");
+  if(flash){
+    flash.classList.add("show");
   }
-},2700);
+
+  setTimeout(()=>{
+    pieces.forEach(piece=>{
+      piece.style.display = "none";
+    });
+
+    if(finalArt){
+      finalArt.classList.add("show");
+    }
+
+   if(flash){
+  flash.classList.remove("show");
+  flash.classList.add("hide");
+}
+  },700);
+
+},2200);
 }
   
 function hideOverlays(){
