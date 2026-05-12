@@ -2092,17 +2092,11 @@ const puzzlePositions = [
 piece.style.setProperty("--puzzle-pos", puzzlePositions[i]);
 
 piece.innerHTML = `
-  <video
-    src="${src}"
-    muted
-    playsinline
-    autoplay>
-  </video>
-
-  <div class="memory-puzzle-tile"></div>
-`;
-
 const video = piece.querySelector("video");
+
+video.addEventListener("loadeddata",()=>{
+  video.play().catch(()=>{});
+});
 
 video.addEventListener("ended",()=>{
   piece.classList.add("fade-loop");
@@ -2147,16 +2141,15 @@ function startMemoryPuzzleMerge(){
     piece.style.transform = "rotate(0deg) scale(1)";
   });
 
-  setTimeout(()=>{
-    pieces.forEach(piece=>{
-      piece.style.opacity = "0";
-    });
+ setTimeout(()=>{
+  pieces.forEach(piece=>{
+    piece.style.display = "none";
+  });
 
-    if(finalArt){
-      finalArt.classList.add("show");
-    }
-  },2700);
-}
+  if(finalArt){
+    finalArt.classList.add("show");
+  }
+},2700);
   
 function hideOverlays(){
   document.body.classList.remove("hide-dots");
