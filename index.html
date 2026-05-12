@@ -1419,8 +1419,30 @@ overflow-wrap:anywhere;
 
   background:
     radial-gradient(circle at center,
-      rgba(201,183,255,.18),
-      rgba(5,5,16,1) 68%);
+      rgba(255,246,224,.75),
+      rgba(215,196,165,.55) 42%,
+      rgba(96,71,52,1) 100%);
+}
+
+.memory-fragment-stage::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,
+      rgba(255,255,255,.10),
+      rgba(0,0,0,.08) 50%,
+      rgba(255,255,255,.08)),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,.04) 0px,
+      rgba(255,255,255,.04) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  opacity:.45;
+  pointer-events:none;
+  z-index:0;
 }
 
 .memory-bg-text{
@@ -2171,14 +2193,23 @@ function startMemoryPuzzleMerge(){
     const col = i % 3;
     const row = Math.floor(i / 3);
 
-    piece.classList.add("merge");
+   piece.classList.add("merge");
 
-    piece.style.left = `calc(50% - ${gridW / 2}px + ${col * tileW}px)`;
-    piece.style.top = `calc(50% - ${gridH / 2}px + ${row * tileH}px)`;
-    piece.style.width = `${tileW}px`;
-    piece.style.filter = "blur(0)";
-    piece.style.zIndex = 15;
-    piece.style.transform = "rotate(0deg) scale(1)";
+const swirlX = (col - 1) * 90;
+const swirlY = (row - 1) * 60;
+const spin = i % 2 === 0 ? 360 : -360;
+
+piece.style.transform =
+  `translate(${swirlX}px, ${swirlY}px) rotate(${spin}deg) scale(.92)`;
+
+setTimeout(()=>{
+  piece.style.left = `calc(50% - ${gridW / 2}px + ${col * tileW}px)`;
+  piece.style.top = `calc(50% - ${gridH / 2}px + ${row * tileH}px)`;
+  piece.style.width = `${tileW}px`;
+  piece.style.filter = "blur(0)";
+  piece.style.zIndex = 15;
+  piece.style.transform = "translate(0,0) rotate(0deg) scale(1)";
+},220);
   });
 
  setTimeout(()=>{
@@ -2203,7 +2234,7 @@ function startMemoryPuzzleMerge(){
 }
   },700);
 
-},2200);
+},2800);
 }
   
 function hideOverlays(){
