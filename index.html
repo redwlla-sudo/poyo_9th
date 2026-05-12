@@ -2054,18 +2054,18 @@ const memoryClipList = [
 ];
 
 const memoryPositions = [
-  { left:"5%", top:"14%" },
-  { left:"36%", top:"8%" },
-  { left:"70%", top:"14%" },
+  { left:"7%", top:"12%" },
+  { left:"34%", top:"8%" },
+  { left:"63%", top:"12%" },
 
-  { left:"7%", top:"43%" },
-  { left:"75%", top:"43%" },
+  { left:"8%", top:"39%" },
+  { left:"68%", top:"39%" },
 
-  { left:"6%", top:"70%" },
-  { left:"36%", top:"68%" },
-  { left:"70%", top:"70%" },
+  { left:"9%", top:"66%" },
+  { left:"35%", top:"65%" },
+  { left:"64%", top:"65%" },
 
-  { left:"48%", top:"20%" }
+  { left:"42%", top:"23%" }
 ];
 function shuffleArray(arr){
   return arr
@@ -2091,7 +2091,7 @@ if(flash){
   flash.classList.remove("show","hide");
 }
 
-  const randomPositions = shuffleArray(memoryPositions);
+  const randomPositions = memoryPositions;
 
   memoryClipList.forEach((src, i)=>{
     const piece = document.createElement("div");
@@ -2101,7 +2101,7 @@ piece.style.left = randomPositions[i].left;
 piece.style.top = randomPositions[i].top;
 piece.style.animationDelay = `${i * 0.45}s`;
     
-const sizes = ["620px","560px","520px","600px","540px","650px","5000px","580px","540px"];
+const sizes = ["580px","500px","420px","600px","380px","360px","450px","320px","400px"];
 const blurs = ["1.8px","0px","2.2px","0px","1px","2.8px","0px","1.5px","0px"];
 const zIndexes = [5,8,4,9,6,3,7,4,8];
 
