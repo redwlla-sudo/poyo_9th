@@ -1516,16 +1516,6 @@ overflow-wrap:anywhere;
   opacity:1;
 }
 
-.memory-piece{
-  transition:
-    left 2.4s ease,
-    top 2.4s ease,
-    width 2.4s ease,
-    transform 2.4s ease,
-    filter 2.4s ease,
-    opacity 1s ease;
-}
-
   #memoryWhiteFlash{
   position:absolute;
   inset:0;
@@ -2139,7 +2129,7 @@ piece.innerHTML = `
   src="${src}"
   muted
   playsinline
-  preload="auto">
+  preload="auto"
   loop>
 </video>
 
@@ -2153,6 +2143,11 @@ video.addEventListener("canplay",()=>{
   video.play().catch(()=>{});
   piece.classList.add("ready");
 },{once:true});
+
+setTimeout(()=>{
+  picec.classList.add("ready");
+  video.play().catch(()=>{});
+} , 1200);
 
 container.appendChild(piece);
 
