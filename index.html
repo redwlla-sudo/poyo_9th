@@ -2091,7 +2091,17 @@ const puzzlePositions = [
 
 piece.style.setProperty("--puzzle-pos", puzzlePositions[i]);
 
-piece.innerHTML = `
+ece.innerHTML = `
+  <video
+    src="${src}"
+    muted
+    playsinline
+    preload="auto">
+  </video>
+
+  <div class="memory-puzzle-tile"></div>
+`;
+
 const video = piece.querySelector("video");
 
 video.addEventListener("loadeddata",()=>{
@@ -2150,6 +2160,7 @@ function startMemoryPuzzleMerge(){
     finalArt.classList.add("show");
   }
 },2700);
+}
   
 function hideOverlays(){
   document.body.classList.remove("hide-dots");
