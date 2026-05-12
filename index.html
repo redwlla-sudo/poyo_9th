@@ -1617,25 +1617,6 @@ overflow-wrap:anywhere;
   }
 }
 
-.memory-piece.merge-swirl video,
-.memory-piece.merge-swirl .memory-puzzle-tile{
-  animation:pieceInnerSpin 2.6s ease-in-out forwards;
-}
-
-@keyframes pieceInnerSpin{
-  0%{
-    transform:rotate(0deg) scale(1);
-  }
-
-  45%{
-    transform:rotate(var(--spin)) scale(.88);
-  }
-
-  100%{
-    transform:rotate(0deg) scale(1);
-  }
-}
-  
 </style>
 </head>
 
@@ -2212,19 +2193,14 @@ function startMemoryPuzzleMerge(){
     const col = i % 3;
     const row = Math.floor(i / 3);
 
-  const spin = i % 2 === 0 ? "720deg" :
-  "-720dge";
-   piece.style.setProperty("--spin", spin);
-    
- piece.classList.add("merge", "merge-swirl");
-    
-setTimeout(()=>{
-  piece.style.left = `calc(50% - ${gridW / 2}px + ${col * tileW}px)`;
-  piece.style.top = `calc(50% - ${gridH / 2}px + ${row * tileH}px)`;
-  piece.style.width = `${tileW}px`;
-  piece.style.filter = "blur(0)";
-  piece.style.zIndex = 15;
-},220);
+ piece.classList.add("merge");
+
+piece.style.left = `calc(50% - ${gridW / 2}px + ${col * tileW}px)`;
+piece.style.top = `calc(50% - ${gridH / 2}px + ${row * tileH}px)`;
+piece.style.width = `${tileW}px`;
+piece.style.filter = "blur(0)";
+piece.style.zIndex = 15;
+piece.style.transform = "rotate(0deg) scale(1)";
   });
 
  setTimeout(()=>{
