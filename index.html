@@ -1472,9 +1472,13 @@ overflow-wrap:anywhere;
     scale(.75)
     rotate(var(--rotate));
 
-  animation:
-    memoryPieceIn .9s ease forwards,
-    memoryFloat 4.8s ease-in-out infinite;
+  transition:
+    opacity .6s ease,
+    left 2.4s ease,
+    top 2.4s ease,
+    width 2.4s ease,
+    transform 2.4s ease,
+    filter 2.4s ease;
 }
 
 .memory-piece video{
@@ -1485,6 +1489,11 @@ overflow-wrap:anywhere;
   transition:opacity 1s ease;
 }
 
+  .memory-piece.ready{
+    opacity:.86;
+    animation:memoryFloat 4.8s ease-in-out infinite;
+}    
+  
 .memory-puzzle-tile{
   position:absolute;
   inset:0;
@@ -2127,30 +2136,23 @@ piece.style.setProperty("--puzzle-pos", puzzlePositions[i]);
 
 piece.innerHTML = `
   <video
-    src="${src}"
-    muted
-    playsinline
-    preload="auto">
-  </video>
+  src="${src}"
+  muted
+  playsinline
+  preload="auto">
+  loop>
+</video>
 
   <div class="memory-puzzle-tile"></div>
 `;
 
 const video = piece.querySelector("video");
 
-video.addEventListener("loadeddata",()=>{
+video.addEventListener("canplay",()=>{
+  video.currentTime = 0.05;
   video.play().catch(()=>{});
-});
-
-video.addEventListener("ended",()=>{
-  piece.classList.add("fade-loop");
-
-  setTimeout(()=>{
-    video.currentTime = 0;
-    video.play().catch(()=>{});
-    piece.classList.remove("fade-loop");
-  },500);
-});
+  piece.classList.add("ready");
+},{once:true});
 
 container.appendChild(piece);
 
