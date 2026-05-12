@@ -1482,6 +1482,66 @@ overflow-wrap:anywhere;
   height:100%;
   object-fit:cover;
   display:block;
+  transition:opacity 1s ease;
+}
+
+.memory-puzzle-tile{
+  position:absolute;
+  inset:0;
+
+  background-image:url("poyo_9th_memory.png");
+  background-size:300% 300%;
+  background-position:var(--puzzle-pos);
+
+  opacity:0;
+  transition:opacity 1s ease;
+
+  z-index:2;
+}
+
+.memory-piece.merge video{
+  opacity:0;
+}
+
+.memory-piece.merge .memory-puzzle-tile{
+  opacity:1;
+}
+
+.memory-piece{
+  transition:
+    left 2.4s ease,
+    top 2.4s ease,
+    width 2.4s ease,
+    transform 2.4s ease,
+    filter 2.4s ease,
+    opacity 1s ease;
+}
+
+#memoryFinalArt{
+  position:absolute;
+  left:50%;
+  top:50%;
+
+  width:780px;
+  max-width:82vw;
+
+  transform:translate(-50%,-50%) scale(.96);
+
+  opacity:0;
+  z-index:20;
+
+  border-radius:26px;
+
+  box-shadow:
+    0 0 40px rgba(255,255,255,.55),
+    0 0 90px rgba(201,183,255,.55);
+
+  transition:opacity 1.4s ease, transform 1.4s ease;
+}
+
+#memoryFinalArt.show{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1);
 }
 
 .memory-piece::after{
@@ -1676,6 +1736,8 @@ STEP 3
     </div>
 
     <div id="memoryFragments"></div>
+    
+    <img id="memoryFinalArt" src="poyo_9th_memory.png" alt="포요 9주년 일러스트">
 
   </div>
 
@@ -2015,13 +2077,29 @@ piece.style.setProperty("--piece-blur", blurs[i]);
 piece.style.setProperty("--piece-z", zIndexes[i]);
 piece.style.setProperty("--rotate", `${Math.random() * 26 - 13}deg`);
 
- piece.innerHTML = `
+const puzzlePositions = [
+  "0% 0%",
+  "50% 0%",
+  "100% 0%",
+  "0% 50%",
+  "50% 50%",
+  "100% 50%",
+  "0% 100%",
+  "50% 100%",
+  "100% 100%"
+];
+
+piece.style.setProperty("--puzzle-pos", puzzlePositions[i]);
+
+piece.innerHTML = `
   <video
     src="${src}"
     muted
     playsinline
     autoplay>
   </video>
+
+  <div class="memory-puzzle-tile"></div>
 `;
 
 const video = piece.querySelector("video");
@@ -2039,8 +2117,47 @@ video.addEventListener("ended",()=>{
 container.appendChild(piece);
 
   });
+
+  setTimeout(()=>{
+    startMemoryPuzzleMerge();
+  },12000);
 }
     
+function startMemoryPuzzleMerge(){
+  const pieces = document.querySelectorAll(".memory-piece");
+  const finalArt = document.getElementById("memoryFinalArt");
+
+  const tileW = 260;
+  const tileH = 146.25;
+
+  const gridW = tileW * 3;
+  const gridH = tileH * 3;
+
+  pieces.forEach((piece, i)=>{
+    const col = i % 3;
+    const row = Math.floor(i / 3);
+
+    piece.classList.add("merge");
+
+    piece.style.left = `calc(50% - ${gridW / 2}px + ${col * tileW}px)`;
+    piece.style.top = `calc(50% - ${gridH / 2}px + ${row * tileH}px)`;
+    piece.style.width = `${tileW}px`;
+    piece.style.filter = "blur(0)";
+    piece.style.zIndex = 15;
+    piece.style.transform = "rotate(0deg) scale(1)";
+  });
+
+  setTimeout(()=>{
+    pieces.forEach(piece=>{
+      piece.style.opacity = "0";
+    });
+
+    if(finalArt){
+      finalArt.classList.add("show");
+    }
+  },2700);
+}
+  
 function hideOverlays(){
   document.body.classList.remove("hide-dots");
   document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
