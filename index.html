@@ -2139,8 +2139,16 @@ piece.innerHTML = `
 const video = piece.querySelector("video");
 
 video.addEventListener("canplay",()=>{
+  video.currentTime = 0.05;
+  video.play().catch(()=>{});
+},{once:true});
 
 container.appendChild(piece);
+
+setTimeout(()=>{
+  video.play().catch(()=>{});
+  piece.classList.add("ready");
+}, i * 450);
 
   });
 
