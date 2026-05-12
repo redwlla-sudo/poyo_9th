@@ -1617,20 +1617,18 @@ overflow-wrap:anywhere;
   }
 }
 
-.memory-piece.merge-swirl{
-  animation:memoryMergeSwirl 2.6s ease-in-out forwards !important;
+.memory-piece.merge-swirl video,
+.memory-piece.merge-swirl .memory-puzzle-tile{
+  animation:pieceInnerSpin 2.6s ease-in-out forwards;
 }
 
-@keyframes memoryMergeSwirl{
+@keyframes pieceInnerSpin{
   0%{
-    transform:rotate(var(--rotate)) scale(1);
+    transform:rotate(0deg) scale(1);
   }
 
   45%{
-    transform:
-      translate(var(--swirl-x), var(--swirl-y))
-      rotate(var(--spin))
-      scale(.92);
+    transform:rotate(var(--spin)) scale(.88);
   }
 
   100%{
@@ -2214,15 +2212,18 @@ function startMemoryPuzzleMerge(){
     const col = i % 3;
     const row = Math.floor(i / 3);
 
-   piece.classList.add("merge");
-
+  const spin = i % 2 === 0 ? "720deg" ;
+  "-720dge";
+   piece.style.setProperty("--spin", spin);
+    
+ piece.classList.add("merge", "merge-swirl");
+    
 setTimeout(()=>{
   piece.style.left = `calc(50% - ${gridW / 2}px + ${col * tileW}px)`;
   piece.style.top = `calc(50% - ${gridH / 2}px + ${row * tileH}px)`;
   piece.style.width = `${tileW}px`;
   piece.style.filter = "blur(0)";
   piece.style.zIndex = 15;
-  piece.style.transform = "translate(0,0) rotate(0deg) scale(1)";
 },220);
   });
 
