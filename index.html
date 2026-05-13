@@ -1861,7 +1861,8 @@ STEP 3
 
     <div class="memory-bg-text">
       함께한 3,285일,<br>
-      그 모든 순간이 모여 오늘의 이야기를 완성했습니다.
+      그 모든 순간이 모여,<br>
+      오늘의 이야기를 완성했습니다.
     </div>
 
     <div id="memoryFragments"></div>
@@ -2259,6 +2260,20 @@ const fixedPositions = [
     piece.style.top = pos.top;
     
     piece.style.width = sizes[i];
+    
+    /* clip_9.mp4 = 9번 클립 */
+if(i === 5){
+  piece.style.width = "330px";
+  piece.style.left = "38%";
+  piece.style.top = "63%";
+}
+
+/* clip_6.mp4 = 6번 클립 */
+if(i === 6){
+  piece.style.width = "370px";
+  piece.style.left = "73%";
+  piece.style.top = "48%";
+}
 
 if(i === 5){
   piece.style.width = "340px";
@@ -2309,14 +2324,25 @@ if(i === 3){
 
     const video = piece.querySelector("video");
 
-    video.addEventListener("loadeddata",()=>{
-      video.currentTime = 0.05;
-      video.play().catch(()=>{});
+ const showPiece = ()=>{
+  video.currentTime = 0.05;
+  video.play().catch(()=>{});
 
-      setTimeout(()=>{
-        piece.classList.add("ready");
-      }, i * 250);
-    },{once:true});
+  setTimeout(()=>{
+    piece.classList.add("ready");
+  }, i * 180);
+};
+
+video.addEventListener("canplay", showPiece, {once:true});
+
+video.load();
+
+setTimeout(()=>{
+  if(!piece.classList.contains("ready")){
+    piece.classList.add("ready");
+    video.play().catch(()=>{});
+  }
+}, 900 + i * 180);
 
     container.appendChild(piece);
   });
