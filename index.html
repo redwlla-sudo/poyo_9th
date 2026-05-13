@@ -1490,10 +1490,10 @@ overflow-wrap:anywhere;
   filter:blur(var(--piece-blur));
   z-index:var(--piece-z);
 
-  transform:
-    scale(.75)
+ transform:
+    scale(1)
     rotate(var(--rotate));
-
+  
   transition:
     opacity .6s ease,
     left 2.4s ease,
@@ -2113,18 +2113,18 @@ function startMemoryFragments(){
     flash.classList.remove("show","hide");
   }
 
-  const sizes = [
+ const sizes = [
+  "470px",
+  "450px",
+  "460px",
+
+  "440px",
   "430px",
-  "410px",
-  "420px",
+  "450px",
 
-  "400px",
-  "390px",
-  "410px",
-
-  "420px",
-  "400px",
-  "430px"
+  "460px",
+  "440px",
+  "470px"
 ];
 
   const blurs = ["1.4px","0px","1.8px","0px","1px","2px","0px","1.2px","0px"];
@@ -2132,17 +2132,17 @@ function startMemoryFragments(){
 
 const fixedPositions = [
   { left:"6%",  top:"10%" },
-  { left:"23%", top:"8%"  },
-  { left:"54%", top:"9%"  },
-  { left:"77%", top:"14%" },
+  { left:"36%", top:"8%"  },
+  { left:"66%", top:"11%" },
 
-  { left:"7%",  top:"38%" },
-  { left:"20%", top:"48%" },
-  { left:"73%", top:"53%" },
+  { left:"8%",  top:"39%" },
+  { left:"68%", top:"41%" },
 
-  { left:"5%",  top:"70%" },
-  { left:"26%", top:"74%" },
-  { left:"79%", top:"76%" }
+  { left:"6%",  top:"67%" },
+  { left:"36%", top:"65%" },
+  { left:"66%", top:"68%" },
+
+  { left:"37%", top:"24%" }
 ];
 
   const puzzlePositions = [
@@ -2156,8 +2156,6 @@ const fixedPositions = [
     "50% 100%",
     "100% 100%"
   ];
-
-  const shuffledZones = shuffleArray([...zones]);
 
   memoryClipList.forEach((src, i)=>{
     const piece = document.createElement("div");
@@ -2173,37 +2171,6 @@ const fixedPositions = [
 
     piece.style.left = pos.left;
     piece.style.top = pos.top;
-
-    /* 중앙 문구 절대 보호 영역 */
-const textSafe = {
-  left: screenW * 0.32,
-  right: screenW * 0.68,
-  top: screenH * 0.34,
-  bottom: screenH * 0.66
-};
-
-const pieceRect = {
-  left: leftPx,
-  right: leftPx + pieceW,
-  top: topPx,
-  bottom: topPx + pieceH
-};
-
-const hitText =
-  pieceRect.left < textSafe.right &&
-  pieceRect.right > textSafe.left &&
-  pieceRect.top < textSafe.bottom &&
-  pieceRect.bottom > textSafe.top;
-
-if(hitText){
-  if(leftPx < screenW / 2){
-    leftPx = textSafe.left - pieceW - 80;
-  }else{
-    leftPx = textSafe.right + 80;
-  }
-
-  leftPx = Math.max(24, Math.min(leftPx, screenW - pieceW - 24));
-}
     
     piece.style.width = sizes[i];
     piece.style.animationDelay = `${i * 0.45}s`;
