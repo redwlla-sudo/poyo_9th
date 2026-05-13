@@ -2259,6 +2259,13 @@ const fixedPositions = [
     piece.style.top = pos.top;
     
     piece.style.width = sizes[i];
+
+if(i === 5){
+  piece.style.width = "330px";
+  piece.style.left = "27%";
+  piece.style.top = "42%";
+}
+
     piece.style.animationDelay = `${i * 0.45}s`;
 
     piece.style.setProperty("--piece-blur", blurs[i]);
