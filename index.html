@@ -2170,19 +2170,6 @@ piece.style.left = `${leftPx}px`;
 piece.style.top = `${topPx}px`;
 piece.style.animationDelay = `${i * 0.45}s`;
 
-const pieceW = parseInt(sizes[i]);
-const pieceH = pieceW * 9 / 16;
-
-const screenW = window.innerWidth;
-const screenH = window.innerHeight;
-
-let leftPx = pos.x;
-let topPx = pos.y;
-
-/* 화면 밖으로 절대 안 나가게 */
-leftPx = Math.max(24, Math.min(leftPx, screenW - pieceW - 24));
-topPx = Math.max(24, Math.min(topPx, screenH - pieceH - 24));
-
 const centerSafe = {
   left: screenW * 0.33,
   right: screenW * 0.67,
