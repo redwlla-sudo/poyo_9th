@@ -2114,27 +2114,35 @@ function startMemoryFragments(){
   }
 
   const sizes = [
-    "500px", "390px", "330px",
-    "470px", "340px",
-    "410px", "320px", "380px", "300px"
-  ];
+  "360px",
+  "345px",
+  "355px",
+
+  "370px",
+  "350px",
+
+  "365px",
+  "340px",
+  "360px",
+  "350px"
+];
 
   const blurs = ["1.4px","0px","1.8px","0px","1px","2px","0px","1.2px","0px"];
   const zIndexes = [5,8,4,9,6,3,7,4,8];
 
-  const zones = [
-    { x1: 60,  y1: 70,  x2: 270, y2: 170 },
-    { x1: 70,  y1: 330, x2: 280, y2: 450 },
-    { x1: 70,  y1: 620, x2: 300, y2: 730 },
+const zones = [
+  { x1: 80,  y1: 80,  x2: 260, y2: 160 },
+  { x1: 80,  y1: 330, x2: 260, y2: 430 },
+  { x1: 80,  y1: 610, x2: 260, y2: 710 },
 
-    { x1: 520, y1: 60,  x2: 740, y2: 170 },
-    { x1: 520, y1: 620, x2: 760, y2: 730 },
+  { x1: 420, y1: 70,  x2: 560, y2: 150 },
+  { x1: 420, y1: 650, x2: 560, y2: 730 },
 
-    { x1: 1040, y1: 70,  x2: 1280, y2: 180 },
-    { x1: 1060, y1: 300, x2: 1320, y2: 420 },
-    { x1: 1010, y1: 520, x2: 1300, y2: 640 },
-    { x1: 1120, y1: 650, x2: 1360, y2: 750 }
-  ];
+  { x1: 1060, y1: 80,  x2: 1260, y2: 160 },
+  { x1: 1120, y1: 300, x2: 1320, y2: 400 },
+  { x1: 1060, y1: 520, x2: 1260, y2: 620 },
+  { x1: 1120, y1: 660, x2: 1320, y2: 730 }
+];
 
   const puzzlePositions = [
     "0% 0%",
@@ -2168,6 +2176,37 @@ function startMemoryFragments(){
     leftPx = Math.max(24, Math.min(leftPx, screenW - pieceW - 24));
     topPx = Math.max(24, Math.min(topPx, screenH - pieceH - 24));
 
+    /* 중앙 문구 절대 보호 영역 */
+const textSafe = {
+  left: screenW * 0.32,
+  right: screenW * 0.68,
+  top: screenH * 0.34,
+  bottom: screenH * 0.66
+};
+
+const pieceRect = {
+  left: leftPx,
+  right: leftPx + pieceW,
+  top: topPx,
+  bottom: topPx + pieceH
+};
+
+const hitText =
+  pieceRect.left < textSafe.right &&
+  pieceRect.right > textSafe.left &&
+  pieceRect.top < textSafe.bottom &&
+  pieceRect.bottom > textSafe.top;
+
+if(hitText){
+  if(leftPx < screenW / 2){
+    leftPx = textSafe.left - pieceW - 80;
+  }else{
+    leftPx = textSafe.right + 80;
+  }
+
+  leftPx = Math.max(24, Math.min(leftPx, screenW - pieceW - 24));
+}
+    
     piece.style.left = `${leftPx}px`;
     piece.style.top = `${topPx}px`;
     piece.style.width = sizes[i];
