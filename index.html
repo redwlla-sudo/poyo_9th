@@ -2134,22 +2134,21 @@ const blurs = ["1.8px","0px","2.2px","0px","1px","2.8px","0px","1.5px","0px"];
 const zIndexes = [5,8,4,9,6,3,7,4,8];
     
 const safePositions = [
-  { x:40,  y:34  },
-  { x:760, y:42  },
-  { x:1320,y:46  },
+  { x:60,   y:45  },   // 왼쪽 위
+  { x:520,  y:42  },   // 중앙 위
+  { x:1080, y:55  },   // 오른쪽 위
 
-  { x:90,  y:360 },
-  { x:1180,y:350 },
+  { x:80,   y:330 },   // 왼쪽 중간
+  { x:1130, y:330 },   // 오른쪽 중간
 
-  { x:70,  y:700 },
-  { x:620, y:670 },
-  { x:1100,y:690 },
+  { x:80,   y:650 },   // 왼쪽 아래
+  { x:540,  y:650 },   // 중앙 아래
+  { x:1080, y:650 },   // 오른쪽 아래
 
-  { x:760, y:250 }
+  { x:760,  y:250 }    // 중앙 보조
 ];
 
-const shuffledSafePositions = shuffleArray(safePositions);
-const pos = shuffledSafePositions[i];
+const pos = safePositions[i];
 
 const pieceW = parseInt(sizes[i]);
 const pieceH = pieceW * 9 / 16;
@@ -2164,6 +2163,36 @@ let topPx = pos.y;
 leftPx = Math.max(24, Math.min(leftPx, screenW - pieceW - 24));
 topPx = Math.max(24, Math.min(topPx, screenH - pieceH - 24));
 
+const centerSafe = {
+  left: screenW * 0.33,
+  right: screenW * 0.67,
+  top: screenH * 0.35,
+  bottom: screenH * 0.62
+};
+
+const pieceRect = {
+  left: leftPx,
+  right: leftPx + pieceW,
+  top: topPx,
+  bottom: topPx + pieceH
+};
+
+const overlapsText =
+  pieceRect.left < centerSafe.right &&
+  pieceRect.right > centerSafe.left &&
+  pieceRect.top < centerSafe.bottom &&
+  pieceRect.bottom > centerSafe.top;
+
+if(overlapsText){
+  if(leftPx < screenW / 2){
+    leftPx = centerSafe.left - pieceW - 40;
+  }else{
+    leftPx = centerSafe.right + 40;
+  }
+
+  leftPx = Math.max(24, Math.min(leftPx, screenW - pieceW - 24));
+}
+    
 piece.style.left = `${leftPx}px`;
 piece.style.top = `${topPx}px`;
 piece.style.animationDelay = `${i * 0.45}s`;
@@ -2201,17 +2230,16 @@ piece.innerHTML = `
 
 const video = piece.querySelector("video");
 
-video.addEventListener("canplay",()=>{
+video.addEventListener("loadeddata",()=>{
   video.currentTime = 0.05;
   video.play().catch(()=>{});
+
+  setTimeout(()=>{
+    piece.classList.add("ready");
+  }, i * 250);
 },{once:true});
 
 container.appendChild(piece);
-
-setTimeout(()=>{
-  video.play().catch(()=>{});
-  piece.classList.add("ready");
-}, i * 450);
 
   });
 
