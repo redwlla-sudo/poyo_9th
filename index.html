@@ -2119,23 +2119,33 @@ if(flash){
     const piece = document.createElement("div");
     piece.className = "memory-piece";
 
-const sizes = ["580px","500px","420px","600px","380px","360px","450px","320px","400px"];
+const sizes = [
+  "640px", // 큼
+  "430px", // 중간
+  "300px", // 작음
+  "590px", // 큼
+  "340px", // 작음
+  "470px", // 중간
+  "280px", // 작음
+  "520px", // 중간~큼
+  "370px"  // 작중간
+];
 const blurs = ["1.8px","0px","2.2px","0px","1px","2.8px","0px","1.5px","0px"];
 const zIndexes = [5,8,4,9,6,3,7,4,8];
     
 const safePositions = [
-  { x:8,  y:8  },
-  { x:38, y:7  },
-  { x:67, y:8  },
+  { x:40,  y:34  },
+  { x:760, y:42  },
+  { x:1320,y:46  },
 
-  { x:8,  y:36 },
-  { x:66, y:36 },
+  { x:90,  y:360 },
+  { x:1180,y:350 },
 
-  { x:8,  y:64 },
-  { x:36, y:63 },
-  { x:64, y:63 },
+  { x:70,  y:700 },
+  { x:620, y:670 },
+  { x:1100,y:690 },
 
-  { x:42, y:24 }
+  { x:760, y:250 }
 ];
 
 const shuffledSafePositions = shuffleArray(safePositions);
@@ -2147,10 +2157,10 @@ const pieceH = pieceW * 9 / 16;
 const screenW = window.innerWidth;
 const screenH = window.innerHeight;
 
-let leftPx = screenW * (pos.x / 100);
-let topPx = screenH * (pos.y / 100);
+let leftPx = pos.x;
+let topPx = pos.y;
 
-/* 화면 밖으로 절대 안 나가게 강제 제한 */
+/* 화면 밖으로 절대 안 나가게 */
 leftPx = Math.max(24, Math.min(leftPx, screenW - pieceW - 24));
 topPx = Math.max(24, Math.min(topPx, screenH - pieceH - 24));
 
