@@ -2133,22 +2133,42 @@ const sizes = [
 const blurs = ["1.8px","0px","2.2px","0px","1px","2.8px","0px","1.5px","0px"];
 const zIndexes = [5,8,4,9,6,3,7,4,8];
     
-const safePositions = [
-  { x:60,   y:45  },   // 왼쪽 위
-  { x:520,  y:42  },   // 중앙 위
-  { x:1080, y:55  },   // 오른쪽 위
+const zones = [
+  // 왼쪽 3개
+  { minX:40,  maxX:260,  minY:60,  maxY:170 },
+  { minX:50,  maxX:260,  minY:330, maxY:460 },
+  { minX:60,  maxX:260,  minY:620, maxY:720 },
 
-  { x:80,   y:330 },   // 왼쪽 중간
-  { x:1130, y:330 },   // 오른쪽 중간
+  // 가운데 2개
+  { minX:520, maxX:760,  minY:60,  maxY:170 },
+  { minX:520, maxX:760,  minY:620, maxY:720 },
 
-  { x:80,   y:650 },   // 왼쪽 아래
-  { x:540,  y:650 },   // 중앙 아래
-  { x:1080, y:650 },   // 오른쪽 아래
-
-  { x:760,  y:250 }    // 중앙 보조
+  // 오른쪽 4개
+  { minX:1010, maxX:1260, minY:60,  maxY:170 },
+  { minX:1040, maxX:1280, minY:300, maxY:420 },
+  { minX:1000, maxX:1260, minY:520, maxY:630 },
+  { minX:1120, maxX:1340, minY:650, maxY:740 }
 ];
 
-const pos = safePositions[i];
+const shuffledZones = shuffleArray(zones);
+const zone = shuffledZones[i];
+
+const pieceW = parseInt(sizes[i]);
+const pieceH = pieceW * 9 / 16;
+
+const screenW = window.innerWidth;
+const screenH = window.innerHeight;
+
+let leftPx = zone.minX + Math.random() * (zone.maxX - zone.minX);
+let topPx = zone.minY + Math.random() * (zone.maxY - zone.minY);
+
+/* 화면 밖으로 절대 안 나가게 */
+leftPx = Math.max(24, Math.min(leftPx, screenW - pieceW - 24));
+topPx = Math.max(24, Math.min(topPx, screenH - pieceH - 24));
+
+piece.style.left = `${leftPx}px`;
+piece.style.top = `${topPx}px`;
+piece.style.animationDelay = `${i * 0.45}s`;
 
 const pieceW = parseInt(sizes[i]);
 const pieceH = pieceW * 9 / 16;
