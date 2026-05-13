@@ -2113,20 +2113,51 @@ if(flash){
   flash.classList.remove("show","hide");
 }
 
-  const randomPositions = memoryPositions;
+  const randomPositions = null;
 
   memoryClipList.forEach((src, i)=>{
     const piece = document.createElement("div");
     piece.className = "memory-piece";
 
-piece.style.left = randomPositions[i].left;
-piece.style.top = randomPositions[i].top;
-piece.style.animationDelay = `${i * 0.45}s`;
-    
 const sizes = ["580px","500px","420px","600px","380px","360px","450px","320px","400px"];
 const blurs = ["1.8px","0px","2.2px","0px","1px","2.8px","0px","1.5px","0px"];
 const zIndexes = [5,8,4,9,6,3,7,4,8];
+    
+const safePositions = [
+  { x:8,  y:8  },
+  { x:38, y:7  },
+  { x:67, y:8  },
 
+  { x:8,  y:36 },
+  { x:66, y:36 },
+
+  { x:8,  y:64 },
+  { x:36, y:63 },
+  { x:64, y:63 },
+
+  { x:42, y:24 }
+];
+
+const shuffledSafePositions = shuffleArray(safePositions);
+const pos = shuffledSafePositions[i];
+
+const pieceW = parseInt(sizes[i]);
+const pieceH = pieceW * 9 / 16;
+
+const screenW = window.innerWidth;
+const screenH = window.innerHeight;
+
+let leftPx = screenW * (pos.x / 100);
+let topPx = screenH * (pos.y / 100);
+
+/* 화면 밖으로 절대 안 나가게 강제 제한 */
+leftPx = Math.max(24, Math.min(leftPx, screenW - pieceW - 24));
+topPx = Math.max(24, Math.min(topPx, screenH - pieceH - 24));
+
+piece.style.left = `${leftPx}px`;
+piece.style.top = `${topPx}px`;
+piece.style.animationDelay = `${i * 0.45}s`;
+    
 piece.style.width = sizes[i];
 piece.style.setProperty("--piece-blur", blurs[i]);
 piece.style.setProperty("--piece-z", zIndexes[i]);
