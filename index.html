@@ -1605,6 +1605,18 @@ overflow-wrap:anywhere;
   z-index:2;
 }
 
+.memory-piece.merge{
+  padding:0;
+  background:transparent;
+  box-shadow:none;
+  border-radius:0;
+  overflow:hidden;
+}
+
+.memory-piece.merge::before{
+  display:none;
+}
+  
 .memory-piece.merge video{
   opacity:0;
 }
@@ -2216,9 +2228,9 @@ const fixedPositions = [
   { left:"70%", top:"48%" },
 
   { left:"4%",  top:"72%" },
-  { left:"30%", top:"74%" }
+  { left:"14%", top:"68%" }
 ];
-
+  
   const puzzlePositions = [
     "0% 0%",
     "50% 0%",
