@@ -2113,113 +2113,87 @@ if(flash){
   flash.classList.remove("show","hide");
 }
 
-  const randomPositions = null;
-
-  memoryClipList.forEach((src, i)=>{
-    const piece = document.createElement("div");
-    piece.className = "memory-piece";
-
-const sizes = [
-  "640px", // 큼
-  "430px", // 중간
-  "300px", // 작음
-  "590px", // 큼
-  "340px", // 작음
-  "470px", // 중간
-  "280px", // 작음
-  "520px", // 중간~큼
-  "370px"  // 작중간
+  const sizes = [
+  "500px", "390px", "330px",
+  "470px", "340px",
+  "410px", "320px", "380px", "300px"
 ];
-const blurs = ["1.8px","0px","2.2px","0px","1px","2.8px","0px","1.5px","0px"];
+
+const blurs = ["1.4px","0px","1.8px","0px","1px","2px","0px","1.2px","0px"];
 const zIndexes = [5,8,4,9,6,3,7,4,8];
-    
+
 const zones = [
-  // 왼쪽 3개
-  { minX:40,  maxX:260,  minY:60,  maxY:170 },
-  { minX:50,  maxX:260,  minY:330, maxY:460 },
-  { minX:60,  maxX:260,  minY:620, maxY:720 },
+  { x1: 60,  y1: 70,  x2: 270, y2: 170 },
+  { x1: 70,  y1: 330, x2: 280, y2: 450 },
+  { x1: 70,  y1: 620, x2: 300, y2: 730 },
 
-  // 가운데 2개
-  { minX:520, maxX:760,  minY:60,  maxY:170 },
-  { minX:520, maxX:760,  minY:620, maxY:720 },
+  { x1: 520, y1: 60,  x2: 740, y2: 170 },
+  { x1: 520, y1: 620, x2: 760, y2: 730 },
 
-  // 오른쪽 4개
-  { minX:1010, maxX:1260, minY:60,  maxY:170 },
-  { minX:1040, maxX:1280, minY:300, maxY:420 },
-  { minX:1000, maxX:1260, minY:520, maxY:630 },
-  { minX:1120, maxX:1340, minY:650, maxY:740 }
+  { x1: 1040, y1: 70,  x2: 1280, y2: 180 },
+  { x1: 1060, y1: 300, x2: 1320, y2: 420 },
+  { x1: 1010, y1: 520, x2: 1300, y2: 640 },
+  { x1: 1120, y1: 650, x2: 1360, y2: 750 }
 ];
 
-const shuffledZones = shuffleArray(zones);
-const zone = shuffledZones[i];
+const shuffledZones = shuffleArray([...zones]);
 
-const pieceW = parseInt(sizes[i]);
-const pieceH = pieceW * 9 / 16;
+memoryClipList.forEach((src, i)=>{
+  const piece = document.createElement("div");
+  piece.className = "memory-piece";
 
-const screenW = window.innerWidth;
-const screenH = window.innerHeight;
+  const screenW = window.innerWidth;
+  const screenH = window.innerHeight;
 
-let leftPx = zone.minX + Math.random() * (zone.maxX - zone.minX);
-let topPx = zone.minY + Math.random() * (zone.maxY - zone.minY);
+  const pieceW = parseInt(sizes[i]);
+  const pieceH = pieceW * 9 / 16;
 
-/* 화면 밖으로 절대 안 나가게 */
-leftPx = Math.max(24, Math.min(leftPx, screenW - pieceW - 24));
-topPx = Math.max(24, Math.min(topPx, screenH - pieceH - 24));
+  const zone = shuffledZones[i];
 
-piece.style.left = `${leftPx}px`;
-piece.style.top = `${topPx}px`;
-piece.style.animationDelay = `${i * 0.45}s`;
-
-const centerSafe = {
-  left: screenW * 0.33,
-  right: screenW * 0.67,
-  top: screenH * 0.35,
-  bottom: screenH * 0.62
-};
-
-const pieceRect = {
-  left: leftPx,
-  right: leftPx + pieceW,
-  top: topPx,
-  bottom: topPx + pieceH
-};
-
-const overlapsText =
-  pieceRect.left < centerSafe.right &&
-  pieceRect.right > centerSafe.left &&
-  pieceRect.top < centerSafe.bottom &&
-  pieceRect.bottom > centerSafe.top;
-
-if(overlapsText){
-  if(leftPx < screenW / 2){
-    leftPx = centerSafe.left - pieceW - 40;
-  }else{
-    leftPx = centerSafe.right + 40;
-  }
+  let leftPx = zone.x1 + Math.random() * (zone.x2 - zone.x1);
+  let topPx = zone.y1 + Math.random() * (zone.y2 - zone.y1);
 
   leftPx = Math.max(24, Math.min(leftPx, screenW - pieceW - 24));
-}
-    
-piece.style.left = `${leftPx}px`;
-piece.style.top = `${topPx}px`;
-piece.style.animationDelay = `${i * 0.45}s`;
-    
-piece.style.width = sizes[i];
-piece.style.setProperty("--piece-blur", blurs[i]);
-piece.style.setProperty("--piece-z", zIndexes[i]);
-piece.style.setProperty("--rotate", `${Math.random() * 26 - 13}deg`);
-    
-const puzzlePositions = [
-  "0% 0%",
-  "50% 0%",
-  "100% 0%",
-  "0% 50%",
-  "50% 50%",
-  "100% 50%",
-  "0% 100%",
-  "50% 100%",
-  "100% 100%"
-];
+  topPx = Math.max(24, Math.min(topPx, screenH - pieceH - 24));
+
+  const textSafe = {
+    left: screenW * 0.48,
+    right: screenW * 0.90,
+    top: screenH * 0.40,
+    bottom: screenH * 0.68
+  };
+
+  const rect = {
+    left: leftPx,
+    right: leftPx + pieceW,
+    top: topPx,
+    bottom: topPx + pieceH
+  };
+
+  const hitText =
+    rect.left < textSafe.right &&
+    rect.right > textSafe.left &&
+    rect.top < textSafe.bottom &&
+    rect.bottom > textSafe.top;
+
+  if(hitText){
+    if(leftPx < screenW / 2){
+      leftPx = textSafe.left - pieceW - 60;
+    }else{
+      leftPx = textSafe.right + 60;
+    }
+
+    leftPx = Math.max(24, Math.min(leftPx, screenW - pieceW - 24));
+  }
+
+  piece.style.left = `${leftPx}px`;
+  piece.style.top = `${topPx}px`;
+  piece.style.width = sizes[i];
+  piece.style.animationDelay = `${i * 0.45}s`;
+
+  piece.style.setProperty("--piece-blur", blurs[i]);
+  piece.style.setProperty("--piece-z", zIndexes[i]);
+  piece.style.setProperty("--rotate", `${Math.random() * 22 - 11}deg`);
 
 piece.style.setProperty("--puzzle-pos", puzzlePositions[i]);
 
