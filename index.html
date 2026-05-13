@@ -2114,34 +2114,35 @@ function startMemoryFragments(){
   }
 
   const sizes = [
-  "360px",
-  "345px",
-  "355px",
+  "430px",
+  "410px",
+  "420px",
 
-  "370px",
-  "350px",
+  "400px",
+  "390px",
+  "410px",
 
-  "365px",
-  "340px",
-  "360px",
-  "350px"
+  "420px",
+  "400px",
+  "430px"
 ];
 
   const blurs = ["1.4px","0px","1.8px","0px","1px","2px","0px","1.2px","0px"];
   const zIndexes = [5,8,4,9,6,3,7,4,8];
 
-const zones = [
-  { x1: 80,  y1: 80,  x2: 260, y2: 160 },
-  { x1: 80,  y1: 330, x2: 260, y2: 430 },
-  { x1: 80,  y1: 610, x2: 260, y2: 710 },
+const fixedPositions = [
+  { left:"6%",  top:"10%" },
+  { left:"23%", top:"8%"  },
+  { left:"54%", top:"9%"  },
+  { left:"77%", top:"14%" },
 
-  { x1: 420, y1: 70,  x2: 560, y2: 150 },
-  { x1: 420, y1: 650, x2: 560, y2: 730 },
+  { left:"7%",  top:"38%" },
+  { left:"20%", top:"48%" },
+  { left:"73%", top:"53%" },
 
-  { x1: 1060, y1: 80,  x2: 1260, y2: 160 },
-  { x1: 1120, y1: 300, x2: 1320, y2: 400 },
-  { x1: 1060, y1: 520, x2: 1260, y2: 620 },
-  { x1: 1120, y1: 660, x2: 1320, y2: 730 }
+  { left:"5%",  top:"70%" },
+  { left:"26%", top:"74%" },
+  { left:"79%", top:"76%" }
 ];
 
   const puzzlePositions = [
@@ -2168,13 +2169,10 @@ const zones = [
     const pieceW = parseInt(sizes[i]);
     const pieceH = pieceW * 9 / 16;
 
-    const zone = shuffledZones[i];
+    const pos = fixedPositions[i];
 
-    let leftPx = zone.x1 + Math.random() * (zone.x2 - zone.x1);
-    let topPx = zone.y1 + Math.random() * (zone.y2 - zone.y1);
-
-    leftPx = Math.max(24, Math.min(leftPx, screenW - pieceW - 24));
-    topPx = Math.max(24, Math.min(topPx, screenH - pieceH - 24));
+    piece.style.left = pos.left;
+    piece.style.top = pos.top;
 
     /* 중앙 문구 절대 보호 영역 */
 const textSafe = {
@@ -2207,8 +2205,6 @@ if(hitText){
   leftPx = Math.max(24, Math.min(leftPx, screenW - pieceW - 24));
 }
     
-    piece.style.left = `${leftPx}px`;
-    piece.style.top = `${topPx}px`;
     piece.style.width = sizes[i];
     piece.style.animationDelay = `${i * 0.45}s`;
 
