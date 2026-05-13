@@ -2210,22 +2210,29 @@ piece.style.transform = "rotate(0deg) scale(1)";
     flash.classList.add("show");
   }
 
+ setTimeout(()=>{
+  const flash = document.getElementById("memoryWhiteFlash");
+
+  if(flash){
+    flash.classList.add("show");
+  }
+
+  pieces.forEach(piece=>{
+    piece.style.display = "none";
+  });
+
+  if(finalArt){
+    finalArt.classList.add("show");
+  }
+
   setTimeout(()=>{
-    pieces.forEach(piece=>{
-      piece.style.display = "none";
-    });
-
-    if(finalArt){
-      finalArt.classList.add("show");
+    if(flash){
+      flash.classList.remove("show");
+      flash.classList.add("hide");
     }
+  },450);
 
-   if(flash){
-  flash.classList.remove("show");
-  flash.classList.add("hide");
-}
-  },700);
-
-},2800);
+},2400);
 }
   
 function hideOverlays(){
