@@ -2233,13 +2233,13 @@ function playMemoryFilmIntro(){
     4200, // clip_4
     4200, // clip_1
     4200, // clip_2
-    6200, // clip_9 감정 포인트
+    8200, // clip_9 감정 포인트
     4200, // clip_3
     4200, // clip_5
     4200, // clip_6
     4200, // clip_7
     4200, // clip_8
-    7000  // clip_10 마지막 기억
+    9500  // clip_10 마지막 기억
   ];
 
   function playNextFilmClip(){
@@ -2492,7 +2492,11 @@ piece.style.top = `calc(50% - ${gridH / 2}px + ${row * tileH}px)`;
 piece.style.width = `${tileW}px`;
 piece.style.filter = "blur(0)";
 piece.style.zIndex = 15;
-piece.style.transform = "rotate(0deg) scale(1)";
+
+const mergeRotate = (Math.random() * 8 - 4).toFixed(1);
+
+piece.style.transform =
+  `rotate(${mergeRotate}deg) scale(1)`;
   });
 
 setTimeout(()=>{
