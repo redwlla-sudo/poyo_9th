@@ -1418,11 +1418,10 @@ overflow-wrap:anywhere;
 
   background:
     radial-gradient(circle at center,
-      rgba(245,226,145,.55) 0%,
-      rgba(160,128,62,.45) 38%,
-      rgba(38,30,18,.92) 72%,
-      rgba(6,5,4,.98) 100%),
-    #0b0905;
+      rgba(232,220,170,.22) 0%,
+      rgba(80,68,45,.18) 42%,
+      rgba(5,5,5,.96) 100%),
+    #050505;
 
   display:flex;
   align-items:center;
@@ -1430,6 +1429,7 @@ overflow-wrap:anywhere;
 
   opacity:1;
   pointer-events:none;
+
   overflow:hidden;
 
   transition:opacity 1.2s ease;
@@ -1447,24 +1447,26 @@ overflow-wrap:anywhere;
   aspect-ratio:16/9;
 
   overflow:hidden;
-  border-radius:18px;
 
   background:
     radial-gradient(circle at center,
-      rgba(245,226,150,.46) 0%,
-      rgba(115,92,47,.45) 48%,
-      rgba(15,12,8,.96) 100%),
-    #080604;
+      rgba(235,228,190,.18),
+      rgba(18,18,18,.92) 78%),
+    #000;
+
+  border-radius:14px;
 
   box-shadow:
-    inset 0 0 70px rgba(0,0,0,.92),
-    inset 0 0 140px rgba(0,0,0,.55),
-    0 0 45px rgba(235,207,120,.26),
-    0 0 120px rgba(0,0,0,.9);
+    inset 0 0 40px rgba(0,0,0,.8),
+    0 0 35px rgba(255,240,180,.08),
+    0 0 80px rgba(0,0,0,.72);
 
-  filter:sepia(.72) contrast(1.25) brightness(.96) saturate(.85);
+  filter:
+    sepia(.24)
+    contrast(1.08)
+    brightness(.94);
 
-  animation:filmShake 1.5s infinite steps(2);
+  animation:filmShake 2.2s infinite steps(2);
 }
 
 #filmClip{
@@ -1473,349 +1475,111 @@ overflow-wrap:anywhere;
   object-fit:cover;
   display:block;
 
-  opacity:.78;
-  filter:sepia(.62) contrast(1.18) brightness(.88) saturate(.78);
+  opacity:.88;
+
+  filter:
+    sepia(.16)
+    contrast(1.04)
+    brightness(.95);
 }
 
-/* 먼지 + 세로 스크래치 + 노이즈 */
+/* 은은한 필름 노이즈 */
 .film-noise{
   position:absolute;
   inset:0;
   z-index:3;
+
   pointer-events:none;
 
   background:
     repeating-linear-gradient(
-      90deg,
-      rgba(255,245,190,.16) 0px,
-      rgba(255,245,190,.16) 1px,
-      transparent 1px,
-      transparent 42px
-    ),
-    repeating-linear-gradient(
       0deg,
-      rgba(255,255,255,.055) 0px,
-      rgba(255,255,255,.055) 1px,
+      rgba(255,255,255,.035) 0px,
+      rgba(255,255,255,.035) 1px,
       transparent 1px,
-      transparent 3px
+      transparent 4px
     ),
-    radial-gradient(circle at 12% 18%, rgba(0,0,0,.65) 0 2px, transparent 3px),
-    radial-gradient(circle at 28% 61%, rgba(0,0,0,.55) 0 1.5px, transparent 3px),
-    radial-gradient(circle at 63% 35%, rgba(0,0,0,.6) 0 2px, transparent 3px),
-    radial-gradient(circle at 82% 72%, rgba(0,0,0,.5) 0 1.5px, transparent 3px),
-    radial-gradient(circle at 46% 82%, rgba(255,245,190,.22) 0 1px, transparent 2px);
+    radial-gradient(circle at 18% 26%, rgba(255,255,255,.05) 0 1px, transparent 2px),
+    radial-gradient(circle at 74% 62%, rgba(0,0,0,.18) 0 1px, transparent 2px);
 
-  opacity:.62;
+  opacity:.28;
+
   mix-blend-mode:screen;
 
   animation:
-    filmFlicker .12s infinite,
-    filmDust .9s infinite steps(4);
+    filmFlicker .18s infinite,
+    filmDust 2.4s infinite steps(2);
 }
 
-/* 필름 얼룩 */
-.film-frame::before{
+/* 가장자리 vignette */
+.memory-film-intro::after{
   content:"";
   position:absolute;
   inset:0;
-  z-index:5;
+
+  z-index:4;
   pointer-events:none;
 
   background:
-    radial-gradient(circle at 7% 14%, rgba(0,0,0,.42) 0 5px, transparent 8px),
-    radial-gradient(circle at 93% 10%, rgba(0,0,0,.5) 0 6px, transparent 10px),
-    radial-gradient(circle at 88% 86%, rgba(0,0,0,.45) 0 5px, transparent 9px),
-    radial-gradient(circle at 18% 88%, rgba(255,230,150,.18) 0 7px, transparent 12px);
+    radial-gradient(circle at center,
+      transparent 38%,
+      rgba(0,0,0,.18) 68%,
+      rgba(0,0,0,.72) 100%);
 
-  opacity:.75;
-}
-
-.memory-fragment-stage::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    linear-gradient(90deg,
-      rgba(255,255,255,.10),
-      rgba(0,0,0,.08) 50%,
-      rgba(255,255,255,.08)),
-    repeating-linear-gradient(
-      0deg,
-      rgba(255,255,255,.04) 0px,
-      rgba(255,255,255,.04) 1px,
-      transparent 1px,
-      transparent 4px
-    );
-  opacity:.45;
-  pointer-events:none;
-  z-index:0;
-}
-
-.memory-bg-text{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-
-  z-index:1;
-
-  font-size:3.6rem;
-  font-weight:900;
-  line-height:1.35;
-  text-align:center;
-
-  color:white;
-
-  text-shadow:
-    0 0 18px rgba(255,255,255,.75),
-    0 0 36px rgba(159,255,224,.45);
-
-  opacity:0;
-  transition:opacity 1.4s ease, transform 1.4s ease;
-  
-}
-
-  .memory-bg-text.show{
-  opacity:.9;
-}
-
-#memoryFragments{
-  position:absolute;
-  inset:0;
-  z-index:3;
-}
-
-.memory-piece{
-  position:absolute;
-  width:380px;
-  aspect-ratio:auto;
-
-  padding:16px 16px 58px;
-
-  border-radius:4px;
-  overflow:visible;
-
-  background:#fffaf2;
-
-  box-shadow:
-    0 18px 38px rgba(0,0,0,.32),
-    0 0 28px rgba(255,255,255,.18);
-
-  opacity:0;
-  filter:blur(var(--piece-blur));
-  z-index:var(--piece-z);
-
-  transform:
-    scale(1)
-    rotate(var(--rotate));
-
-  transition:
-    opacity .6s ease,
-    left 2.4s ease,
-    top 2.4s ease,
-    width 2.4s ease,
-    transform 2.4s ease,
-    filter 2.4s ease;
-}
-
-.memory-piece::before{
-  content:"";
-  position:absolute;
-  left:50%;
-  top:-24px;
-
-  width:92px;
-  height:34px;
-
-  transform:translateX(-50%) rotate(var(--tape-rotate));
-
-  background:var(--tape-color);
   opacity:.82;
-
-  clip-path:polygon(
-    0 12%,
-    10% 0,
-    20% 12%,
-    30% 0,
-    40% 12%,
-    50% 0,
-    60% 12%,
-    70% 0,
-    80% 12%,
-    90% 0,
-    100% 12%,
-    100% 88%,
-    90% 100%,
-    80% 88%,
-    70% 100%,
-    60% 88%,
-    50% 100%,
-    40% 88%,
-    30% 100%,
-    20% 88%,
-    10% 100%,
-    0 88%
-  );
-
-  z-index:5;
 }
 
-.memory-piece.pin::before{
-  width:34px;
-  height:34px;
-  border-radius:50%;
-  top:-16px;
-
-  background:#e9d8c7;
-  box-shadow:
-    inset 0 -4px 7px rgba(0,0,0,.18),
-    0 4px 10px rgba(0,0,0,.24);
-
-  clip-path:none;
-}
-
-.memory-piece.clip::before{
-  content:"📎";
-
-  background:none;
-  font-size:2.4rem;
-  opacity:.9;
-  box-shadow:none;
-  clip-path:none;
-}
-  
-.memory-piece video{
-  width:100%;
-  aspect-ratio:16/9;
-  height:auto;
-
-  object-fit:cover;
-  display:block;
-
-  border-radius:2px;
-  background:#000;
-
-  transition:opacity 1s ease;
-}
-
-  .memory-piece.ready{
-    opacity:.86;
-    animation:memoryFloat 4.8s ease-in-out infinite;
-}    
-  
-.memory-puzzle-tile{
-  position:absolute;
-  inset:0;
-
-  background-image:url("poyo_9th_memory.png");
-  background-size:300% 300%;
-  background-position:var(--puzzle-pos);
-
-  opacity:0;
-  transition:opacity 1s ease;
-
-  z-index:2;
-}
-
-.memory-piece.merge{
-  padding:0;
-  background:transparent;
-  box-shadow:none;
-  border-radius:0;
-  overflow:hidden;
-}
-
-.memory-piece.merge::before{
-  display:none;
-}
-  
-.memory-piece.merge video{
-  opacity:0;
-}
-
-.memory-piece.merge .memory-puzzle-tile{
-  opacity:1;
-}
-
-  #memoryWhiteFlash{
-  position:absolute;
-  inset:0;
-
-  background:white;
-  opacity:0;
-
-  z-index:30;
-  pointer-events:none;
-
-  transition:opacity .8s ease;
-}
-
-#memoryWhiteFlash.show{
-  opacity:1;
-}
-
-#memoryWhiteFlash.hide{
-  opacity:0;
-}
-  
-#memoryFinalArt{
-  position:absolute;
-  left:50%;
-  top:50%;
-
-  width:1180px;
-  max-width:94vw;
-
-  transform:translate(-50%,-50%) scale(.96);
-
-  opacity:0;
-  z-index:20;
-
-  border-radius:26px;
-
-  box-shadow:
-    0 0 40px rgba(255,255,255,.55),
-    0 0 90px rgba(201,183,255,.55);
-
-  transition:opacity 1.4s ease, transform 1.4s ease;
-}
-
-#memoryFinalArt.show{
-  opacity:1;
-  transform:translate(-50%,-50%) scale(1);
-}
-
-.memory-piece::after{
+/* 얇은 스크래치 */
+.film-frame::after{
   content:"";
   position:absolute;
   inset:0;
-  background:#000;
-  opacity:0;
-  transition:opacity .5s ease;
+
+  z-index:4;
   pointer-events:none;
-  z-index:5;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 22%,
+      rgba(255,255,255,.08) 22.2%,
+      transparent 22.4%,
+      transparent 67%,
+      rgba(255,255,255,.05) 67.2%,
+      transparent 67.4%
+    );
+
+  opacity:.32;
+
+  animation:filmScratch 1.6s infinite steps(2);
 }
 
-.memory-piece.fade-loop::after{
-  opacity:1;
+@keyframes filmFlicker{
+  0%{opacity:.22;}
+  50%{opacity:.36;}
+  100%{opacity:.28;}
 }
 
-@keyframes memoryPieceIn{
-  to{
-    opacity:.86;
-    transform:scale(1) rotate(var(--rotate));
-  }
+@keyframes filmDust{
+  0%{transform:translate(0,0);}
+  50%{transform:translate(-5px,3px);}
+  100%{transform:translate(4px,-2px);}
 }
 
-@keyframes memoryFloat{
+@keyframes filmScratch{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(4px);}
+}
+
+@keyframes filmShake{
   0%,100%{
-    translate:0 0;
+    transform:translate(0,0);
   }
+
   50%{
-    translate:0 -18px;
+    transform:translate(1px,-1px);
   }
 }
-
 </style>
 </head>
 
