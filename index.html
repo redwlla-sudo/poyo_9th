@@ -1411,6 +1411,80 @@ overflow-wrap:anywhere;
   overflow:hidden;
 }
 
+.memory-film-intro{
+  position:absolute;
+  inset:0;
+  z-index:25;
+
+  background:#050505;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  opacity:1;
+  pointer-events:none;
+
+  transition:opacity 1.2s ease;
+}
+
+.memory-film-intro.hide{
+  opacity:0;
+}
+
+.film-frame{
+  position:relative;
+
+  width:72vw;
+  max-width:1100px;
+  aspect-ratio:16/9;
+
+  overflow:hidden;
+
+  background:#000;
+
+  box-shadow:
+    0 0 35px rgba(255,255,255,.18),
+    0 0 90px rgba(0,0,0,.75);
+
+  filter:sepia(.28) contrast(1.08) brightness(.92);
+}
+
+#filmClip{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.film-noise{
+  position:absolute;
+  inset:0;
+  z-index:3;
+
+  pointer-events:none;
+
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,.045) 0px,
+      rgba(255,255,255,.045) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+
+  opacity:.34;
+  mix-blend-mode:screen;
+
+  animation:filmFlicker .16s infinite;
+}
+
+@keyframes filmFlicker{
+  0%{opacity:.22;}
+  50%{opacity:.42;}
+  100%{opacity:.28;}
+}
+  
 .memory-fragment-stage{
   position:relative;
   width:100%;
@@ -1865,6 +1939,13 @@ STEP 3
 
   <div class="memory-fragment-stage">
 
+ <div id="memoryFilmIntro" class="memory-film-intro">
+  <div class="film-noise"></div>
+  <div class="film-frame">
+    <video id="filmClip" muted playsinline preload="auto"></video>
+  </div>
+</div>
+
     <div class="memory-bg-text">
       함께한 3,285일,<br>
       그 모든 순간이 모여,<br>
@@ -2157,6 +2238,20 @@ if(id === "memory"){
   
 }
 
+/* 필름 인트로 전용 순서 */
+const memoryFilmList = [
+  "clip/clip_4.mp4",
+  "clip/clip_1.mp4",
+  "clip/clip_2.mp4",
+  "clip/clip_9.mp4",
+  "clip/clip_3.mp4",
+  "clip/clip_5.mp4",
+  "clip/clip_6.mp4",
+  "clip/clip_7.mp4",
+  "clip/clip_8.mp4",
+  "clip/clip_10.mp4"
+];
+  
 const memoryClipList = [
   "clip/clip_4.mp4",
   "clip/clip_1.mp4",
