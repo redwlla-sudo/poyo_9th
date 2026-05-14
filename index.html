@@ -1464,6 +1464,12 @@ overflow-wrap:anywhere;
     0 0 18px rgba(255,255,255,.75),
     0 0 36px rgba(159,255,224,.45);
 
+  opacity:0;
+  transition:opacity 1.4s ease, transform 1.4s ease;
+  
+}
+
+  .memory-bg-text.show{
   opacity:.9;
 }
 
@@ -2326,8 +2332,17 @@ setTimeout(()=>{
   });
 
   setTimeout(()=>{
+  const memoryText = document.querySelector(".memory-bg-text");
+
+  if(memoryText){
+    memoryText.classList.add("show");
+  }
+
+  setTimeout(()=>{
     startMemoryPuzzleMerge();
-  },12000);
+  }, 4200);
+
+}, 6200);
 }
     
 function startMemoryPuzzleMerge(){
