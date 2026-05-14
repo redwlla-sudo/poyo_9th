@@ -2029,7 +2029,7 @@ function showOverlay(id){
 }
 
 if(id === "memory"){
-  startMemoryFragments();
+  playMemoryFilmIntro();
 }
   
 }
@@ -2081,6 +2081,69 @@ function shuffleArray(arr){
     .map(item=>item.value);
 }
 
+function playMemoryFilmIntro(){
+  const filmIntro = document.getElementById("memoryFilmIntro");
+  const filmClip = document.getElementById("filmClip");
+
+  if(!filmIntro || !filmClip){
+    startMemoryFragments();
+    return;
+  }
+
+  filmIntro.classList.remove("hide");
+  filmClip.pause();
+  filmClip.currentTime = 0;
+
+  let filmIndex = 0;
+
+  const clipDurations = [
+    3500, // clip_4
+    3500, // clip_1
+    3500, // clip_2
+    5000, // clip_9 소리 강조
+    3500, // clip_3
+    3500, // clip_5
+    3500, // clip_6
+    3500, // clip_7
+    3500, // clip_8
+    5500  // clip_10 마지막 기억
+  ];
+
+  function playNextFilmClip(){
+    if(filmIndex >= memoryFilmList.length){
+      filmIntro.classList.add("hide");
+
+      setTimeout(()=>{
+        startMemoryFragments();
+      }, 1200);
+
+      return;
+    }
+
+    const src = memoryFilmList[filmIndex];
+
+    filmClip.src = src;
+    filmClip.currentTime = 0;
+
+    // 9번, 10번 클립만 소리 켜기
+    if(src.includes("clip_9") || src.includes("clip_10")){
+      filmClip.muted = false;
+      filmClip.volume = 0.85;
+    }else{
+      filmClip.muted = true;
+    }
+
+    filmClip.play().catch(()=>{});
+
+    setTimeout(()=>{
+      filmIndex++;
+      playNextFilmClip();
+    }, clipDurations[filmIndex]);
+  }
+
+  playNextFilmClip();
+}
+  
 function startMemoryFragments(){
   const container = document.getElementById("memoryFragments");
   if(!container) return;
@@ -2098,7 +2161,31 @@ function startMemoryFragments(){
     flash.classList.remove("show","hide");
   }
 
-const sizes = [
+const blurs = [
+  "1.4px",
+  "0px",
+  "1.8px",
+  "0px",
+  "1px",
+  "2px",
+  "0px",
+  "1.2px",
+  "0px"
+];
+
+const zIndexes = [
+  5,
+  8,
+  4,
+  9,
+  6,
+  3,
+  7,
+  4,
+  8
+];
+  
+  const sizes = [
   "390px",
   "380px",
   "390px",
