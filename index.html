@@ -2216,6 +2216,102 @@ function shuffleArray(arr){
 }
 
 function playMemoryFilmIntro(){
+  const filmIntro = document.getElementById("memoryFilmIntro");
+  const filmClip = document.getElementById("filmClip");
+
+  if(!filmIntro || !filmClip){
+    startMemoryFragments();
+    return;
+  }
+
+  filmIntro.classList.remove("hide");
+  filmClip.classList.remove("film-fade","film-last");
+
+  let filmIndex = 0;
+  let fadeFrame = null;
+
+  function fadeMainBgm(toVolume, duration = 900){
+    if(!mainBgm) return;
+
+    if(fadeFrame){
+      cancelAnimationFrame(fadeFrame);
+      fadeFrame = null;
+    }
+
+    const fromVolume = mainBgm.volume;
+    const start = performance.now();
+
+    function animate(now){
+      const progress = Math.min((now - start) / duration, 1);
+      mainBgm.volume = fromVolume + (toVolume - fromVolume) * progress;
+
+      if(progress < 1){
+        fadeFrame = requestAnimationFrame(animate);
+      }else{
+        mainBgm.volume = toVolume;
+        fadeFrame = null;
+      }
+    }
+
+    fadeFrame = requestAnimationFrame(animate);
+  }
+
+  function playNextFilmClip(){
+    if(filmIndex >= memoryFilmList.length){
+      filmClip.pause();
+      filmIntro.classList.add("hide");
+
+      fadeMainBgm(0.30, 1000);
+
+      setTimeout(()=>{
+        startMemoryFragments();
+      }, 1400);
+
+      return;
+    }
+
+    const src = memoryFilmList[filmIndex];
+    const isSoundClip = src.includes("clip_9") || src.includes("clip_10");
+    const isLastClip = src.includes("clip_10");
+
+    filmClip.classList.add("film-fade");
+
+    if(isSoundClip){
+      fadeMainBgm(0.08, 1200);
+    }else{
+      fadeMainBgm(0.30, 900);
+    }
+
+    setTimeout(()=>{
+      filmClip.src = src;
+      filmClip.currentTime = 0;
+
+      filmClip.muted = !isSoundClip;
+      filmClip.volume = isSoundClip ? 0.85 : 0;
+
+      filmClip.classList.toggle("film-last", isLastClip);
+
+      filmClip.onended = ()=>{
+        filmIndex++;
+        playNextFilmClip();
+      };
+
+      filmClip.play().catch(()=>{
+        setTimeout(()=>{
+          filmIndex++;
+          playNextFilmClip();
+        }, 4000);
+      });
+
+      requestAnimationFrame(()=>{
+        filmClip.classList.remove("film-fade");
+      });
+
+    }, 650);
+  }
+
+  playNextFilmClip();
+}
   
 function startMemoryFragments(){
   const container = document.getElementById("memoryFragments");
