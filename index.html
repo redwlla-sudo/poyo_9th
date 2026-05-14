@@ -1531,6 +1531,189 @@ overflow-wrap:anywhere;
   0%,100%{opacity:.18;}
   50%{opacity:.28;}
 }
+
+.memory-fragment-stage{
+  position:relative;
+  width:100%;
+  height:100vh;
+  overflow:hidden;
+  background:#050510;
+}
+
+.memory-bg-text{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  z-index:1;
+
+  font-size:3.6rem;
+  font-weight:900;
+  line-height:1.35;
+  text-align:center;
+
+  color:white;
+  text-shadow:
+    0 0 18px rgba(255,255,255,.75),
+    0 0 36px rgba(159,255,224,.45);
+
+  opacity:0;
+  transition:opacity 1.4s ease, transform 1.4s ease;
+}
+
+.memory-bg-text.show{
+  opacity:.9;
+}
+
+#memoryFragments{
+  position:absolute;
+  inset:0;
+  z-index:3;
+}
+
+.memory-piece{
+  position:absolute;
+  width:380px;
+  aspect-ratio:auto;
+
+  padding:16px 16px 58px;
+  border-radius:4px;
+  overflow:visible;
+
+  background:#fffaf2;
+
+  box-shadow:
+    0 18px 38px rgba(0,0,0,.32),
+    0 0 28px rgba(255,255,255,.18);
+
+  opacity:0;
+  filter:blur(var(--piece-blur));
+  z-index:var(--piece-z);
+
+  transform:scale(1) rotate(var(--rotate));
+
+  transition:
+    opacity .6s ease,
+    left 2.4s ease,
+    top 2.4s ease,
+    width 2.4s ease,
+    transform 2.4s ease,
+    filter 2.4s ease;
+}
+
+.memory-piece.ready{
+  opacity:.86;
+  animation:memoryFloat 4.8s ease-in-out infinite;
+}
+
+.memory-piece::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:-24px;
+  width:92px;
+  height:34px;
+  transform:translateX(-50%) rotate(var(--tape-rotate));
+  background:var(--tape-color);
+  opacity:.82;
+  z-index:5;
+}
+
+.memory-piece.pin::before{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  top:-16px;
+  background:#e9d8c7;
+}
+
+.memory-piece.clip::before{
+  content:"📎";
+  background:none;
+  font-size:2.4rem;
+}
+
+.memory-piece video{
+  width:100%;
+  aspect-ratio:16/9;
+  height:auto;
+  object-fit:cover;
+  display:block;
+  border-radius:2px;
+  background:#000;
+}
+
+.memory-puzzle-tile{
+  position:absolute;
+  inset:0;
+  background-image:url("poyo_9th_memory.png");
+  background-size:300% 300%;
+  background-position:var(--puzzle-pos);
+  opacity:0;
+  transition:opacity 1s ease;
+  z-index:2;
+}
+
+.memory-piece.merge{
+  padding:0;
+  background:transparent;
+  box-shadow:none;
+  border-radius:0;
+  overflow:hidden;
+}
+
+.memory-piece.merge::before{
+  display:none;
+}
+
+.memory-piece.merge video{
+  opacity:0;
+}
+
+.memory-piece.merge .memory-puzzle-tile{
+  opacity:1;
+}
+
+#memoryWhiteFlash{
+  position:absolute;
+  inset:0;
+  background:white;
+  opacity:0;
+  z-index:30;
+  pointer-events:none;
+  transition:opacity .8s ease;
+}
+
+#memoryWhiteFlash.show{
+  opacity:1;
+}
+
+#memoryFinalArt{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:1180px;
+  max-width:94vw;
+  transform:translate(-50%,-50%) scale(.96);
+  opacity:0;
+  z-index:20;
+  border-radius:26px;
+  box-shadow:
+    0 0 40px rgba(255,255,255,.55),
+    0 0 90px rgba(201,183,255,.55);
+  transition:opacity 1.4s ease, transform 1.4s ease;
+}
+
+#memoryFinalArt.show{
+  opacity:1;
+  transform:translate(-50%,-50%) scale(1);
+}
+
+@keyframes memoryFloat{
+  0%,100%{translate:0 0;}
+  50%{translate:0 -18px;}
+}
+  
 </style>
 </head>
 
