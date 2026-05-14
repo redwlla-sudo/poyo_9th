@@ -2308,7 +2308,7 @@ if(i === 3){
 
   setTimeout(()=>{
     piece.classList.add("ready");
-  }, i * 180);
+  }, i * 520);
 };
 
 video.addEventListener("canplay", showPiece, {once:true});
@@ -2320,7 +2320,7 @@ setTimeout(()=>{
     piece.classList.add("ready");
     video.play().catch(()=>{});
   }
-}, 900 + i * 180);
+}, 1200 + i * 520);
 
     container.appendChild(piece);
   });
