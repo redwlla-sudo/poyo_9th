@@ -1488,6 +1488,33 @@ overflow-wrap:anywhere;
     saturate(.86);
 }
 
+.memory-film-intro::before{
+  content:"";
+  position:absolute;
+  inset:-20%;
+  z-index:2;
+  pointer-events:none;
+
+  background:
+    radial-gradient(circle at 18% 30%, rgba(255,255,255,.16) 0 1px, transparent 2px),
+    radial-gradient(circle at 42% 66%, rgba(184,242,230,.12) 0 2px, transparent 4px),
+    radial-gradient(circle at 71% 24%, rgba(205,180,255,.12) 0 2px, transparent 5px),
+    radial-gradient(circle at 82% 78%, rgba(255,255,255,.10) 0 1px, transparent 3px);
+
+  opacity:.55;
+  filter:blur(.4px);
+  animation:memoryDustFloat 12s ease-in-out infinite alternate;
+}
+
+@keyframes memoryDustFloat{
+  from{
+    transform:translate(-20px, 12px) scale(1);
+  }
+  to{
+    transform:translate(28px, -22px) scale(1.04);
+  }
+}
+  
 /* 아주 약한 기억 노이즈 */
 .film-noise{
   position:absolute;
@@ -1748,6 +1775,7 @@ overflow-wrap:anywhere;
 
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 <audio id="stepBgm" loop src="step.bgm.mp3"></audio>
+<audio id="memoryBgm" loop src="clip/poyo - fanservice.mp3"></audio>  
 
 <div id="main">
 <div id="pages">
@@ -1999,6 +2027,7 @@ const btn=document.getElementById("enterBtn");
 const skipBtn=document.getElementById("skipBtn");
 const mainBgm=document.getElementById("mainBgm");
 const stepBgm=document.getElementById("stepBgm");
+const memoryBgm=document.getElementById("memoryBgm");
 const volumeToggle=document.getElementById("volumeToggle");
 const pages=document.querySelectorAll(".page");
 const dots=document.getElementById("dots");
@@ -2163,6 +2192,12 @@ function showOverlay(id){
 }
 
 if(id === "memory"){
+  mainBgm.volume = 0;
+
+  memoryBgm.currentTime = 0;
+  memoryBgm.volume = 0.35;
+  memoryBgm.play().catch(()=>{});
+
   playMemoryFilmIntro();
 }
   
@@ -2173,8 +2208,8 @@ const memoryFilmList = [
   "clip/clip_4.mp4",
   "clip/clip_1.mp4",
   "clip/clip_2.mp4",
-  "clip/clip_9.mp4",
   "clip/clip_3.mp4",
+  "clip/clip_9.mp4",
   "clip/clip_5.mp4",
   "clip/clip_6.mp4",
   "clip/clip_7.mp4",
@@ -2230,38 +2265,10 @@ function playMemoryFilmIntro(){
   let filmIndex = 0;
   let fadeFrame = null;
 
-  function fadeMainBgm(toVolume, duration = 900){
-    if(!mainBgm) return;
-
-    if(fadeFrame){
-      cancelAnimationFrame(fadeFrame);
-      fadeFrame = null;
-    }
-
-    const fromVolume = mainBgm.volume;
-    const start = performance.now();
-
-    function animate(now){
-      const progress = Math.min((now - start) / duration, 1);
-      mainBgm.volume = fromVolume + (toVolume - fromVolume) * progress;
-
-      if(progress < 1){
-        fadeFrame = requestAnimationFrame(animate);
-      }else{
-        mainBgm.volume = toVolume;
-        fadeFrame = null;
-      }
-    }
-
-    fadeFrame = requestAnimationFrame(animate);
-  }
-
   function playNextFilmClip(){
     if(filmIndex >= memoryFilmList.length){
       filmClip.pause();
       filmIntro.classList.add("hide");
-
-      fadeMainBgm(0.30, 1000);
 
       setTimeout(()=>{
         startMemoryFragments();
@@ -2271,16 +2278,14 @@ function playMemoryFilmIntro(){
     }
 
     const src = memoryFilmList[filmIndex];
-    const isSoundClip = src.includes("clip_9") || src.includes("clip_10");
+    const isSoundClip = src.includes("clip_9");
     const isLastClip = src.includes("clip_10");
 
     filmClip.classList.add("film-fade");
 
-    if(isSoundClip){
-      fadeMainBgm(0.08, 1200);
-    }else{
-      fadeMainBgm(0.30, 900);
-    }
+   if(isSoundClip){
+  mainBgm.volume = 0;
+}
 
     setTimeout(()=>{
       filmClip.src = src;
@@ -2543,6 +2548,12 @@ setTimeout(()=>{
 }
   
 function hideOverlays(){
+  if(memoryBgm){
+  memoryBgm.pause();
+  memoryBgm.currentTime = 0;
+}
+
+mainBgm.volume = 0.30;
   document.body.classList.remove("hide-dots");
   document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
 
