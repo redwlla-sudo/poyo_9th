@@ -1775,8 +1775,8 @@ overflow-wrap:anywhere;
 
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 <audio id="stepBgm" loop src="step.bgm.mp3"></audio>
-<audio id="memoryBgm" loop src="clip/poyo - fanservice.mp3"></audio>  
-
+<audio id="memoryBgm" loop src="clip/poyo - I stan U.mp3"></audio>
+  
 <div id="main">
 <div id="pages">
 
@@ -2195,7 +2195,7 @@ if(id === "memory"){
   mainBgm.volume = 0;
 
   memoryBgm.currentTime = 0;
-  memoryBgm.volume = 0.35;
+  memoryBgm.volume = 0.24;
   memoryBgm.play().catch(()=>{});
 
   playMemoryFilmIntro();
@@ -2292,7 +2292,7 @@ function playMemoryFilmIntro(){
       filmClip.currentTime = 0;
 
       filmClip.muted = !isSoundClip;
-      filmClip.volume = isSoundClip ? 0.85 : 0;
+      filmClip.volume = isSoundClip ? 0.18 : 0;
 
       filmClip.classList.toggle("film-last", isLastClip);
 
@@ -2300,6 +2300,14 @@ function playMemoryFilmIntro(){
         filmIndex++;
         playNextFilmClip();
       };
+
+      if(src.includes("clip_10")){
+  setTimeout(()=>{
+    filmClip.pause();
+    filmIndex++;
+    playNextFilmClip();
+  }, 5500);
+}
 
       filmClip.play().catch(()=>{
         setTimeout(()=>{
