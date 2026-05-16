@@ -1799,7 +1799,7 @@ overflow-wrap:anywhere;
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 <audio id="stepBgm" loop src="step.bgm.mp3"></audio>
 <audio id="memoryBgm" loop src="poyo - I stan U.mp3"></audio>
-<audio id="filmSfx" src="clip/film-sfx.mp3"></audio>
+<audio id="filmSfx" src="clip/film.sfx.mp3"></audio>
   
 <div id="main">
 <div id="pages">
@@ -2242,13 +2242,15 @@ if(filmSfx){
   memoryBgm.volume = 0.24;
 
   if(filmSfx){
-    filmSfx.currentTime = 0;
-    filmSfx.volume = 0.22;
-    filmSfx.play().then(()=>{
-  console.log("filmSfx play success");
-}).catch((e)=>{
-  console.log("filmSfx error", e);
-});
+  filmSfx.currentTime = 0;
+  filmSfx.volume = 0.22;
+
+  filmSfx.play().catch((e)=>{
+    console.log("filmSfx error", e);
+  });
+}
+
+setTimeout(()=>{
 
   setTimeout(()=>{
 
@@ -2283,8 +2285,6 @@ setTimeout(()=>{
 
 },1200);
 
-}
-  
 }
 
 /* 필름 인트로 전용 순서 */
@@ -2641,11 +2641,11 @@ setTimeout(()=>{
   
 function hideOverlays(){
   if(memoryBgm){
-  memoryBgm.pause();
-  memoryBgm.currentTime = 0;
-}
-
-mainBgm.volume = 0.30;
+    memoryBgm.pause();
+    memoryBgm.currentTime = 0;
+  }
+  
+  mainBgm.volume = 0.30;
   document.body.classList.remove("hide-dots");
   document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
 
