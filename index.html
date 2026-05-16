@@ -2224,6 +2224,12 @@ function showOverlay(id){
 
 if(id === "memory"){
 
+  if(mainBgm){
+  mainBgm.pause();
+  mainBgm.currentTime = 0;
+  mainBgm.muted = true;
+}
+
   mainBgm.pause();
   mainBgm.volume = 0;
 
@@ -2238,14 +2244,19 @@ if(filmSfx){
   if(filmSfx){
     filmSfx.currentTime = 0;
     filmSfx.volume = 0.22;
-    filmSfx.play().catch(()=>{});
-  }
+    filmSfx.play().then(()=>{
+  console.log("filmSfx play success");
+}).catch((e)=>{
+  console.log("filmSfx error", e);
+});
 
   setTimeout(()=>{
 
-memoryBgm.play().catch((e)=>{
-    console.log(e);
+setTimeout(()=>{
+  memoryBgm.play().catch((e)=>{
+    console.log("memoryBgm error", e);
   });
+},150);
     
   if(filmSfx){
     const startVol = filmSfx.volume;
