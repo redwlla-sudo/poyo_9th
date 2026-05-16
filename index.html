@@ -2226,10 +2226,6 @@ if(id === "memory"){
   memoryBgm.currentTime = 0;
   memoryBgm.volume = 0.24;
 
-  memoryBgm.play().catch((e)=>{
-    console.log(e);
-  });
-
   if(filmSfx){
     filmSfx.currentTime = 0;
     filmSfx.volume = 0.22;
@@ -2237,8 +2233,34 @@ if(id === "memory"){
   }
 
   setTimeout(()=>{
-    playMemoryFilmIntro();
-  },1200);
+
+memoryBgm.play().catch((e)=>{
+    console.log(e);
+  });
+    
+  if(filmSfx){
+    const startVol = filmSfx.volume;
+    const fadeTime = 700;
+    const startTime = performance.now();
+
+    function fadeOutFilmSfx(now){
+      const progress = Math.min((now - startTime) / fadeTime, 1);
+      filmSfx.volume = startVol * (1 - progress);
+
+      if(progress < 1){
+        requestAnimationFrame(fadeOutFilmSfx);
+      }else{
+        filmSfx.pause();
+        filmSfx.currentTime = 0;
+        filmSfx.volume = startVol;
+      }
+    }
+
+    requestAnimationFrame(fadeOutFilmSfx);
+  }
+
+  playMemoryFilmIntro();
+  
 }
   
 }
