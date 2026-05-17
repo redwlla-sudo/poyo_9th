@@ -2210,81 +2210,72 @@ function showOverlay(id){
   document.body.classList.add("hide-dots");
 
   document
-  .querySelectorAll(".overlay")
-  .forEach(o=>o.classList.remove("show"));
+    .querySelectorAll(".overlay")
+    .forEach(o=>o.classList.remove("show"));
 
   document
-  .getElementById(id)
-  .classList.add("show");
+    .getElementById(id)
+    .classList.add("show");
 
- if(id === "game"){
-  setupGameStartBackground();
-  resetGameToStart();
-}
-
-if(id === "memory"){
-
-  if(mainBgm){
-  mainBgm.pause();
-  mainBgm.currentTime = 0;
-  mainBgm.muted = true;
-}
-
-  mainBgm.pause();
-  mainBgm.volume = 0;
-
-  memoryBgm.muted = audioMuted;
-if(filmSfx){
-  filmSfx.muted = audioMuted;
-}
-  
-  memoryBgm.currentTime = 0;
-  memoryBgm.volume = 0.24;
-
-  if(filmSfx){
-  filmSfx.currentTime = 0;
-  filmSfx.volume = 0.22;
-
-  filmSfx.play().catch((e)=>{
-    console.log("filmSfx error", e);
-  });
-}
-
-setTimeout(()=>{
-
-  setTimeout(()=>{
-
-setTimeout(()=>{
-  memoryBgm.play().catch((e)=>{
-    console.log("memoryBgm error", e);
-  });
-},150);
-    
-  if(filmSfx){
-    const startVol = filmSfx.volume;
-    const fadeTime = 700;
-    const startTime = performance.now();
-
-    function fadeOutFilmSfx(now){
-      const progress = Math.min((now - startTime) / fadeTime, 1);
-      filmSfx.volume = startVol * (1 - progress);
-
-      if(progress < 1){
-        requestAnimationFrame(fadeOutFilmSfx);
-      }else{
-        filmSfx.pause();
-        filmSfx.currentTime = 0;
-        filmSfx.volume = startVol;
-      }
-    }
-
-    requestAnimationFrame(fadeOutFilmSfx);
+  if(id === "game"){
+    setupGameStartBackground();
+    resetGameToStart();
   }
 
-  playMemoryFilmIntro();
+  if(id === "memory"){
 
-},1200);
+    if(mainBgm){
+      mainBgm.pause();
+      mainBgm.currentTime = 0;
+      mainBgm.muted = true;
+      mainBgm.volume = 0;
+    }
 
+    memoryBgm.muted = audioMuted;
+    memoryBgm.currentTime = 0;
+    memoryBgm.volume = 0.24;
+
+    if(filmSfx){
+      filmSfx.muted = audioMuted;
+      filmSfx.currentTime = 0;
+      filmSfx.volume = 0.22;
+
+      filmSfx.play().catch((e)=>{
+        console.log("filmSfx error", e);
+      });
+    }
+
+    setTimeout(()=>{
+
+      memoryBgm.play().catch((e)=>{
+        console.log("memoryBgm error", e);
+      });
+
+      if(filmSfx){
+        const startVol = filmSfx.volume;
+        const fadeTime = 700;
+        const startTime = performance.now();
+
+        function fadeOutFilmSfx(now){
+          const progress = Math.min((now - startTime) / fadeTime, 1);
+          filmSfx.volume = startVol * (1 - progress);
+
+          if(progress < 1){
+            requestAnimationFrame(fadeOutFilmSfx);
+          }else{
+            filmSfx.pause();
+            filmSfx.currentTime = 0;
+            filmSfx.volume = startVol;
+          }
+        }
+
+        requestAnimationFrame(fadeOutFilmSfx);
+      }
+
+      playMemoryFilmIntro();
+
+    },1200);
+  }
 }
 
 /* 필름 인트로 전용 순서 */
@@ -2644,7 +2635,8 @@ function hideOverlays(){
     memoryBgm.pause();
     memoryBgm.currentTime = 0;
   }
-  
+
+  mainBgm.muted = audioMuted;
   mainBgm.volume = 0.30;
   document.body.classList.remove("hide-dots");
   document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
