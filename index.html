@@ -1480,6 +1480,25 @@ overflow-wrap:anywhere;
   transform:scale(1.035);
 }
 
+#filmClip.first-fade-in{
+  opacity:0;
+  animation:firstFilmFadeIn 1.2s ease forwards;
+}
+
+@keyframes firstFilmFadeIn{
+  from{
+    opacity:0;
+    filter:blur(8px) brightness(.5);
+  }
+  to{
+    opacity:.92;
+    filter:
+      contrast(1.05)
+      brightness(.92)
+      saturate(.92);
+  }
+}
+  
 #filmClip.film-last{
   transform:scale(1.06);
   filter:
@@ -1509,8 +1528,8 @@ overflow-wrap:anywhere;
 }
 
 .film-frame.transition-flash::after{
-  opacity:.75;
-  background:radial-gradient(circle,rgba(255,255,255,.9),rgba(0,0,0,.85));
+  opacity:.42;
+  background:radial-gradient(circle,rgba(255,255,255,.65),rgba(0,0,0,.9));
 }
 
 .film-frame::after{
@@ -2343,16 +2362,16 @@ const memoryFilmList = [
   "clip/clip_10.mp4"
 ];
   
- const memoryFilmDurations = [
-  15000, // clip_4
-  14000, // clip_1
-  14000, // clip_2
-  15000, // clip_3
+const memoryFilmDurations = [
+  14000, // clip_4
+  13000, // clip_1
+  13000, // clip_2
+  14000, // clip_3
   null,  // clip_9 끝까지 재생
-  15000, // clip_5
-  14000, // clip_6
-  14000, // clip_7
-  14000, // clip_8
+  14000, // clip_5
+  13000, // clip_6
+  13000, // clip_7
+  13000, // clip_8
   null   // clip_10 끝까지 재생
 ];
   
@@ -2399,8 +2418,14 @@ function playMemoryFilmIntro(){
     return;
   }
 
-  filmIntro.classList.remove("hide");
-  filmClip.classList.remove("film-fade","film-last","transition-soft","transition-strong");
+filmIntro.classList.remove("hide");
+filmClip.classList.remove(
+  "film-fade",
+  "film-last",
+  "transition-soft",
+  "transition-strong",
+  "first-fade-in"
+);
 
   let filmIndex = 0;
   let clipTimer = null;
@@ -2466,9 +2491,13 @@ setTimeout(()=>{
       filmClip.currentTime = 0;
 
       filmClip.muted = audioMuted || !isSoundClip;
-      filmClip.volume = isSoundClip ? 0.35 : 0;
+      filmClip.volume = isSoundClip ? 0.5 : 0;
 
       filmClip.classList.toggle("film-last", isLastClip);
+
+      if(filmIndex === 0){
+  filmClip.classList.add("first-fade-in");
+}
 
     if(isSoundClip){
   fadeAudio(memoryBgm, 0, 1200);
