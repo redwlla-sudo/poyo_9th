@@ -1801,15 +1801,15 @@ overflow-wrap:anywhere;
   position:absolute;
   left:50%;
   top:50%;
-  width:1180px;
-  max-width:94vw;
+  width:100vw;
+  height:100vh;
+  max-width:none;
+  object-fit:cover;
   transform:translate(-50%,-50%) scale(.96);
   opacity:0;
   z-index:20;
-  border-radius:26px;
-  box-shadow:
-    0 0 40px rgba(255,255,255,.55),
-    0 0 90px rgba(201,183,255,.55);
+  border-radius:0;
+  box-shadow:none;
   transition:opacity 1.4s ease, transform 1.4s ease;
 }
 
@@ -2287,66 +2287,67 @@ function showOverlay(id){
     resetGameToStart();
   }
 
-if(id === "memory"){
+  if(id === "memory"){
 
-  if(mainBgm){
-    mainBgm.pause();
-    mainBgm.currentTime = 0;
-    mainBgm.muted = audioMuted;
-    mainBgm.volume = 0;
-  }
+    if(mainBgm){
+      mainBgm.pause();
+      mainBgm.currentTime = 0;
+      mainBgm.muted = audioMuted;
+      mainBgm.volume = 0;
+    }
 
-memoryBgm.pause();
-memoryBgm.currentTime = 0;
-memoryBgm.muted = audioMuted;
-memoryBgm.volume = 0.42;
-
-memoryBgm.play().catch((e)=>{
-  console.log("memoryBgm error", e);
-});
-  
-  if(filmSfx){
-    filmSfx.pause();
-    filmSfx.currentTime = 0;
-    filmSfx.muted = audioMuted;
-    filmSfx.volume = 0.35;
-    filmSfx.load();
-
-    filmSfx.play().catch((e)=>{
-      console.log("filmSfx error", e);
-    });
-  }
-
-  setTimeout(()=>{
-
+    memoryBgm.pause();
+    memoryBgm.currentTime = 0;
     memoryBgm.muted = audioMuted;
     memoryBgm.volume = 0.42;
 
+    memoryBgm.play().catch((e)=>{
+      console.log("memoryBgm error", e);
+    });
+
     if(filmSfx){
-      const startVol = filmSfx.volume;
-      const fadeTime = 700;
-      const startTime = performance.now();
+      filmSfx.pause();
+      filmSfx.currentTime = 0;
+      filmSfx.muted = audioMuted;
+      filmSfx.volume = 0.35;
+      filmSfx.load();
 
-      function fadeOutFilmSfx(now){
-        const progress = Math.min((now - startTime) / fadeTime, 1);
-        filmSfx.volume = startVol * (1 - progress);
-
-        if(progress < 1){
-          requestAnimationFrame(fadeOutFilmSfx);
-        }else{
-          filmSfx.pause();
-          filmSfx.currentTime = 0;
-          filmSfx.volume = startVol;
-        }
-      }
-
-      requestAnimationFrame(fadeOutFilmSfx);
+      filmSfx.play().catch((e)=>{
+        console.log("filmSfx error", e);
+      });
     }
 
-    playMemoryFilmIntro();
+    setTimeout(()=>{
+      memoryBgm.muted = audioMuted;
+      memoryBgm.volume = 0.42;
 
-  },1200);
-}
+      playMemoryFilmIntro();
+
+      setTimeout(()=>{
+        if(filmSfx){
+          const startVol = filmSfx.volume;
+          const fadeTime = 700;
+          const startTime = performance.now();
+
+          function fadeOutFilmSfx(now){
+            const progress = Math.min((now - startTime) / fadeTime, 1);
+            filmSfx.volume = startVol * (1 - progress);
+
+            if(progress < 1){
+              requestAnimationFrame(fadeOutFilmSfx);
+            }else{
+              filmSfx.pause();
+              filmSfx.currentTime = 0;
+              filmSfx.volume = startVol;
+            }
+          }
+
+          requestAnimationFrame(fadeOutFilmSfx);
+        }
+      },1200);
+
+    },1200);
+  }
 }
 
 const memoryFilmList = [
@@ -2746,29 +2747,26 @@ piece.style.transform =
   `rotate(${mergeRotate}deg) scale(1)`;
   });
 
+const flash = document.getElementById("memoryWhiteFlash");
+
+if(flash){
+  flash.classList.add("show");
+}
+
+pieces.forEach(piece=>{
+  piece.style.display = "none";
+});
+
+if(finalArt){
+  finalArt.classList.add("show");
+}
+
 setTimeout(()=>{
-  const flash = document.getElementById("memoryWhiteFlash");
-
   if(flash){
-    flash.classList.add("show");
+    flash.classList.remove("show");
+    flash.classList.add("hide");
   }
-
-  pieces.forEach(piece=>{
-    piece.style.display = "none";
-  });
-
-  if(finalArt){
-    finalArt.classList.add("show");
-  }
-
-  setTimeout(()=>{
-    if(flash){
-      flash.classList.remove("show");
-      flash.classList.add("hide");
-    }
-  },450);
-
-},4000);
+},450);
 }
   
 function hideOverlays(){
