@@ -1796,7 +1796,6 @@ overflow-wrap:anywhere;
 #memoryWhiteFlash.show{
   opacity:1;
 }
-
 #memoryFinalArt{
   position:absolute;
   left:50%;
@@ -1804,7 +1803,8 @@ overflow-wrap:anywhere;
   width:100vw;
   height:100vh;
   max-width:none;
-  object-fit:cover;
+  object-fit:contain;
+  background:#000;
   transform:translate(-50%,-50%) scale(.96);
   opacity:0;
   z-index:20;
@@ -2686,21 +2686,22 @@ if(i === 3){
   video.currentTime = 0.05;
   video.play().catch(()=>{});
 
-  setTimeout(()=>{
+ setTimeout(()=>{
+
+  if(video.readyState >= 2){
     piece.classList.add("ready");
-  }, i * 520);
+
+    video.currentTime = 0.05;
+
+    video.play().catch(()=>{});
+  }
+
+}, i * 850);
 };
 
 video.addEventListener("canplay", showPiece, {once:true});
 
 video.load();
-
-setTimeout(()=>{
-  if(!piece.classList.contains("ready")){
-    piece.classList.add("ready");
-    video.play().catch(()=>{});
-  }
-}, 1200 + i * 520);
 
     container.appendChild(piece);
   });
@@ -2716,7 +2717,7 @@ setTimeout(()=>{
     startMemoryPuzzleMerge();
   }, 800);
 
-}, 6200);
+}, 7600);
 }
     
 function startMemoryPuzzleMerge(){
