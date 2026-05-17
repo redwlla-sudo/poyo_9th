@@ -1488,6 +1488,21 @@ overflow-wrap:anywhere;
     saturate(.86);
 }
 
+.film-frame::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:#000;
+  opacity:0;
+  pointer-events:none;
+  z-index:5;
+  transition:opacity .35s ease;
+}
+
+.film-frame.film-black::after{
+  opacity:1;
+}
+  
 .memory-film-intro .light-dust{
   position:absolute;
   inset:-20%;
@@ -2334,6 +2349,7 @@ function shuffleArray(arr){
 function playMemoryFilmIntro(){
   const filmIntro = document.getElementById("memoryFilmIntro");
   const filmClip = document.getElementById("filmClip");
+  const filmFrame = document.querySelector(".film-frame");
 
   if(!filmIntro || !filmClip){
     startMemoryFragments();
@@ -2362,46 +2378,94 @@ function playMemoryFilmIntro(){
     const isSoundClip = src.includes("clip_9");
     const isLastClip = src.includes("clip_10");
 
-    filmClip.classList.add("film-fade");
+   filmClip.classList.add("film-fade");
 
-   if(isSoundClip){
-  mainBgm.volume = 0;
+if(filmFrame){
+  filmFrame.classList.add("film-black");
 }
 
+setTimeout(()=>{
+  filmClip.src = src;
+  filmClip.currentTime = 0;
+
+  filmClip.muted = !isSoundClip;
+  filmClip.volume = isSoundClip ? 0.18 : 0;
+
+  filmClip.classList.toggle("film-last", isLastClip);
+
+  if(isSoundClip){
+
+  const startVolume = memoryBgm.volume;
+  const targetVolume = 0.07;
+  const fadeDuration = 900;
+  const startTime = performance.now();
+
+  function fadeMemoryBgm(now){
+    const progress = Math.min((now - startTime) / fadeDuration, 1);
+
+    memoryBgm.volume =
+      startVolume +
+      (targetVolume - startVolume) * progress;
+
+    if(progress < 1){
+      requestAnimationFrame(fadeMemoryBgm);
+    }
+  }
+
+  requestAnimationFrame(fadeMemoryBgm);
+}
+
+filmClip.onended = ()=>{
+
+  if(isSoundClip){
+
+    const startVolume = memoryBgm.volume;
+    const targetVolume = 0.24;
+    const fadeDuration = 1200;
+    const startTime = performance.now();
+
+    function restoreMemoryBgm(now){
+      const progress = Math.min((now - startTime) / fadeDuration, 1);
+
+      memoryBgm.volume =
+        startVolume +
+        (targetVolume - startVolume) * progress;
+
+      if(progress < 1){
+        requestAnimationFrame(restoreMemoryBgm);
+      }
+    }
+
+    requestAnimationFrame(restoreMemoryBgm);
+  }
+
+  filmIndex++;
+  playNextFilmClip();
+};
+  if(src.includes("clip_10")){
     setTimeout(()=>{
-      filmClip.src = src;
-      filmClip.currentTime = 0;
+      filmClip.pause();
+      filmIndex++;
+      playNextFilmClip();
+    }, 5500);
+  }
 
-      filmClip.muted = !isSoundClip;
-      filmClip.volume = isSoundClip ? 0.18 : 0;
+  filmClip.play().catch(()=>{
+    setTimeout(()=>{
+      filmIndex++;
+      playNextFilmClip();
+    }, 3500);
+  });
 
-      filmClip.classList.toggle("film-last", isLastClip);
-
-      filmClip.onended = ()=>{
-        filmIndex++;
-        playNextFilmClip();
-      };
-
-      if(src.includes("clip_10")){
   setTimeout(()=>{
-    filmClip.pause();
-    filmIndex++;
-    playNextFilmClip();
-  }, 5500);
-}
+    if(filmFrame){
+      filmFrame.classList.remove("film-black");
+    }
 
-      filmClip.play().catch(()=>{
-        setTimeout(()=>{
-          filmIndex++;
-          playNextFilmClip();
-        }, 4000);
-      });
+    filmClip.classList.remove("film-fade");
+  },120);
 
-      requestAnimationFrame(()=>{
-        filmClip.classList.remove("film-fade");
-      });
-
-    }, 650);
+},350);
   }
 
   playNextFilmClip();
