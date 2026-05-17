@@ -1418,10 +1418,10 @@ overflow-wrap:anywhere;
 
   background:
     radial-gradient(circle at center,
-      rgba(15,15,20,.55) 0%,
-      rgba(5,5,10,.92) 72%,
-      rgba(0,0,0,1) 100%),
-    #000;
+      rgba(255,255,255,.16) 0%,
+      rgba(35,25,25,.35) 42%,
+      rgba(8,6,8,.92) 100%),
+    linear-gradient(180deg,#151018 0%,#070507 100%);
 
   display:flex;
   align-items:center;
@@ -1434,12 +1434,34 @@ overflow-wrap:anywhere;
   transition:opacity 1.4s ease;
 }
 
+.memory-film-intro .cinema-seats{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:24vh;
+  z-index:1;
+  pointer-events:none;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #7a1118 0 52px,
+      #33080b 52px 62px,
+      #7a1118 62px 112px
+    );
+
+  opacity:.82;
+  mask-image:linear-gradient(to top, black 0%, black 62%, transparent 100%);
+}
+  
 .memory-film-intro.hide{
   opacity:0;
 }
 
 .film-frame{
   position:relative;
+  z-index:5;
 
   width:78vw;
   max-width:1180px;
@@ -1647,46 +1669,6 @@ overflow-wrap:anywhere;
   height:100vh;
   overflow:hidden;
   background:#050510;
-}
-
-.memory-fragment-stage::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
-
-  background:
-    radial-gradient(circle at center,
-      rgba(255,255,255,.08) 0%,
-      rgba(255,255,255,.02) 34%,
-      rgba(0,0,0,.55) 72%,
-      rgba(0,0,0,.95) 100%),
-    linear-gradient(180deg,#2a1d16 0%,#14100d 45%,#050505 100%);
-}
-
-.memory-fragment-stage::after{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  height:28vh;
-  z-index:0;
-  pointer-events:none;
-
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(255,255,255,.08) 0 2px,
-      transparent 2px 70px
-    ),
-    linear-gradient(
-      180deg,
-      rgba(0,0,0,0),
-      rgba(60,35,20,.65)
-    );
-  opacity:.45;
 }
 
 .memory-bg-text{
@@ -2021,6 +2003,7 @@ STEP 3
   <div class="memory-fragment-stage">
 
 <div id="memoryFilmIntro" class="memory-film-intro">
+  <div class="cinema-seats"></div>
   <div class="light-dust"></div>
   <div class="film-noise"></div>
   <div class="film-frame">
