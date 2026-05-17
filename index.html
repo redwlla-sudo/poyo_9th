@@ -1649,6 +1649,46 @@ overflow-wrap:anywhere;
   background:#050510;
 }
 
+.memory-fragment-stage::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+
+  background:
+    radial-gradient(circle at center,
+      rgba(255,255,255,.08) 0%,
+      rgba(255,255,255,.02) 34%,
+      rgba(0,0,0,.55) 72%,
+      rgba(0,0,0,.95) 100%),
+    linear-gradient(180deg,#2a1d16 0%,#14100d 45%,#050505 100%);
+}
+
+.memory-fragment-stage::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:28vh;
+  z-index:0;
+  pointer-events:none;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.08) 0 2px,
+      transparent 2px 70px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,0),
+      rgba(60,35,20,.65)
+    );
+  opacity:.45;
+}
+
 .memory-bg-text{
   position:absolute;
   left:50%;
@@ -2624,87 +2664,81 @@ const fixedPositions = [
     "100% 100%"
   ];
 
-  memoryClipList.forEach((src, i)=>{
-    const piece = document.createElement("div");
-    piece.className = "memory-piece";
+let loadedCount = 0;
+const loadedPieces = [];
 
-    const screenW = window.innerWidth;
-    const screenH = window.innerHeight;
+memoryClipList.forEach((src, i)=>{
+  const piece = document.createElement("div");
+  piece.className = "memory-piece";
 
-    const pieceW = parseInt(sizes[i]);
-    const pieceH = pieceW * 9 / 16;
+  const pos = fixedPositions[i];
 
-    const pos = fixedPositions[i];
+  piece.style.left = pos.left;
+  piece.style.top = pos.top;
+  piece.style.width = sizes[i];
 
-    piece.style.left = pos.left;
-    piece.style.top = pos.top;
-    
-    piece.style.width = sizes[i];
+  piece.style.animationDelay = `${i * 0.45}s`;
 
-    piece.style.animationDelay = `${i * 0.45}s`;
+  piece.style.setProperty("--piece-blur", blurs[i]);
+  piece.style.setProperty("--piece-z", zIndexes[i]);
+  piece.style.setProperty("--rotate", `${Math.random() * 22 - 11}deg`);
+  piece.style.setProperty("--puzzle-pos", puzzlePositions[i]);
 
-    piece.style.setProperty("--piece-blur", blurs[i]);
-    piece.style.setProperty("--piece-z", zIndexes[i]);
-    piece.style.setProperty("--rotate", `${Math.random() * 22 - 11}deg`);
+  const tapeColors = [
+    "#d8c0a3",
+    "#e8d08c",
+    "#e6a8c8",
+    "#b8dff0",
+    "#c8a6e8"
+  ];
 
-const tapeColors = [
-  "#d8c0a3",
-  "#e8d08c",
-  "#e6a8c8",
-  "#b8dff0",
-  "#c8a6e8"
-];
+  piece.style.setProperty("--tape-color", tapeColors[i % tapeColors.length]);
+  piece.style.setProperty("--tape-rotate", `${Math.random() * 10 - 5}deg`);
 
-piece.style.setProperty("--tape-color", tapeColors[i % tapeColors.length]);
-piece.style.setProperty("--tape-rotate", `${Math.random() * 10 - 5}deg`);
-
-if(i === 1 || i === 4 || i === 6){
-  piece.classList.add("pin");
-}
-
-if(i === 3){
-  piece.classList.add("clip");
-}
-    
-    piece.style.setProperty("--puzzle-pos", puzzlePositions[i]);
-
-    piece.innerHTML = `
-      <video
-        src="${src}"
-        muted
-        playsinline
-        preload="auto"
-        loop>
-      </video>
-
-      <div class="memory-puzzle-tile"></div>
-    `;
-
-    const video = piece.querySelector("video");
-
- const showPiece = ()=>{
-  video.currentTime = 0.05;
-  video.play().catch(()=>{});
-
- setTimeout(()=>{
-
-  if(video.readyState >= 2){
-    piece.classList.add("ready");
-
-    video.currentTime = 0.05;
-
-    video.play().catch(()=>{});
+  if(i === 1 || i === 4 || i === 6){
+    piece.classList.add("pin");
   }
 
-}, i * 850);
-};
+  if(i === 3){
+    piece.classList.add("clip");
+  }
 
-video.addEventListener("canplay", showPiece, {once:true});
+  piece.innerHTML = `
+    <video
+      src="${src}"
+      muted
+      playsinline
+      preload="auto"
+      loop>
+    </video>
 
-video.load();
+    <div class="memory-puzzle-tile"></div>
+  `;
 
-    container.appendChild(piece);
-  });
+  const video = piece.querySelector("video");
+
+ video.addEventListener("loadeddata", ()=>{
+    loadedCount++;
+
+    if(loadedCount === memoryClipList.length){
+      loadedPieces.forEach((item, idx)=>{
+        const v = item.querySelector("video");
+
+        v.currentTime = 0.05;
+        v.play().catch(()=>{});
+
+        setTimeout(()=>{
+          item.classList.add("ready");
+        }, idx * 850);
+      });
+    }
+  }, {once:true});
+
+  video.load();
+
+  loadedPieces.push(piece);
+  container.appendChild(piece);
+});
 
  setTimeout(()=>{
   const memoryText = document.querySelector(".memory-bg-text");
@@ -2717,7 +2751,7 @@ video.load();
     startMemoryPuzzleMerge();
   }, 800);
 
-}, 7600);
+}, 9000);
 }
     
 function startMemoryPuzzleMerge(){
