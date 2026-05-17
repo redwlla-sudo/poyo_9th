@@ -2222,60 +2222,66 @@ function showOverlay(id){
     resetGameToStart();
   }
 
-  if(id === "memory"){
+if(id === "memory"){
 
-    if(mainBgm){
-      mainBgm.pause();
-      mainBgm.currentTime = 0;
-      mainBgm.muted = true;
-      mainBgm.volume = 0;
-    }
+  if(mainBgm){
+    mainBgm.pause();
+    mainBgm.currentTime = 0;
+    mainBgm.muted = true;
+    mainBgm.volume = 0;
+  }
 
-    memoryBgm.muted = audioMuted;
-    memoryBgm.currentTime = 0;
-    memoryBgm.volume = 0.24;
+  memoryBgm.pause();
+  memoryBgm.currentTime = 0;
+  memoryBgm.muted = audioMuted;
+  memoryBgm.volume = 0;
+  memoryBgm.load();
+
+  memoryBgm.play().catch((e)=>{
+    console.log("memoryBgm error", e);
+  });
+
+  if(filmSfx){
+    filmSfx.pause();
+    filmSfx.currentTime = 0;
+    filmSfx.muted = audioMuted;
+    filmSfx.volume = 0.35;
+    filmSfx.load();
+
+    filmSfx.play().catch((e)=>{
+      console.log("filmSfx error", e);
+    });
+  }
+
+  setTimeout(()=>{
+
+    memoryBgm.volume = audioMuted ? 0 : 0.24;
 
     if(filmSfx){
-      filmSfx.muted = audioMuted;
-      filmSfx.currentTime = 0;
-      filmSfx.volume = 0.22;
+      const startVol = filmSfx.volume;
+      const fadeTime = 700;
+      const startTime = performance.now();
 
-      filmSfx.play().catch((e)=>{
-        console.log("filmSfx error", e);
-      });
-    }
+      function fadeOutFilmSfx(now){
+        const progress = Math.min((now - startTime) / fadeTime, 1);
+        filmSfx.volume = startVol * (1 - progress);
 
-    setTimeout(()=>{
-
-      memoryBgm.play().catch((e)=>{
-        console.log("memoryBgm error", e);
-      });
-
-      if(filmSfx){
-        const startVol = filmSfx.volume;
-        const fadeTime = 700;
-        const startTime = performance.now();
-
-        function fadeOutFilmSfx(now){
-          const progress = Math.min((now - startTime) / fadeTime, 1);
-          filmSfx.volume = startVol * (1 - progress);
-
-          if(progress < 1){
-            requestAnimationFrame(fadeOutFilmSfx);
-          }else{
-            filmSfx.pause();
-            filmSfx.currentTime = 0;
-            filmSfx.volume = startVol;
-          }
+        if(progress < 1){
+          requestAnimationFrame(fadeOutFilmSfx);
+        }else{
+          filmSfx.pause();
+          filmSfx.currentTime = 0;
+          filmSfx.volume = startVol;
         }
-
-        requestAnimationFrame(fadeOutFilmSfx);
       }
 
-      playMemoryFilmIntro();
+      requestAnimationFrame(fadeOutFilmSfx);
+    }
 
-    },1200);
-  }
+    playMemoryFilmIntro();
+
+  },1200);
+}
 }
 
 /* 필름 인트로 전용 순서 */
