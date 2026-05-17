@@ -2299,7 +2299,6 @@ memoryBgm.play().catch((e)=>{
 }
 }
 
-/* 필름 인트로 전용 순서 */
 const memoryFilmList = [
   "clip/clip_4.mp4",
   "clip/clip_1.mp4",
@@ -2311,6 +2310,20 @@ const memoryFilmList = [
   "clip/clip_7.mp4",
   "clip/clip_8.mp4",
   "clip/clip_10.mp4"
+];
+  
+  /* 필름 인트로 전용 순서 */
+const memoryFilmDurations = [
+  7000, // clip_4
+  6500, // clip_1
+  6500, // clip_2
+  7000, // clip_3
+  8000, // clip_9
+  6500, // clip_5
+  6000, // clip_6
+  6000, // clip_7
+  6000, // clip_8
+  8000  // clip_10
 ];
   
 const memoryClipList = [
@@ -2360,112 +2373,111 @@ function playMemoryFilmIntro(){
   filmClip.classList.remove("film-fade","film-last");
 
   let filmIndex = 0;
-  let fadeFrame = null;
+  let clipTimer = null;
+
+  function fadeAudio(audio, targetVolume, duration){
+    if(!audio) return;
+
+    const startVolume = audio.volume;
+    const startTime = performance.now();
+
+    function animate(now){
+      const progress = Math.min((now - startTime) / duration, 1);
+      audio.volume = startVolume + (targetVolume - startVolume) * progress;
+
+      if(progress < 1){
+        requestAnimationFrame(animate);
+      }
+    }
+
+    requestAnimationFrame(animate);
+  }
 
   function playNextFilmClip(){
+    if(clipTimer){
+      clearTimeout(clipTimer);
+      clipTimer = null;
+    }
+
     if(filmIndex >= memoryFilmList.length){
       filmClip.pause();
       filmIntro.classList.add("hide");
 
       setTimeout(()=>{
         startMemoryFragments();
-      }, 1400);
+      },1400);
 
       return;
     }
 
     const src = memoryFilmList[filmIndex];
+    const duration = memoryFilmDurations[filmIndex];
     const isSoundClip = src.includes("clip_9");
     const isLastClip = src.includes("clip_10");
 
-   filmClip.classList.add("film-fade");
-
-if(filmFrame){
-  filmFrame.classList.add("film-black");
-}
-
-setTimeout(()=>{
-  filmClip.src = src;
-  filmClip.currentTime = 0;
-
-  filmClip.muted = !isSoundClip;
-  filmClip.volume = isSoundClip ? 0.18 : 0;
-
-  filmClip.classList.toggle("film-last", isLastClip);
-
-  if(isSoundClip){
-
-  const startVolume = memoryBgm.volume;
-  const targetVolume = 0.07;
-  const fadeDuration = 900;
-  const startTime = performance.now();
-
-  function fadeMemoryBgm(now){
-    const progress = Math.min((now - startTime) / fadeDuration, 1);
-
-    memoryBgm.volume =
-      startVolume +
-      (targetVolume - startVolume) * progress;
-
-    if(progress < 1){
-      requestAnimationFrame(fadeMemoryBgm);
-    }
-  }
-
-  requestAnimationFrame(fadeMemoryBgm);
-}
-
-filmClip.onended = ()=>{
-
-  if(isSoundClip){
-
-    const startVolume = memoryBgm.volume;
-    const targetVolume = 0.24;
-    const fadeDuration = 1200;
-    const startTime = performance.now();
-
-    function restoreMemoryBgm(now){
-      const progress = Math.min((now - startTime) / fadeDuration, 1);
-
-      memoryBgm.volume =
-        startVolume +
-        (targetVolume - startVolume) * progress;
-
-      if(progress < 1){
-        requestAnimationFrame(restoreMemoryBgm);
-      }
+    if(isLastClip){
+      fadeAudio(memoryBgm, 0.10, 6000);
     }
 
-    requestAnimationFrame(restoreMemoryBgm);
-  }
+    filmClip.classList.add("film-fade");
 
-  filmIndex++;
-  playNextFilmClip();
-};
-  if(src.includes("clip_10")){
-    setTimeout(()=>{
-      filmClip.pause();
-      filmIndex++;
-      playNextFilmClip();
-    }, 5500);
-  }
-
-  filmClip.play().catch(()=>{
-    setTimeout(()=>{
-      filmIndex++;
-      playNextFilmClip();
-    }, 3500);
-  });
-
-  setTimeout(()=>{
     if(filmFrame){
-      filmFrame.classList.remove("film-black");
+      filmFrame.classList.add("film-black");
     }
 
-    filmClip.classList.remove("film-fade");
-  },120);
+    setTimeout(()=>{
+      filmClip.src = src;
+      filmClip.currentTime = 0;
 
-},350);
+      filmClip.muted = !isSoundClip;
+      filmClip.volume = isSoundClip ? 0.18 : 0;
+
+      filmClip.classList.toggle("film-last", isLastClip);
+
+      if(isSoundClip){
+        fadeAudio(memoryBgm, 0.07, 900);
+      }
+
+      let alreadyNext = false;
+
+      function goNext(){
+        if(alreadyNext) return;
+        alreadyNext = true;
+
+        if(clipTimer){
+          clearTimeout(clipTimer);
+          clipTimer = null;
+        }
+
+        filmClip.pause();
+
+        if(isSoundClip && !isLastClip){
+          fadeAudio(memoryBgm, 0.24, 1200);
+        }
+
+        filmIndex++;
+        playNextFilmClip();
+      }
+
+      filmClip.onended = goNext;
+
+      filmClip.play().catch(()=>{
+        goNext();
+      });
+
+      clipTimer = setTimeout(()=>{
+        goNext();
+      }, duration);
+
+      setTimeout(()=>{
+        if(filmFrame){
+          filmFrame.classList.remove("film-black");
+        }
+
+        filmClip.classList.remove("film-fade");
+      },120);
+
+    },350);
   }
 
   playNextFilmClip();
