@@ -1488,6 +1488,21 @@ overflow-wrap:anywhere;
     saturate(.86);
 }
 
+  #filmClip.transition-soft{
+  transform:scale(1.06);
+  filter:blur(3px) brightness(1.15) saturate(1.1);
+}
+
+#filmClip.transition-strong{
+  transform:scale(1.16) rotate(.6deg);
+  filter:blur(8px) brightness(1.35) saturate(1.25);
+}
+
+.film-frame.transition-flash::after{
+  opacity:.75;
+  background:radial-gradient(circle,rgba(255,255,255,.9),rgba(0,0,0,.85));
+}
+
 .film-frame::after{
   content:"";
   position:absolute;
@@ -1813,7 +1828,7 @@ overflow-wrap:anywhere;
 
 <audio id="mainBgm" loop src="bgm.mp3"></audio>
 <audio id="stepBgm" loop src="step.bgm.mp3"></audio>
-<audio id="memoryBgm" loop src="poyo - I stan U.mp3"></audio>
+<audio id="memoryBgm" src="poyo - I stan U.mp3"></audio>
 <audio id="filmSfx" src="clip/film.sfx.mp3"></audio>
   
 <div id="main">
@@ -2137,6 +2152,12 @@ if(filmSfx){
   filmSfx.muted = audioMuted;
 }
 
+const currentFilmClip = document.getElementById("filmClip");
+
+if(currentFilmClip){
+  currentFilmClip.muted = audioMuted;
+}
+    
     volumeToggle.textContent=audioMuted ? "🔇" : "🔊";
   });
 }
@@ -2248,7 +2269,7 @@ if(id === "memory"){
 
 memoryBgm.pause();
 memoryBgm.currentTime = 0;
-memoryBgm.muted = false;
+memoryBgm.muted = audioMuted;
 memoryBgm.volume = 0.28;
 
 memoryBgm.play().catch((e)=>{
@@ -2269,7 +2290,7 @@ memoryBgm.play().catch((e)=>{
 
   setTimeout(()=>{
 
-    memoryBgm.muted = false;
+    memoryBgm.muted = audioMuted;
     memoryBgm.volume = 0.28;
 
     if(filmSfx){
@@ -2312,18 +2333,17 @@ const memoryFilmList = [
   "clip/clip_10.mp4"
 ];
   
-  /* 필름 인트로 전용 순서 */
-const memoryFilmDurations = [
-  7000, // clip_4
-  6500, // clip_1
-  6500, // clip_2
-  7000, // clip_3
-  8000, // clip_9
-  6500, // clip_5
-  6000, // clip_6
-  6000, // clip_7
-  6000, // clip_8
-  8000  // clip_10
+ const memoryFilmDurations = [
+  15000, // clip_4
+  14000, // clip_1
+  14000, // clip_2
+  15000, // clip_3
+  22000, // clip_9 실제 소리 강조
+  15000, // clip_5
+  14000, // clip_6
+  14000, // clip_7
+  14000, // clip_8
+  18000  // clip_10
 ];
   
 const memoryClipList = [
@@ -2370,7 +2390,7 @@ function playMemoryFilmIntro(){
   }
 
   filmIntro.classList.remove("hide");
-  filmClip.classList.remove("film-fade","film-last");
+  filmClip.classList.remove("film-fade","film-last","transition-soft","transition-strong");
 
   let filmIndex = 0;
   let clipTimer = null;
@@ -2403,39 +2423,43 @@ function playMemoryFilmIntro(){
       filmClip.pause();
       filmIntro.classList.add("hide");
 
+      fadeAudio(memoryBgm, 0.12, 1800);
+
       setTimeout(()=>{
         startMemoryFragments();
-      },1400);
+      },1200);
 
       return;
     }
 
     const src = memoryFilmList[filmIndex];
     const duration = memoryFilmDurations[filmIndex];
+
     const isSoundClip = src.includes("clip_9");
     const isLastClip = src.includes("clip_10");
+    const isStrongTransition = isSoundClip || isLastClip;
 
-    if(isLastClip){
-      fadeAudio(memoryBgm, 0.10, 6000);
-    }
-
-    filmClip.classList.add("film-fade");
+    filmClip.classList.add(isStrongTransition ? "transition-strong" : "transition-soft");
 
     if(filmFrame){
-      filmFrame.classList.add("film-black");
+      filmFrame.classList.add("film-black","transition-flash");
     }
 
     setTimeout(()=>{
       filmClip.src = src;
       filmClip.currentTime = 0;
 
-      filmClip.muted = !isSoundClip;
-      filmClip.volume = isSoundClip ? 0.18 : 0;
+      filmClip.muted = audioMuted || !isSoundClip;
+      filmClip.volume = isSoundClip ? 0.35 : 0;
 
       filmClip.classList.toggle("film-last", isLastClip);
 
       if(isSoundClip){
-        fadeAudio(memoryBgm, 0.07, 900);
+        fadeAudio(memoryBgm, 0, 700);
+      }
+
+      if(isLastClip){
+        fadeAudio(memoryBgm, 0.12, 6000);
       }
 
       let alreadyNext = false;
@@ -2451,8 +2475,8 @@ function playMemoryFilmIntro(){
 
         filmClip.pause();
 
-        if(isSoundClip && !isLastClip){
-          fadeAudio(memoryBgm, 0.24, 1200);
+        if(isSoundClip){
+          fadeAudio(memoryBgm, 0.28, 1300);
         }
 
         filmIndex++;
@@ -2471,13 +2495,13 @@ function playMemoryFilmIntro(){
 
       setTimeout(()=>{
         if(filmFrame){
-          filmFrame.classList.remove("film-black");
+          filmFrame.classList.remove("film-black","transition-flash");
         }
 
-        filmClip.classList.remove("film-fade");
-      },120);
+        filmClip.classList.remove("film-fade","transition-soft","transition-strong");
+      },180);
 
-    },350);
+    },420);
   }
 
   playNextFilmClip();
