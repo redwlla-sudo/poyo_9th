@@ -1475,6 +1475,26 @@ overflow-wrap:anywhere;
     filter .75s ease;
 }
 
+.film-crossfade{
+  animation:filmCrossFade 1.15s ease forwards;
+}
+
+@keyframes filmCrossFade{
+  from{
+    opacity:0;
+    transform:scale(1.025);
+    filter:blur(5px) brightness(.75);
+  }
+  to{
+    opacity:.92;
+    transform:scale(1);
+    filter:
+      contrast(1.05)
+      brightness(.92)
+      saturate(.92);
+  }
+}
+
 #filmClip.film-fade{
   opacity:0;
   transform:scale(1.035);
@@ -1527,26 +1547,6 @@ overflow-wrap:anywhere;
   100%{transform:scale(1);}
 }
 
-.film-frame.transition-flash::after{
-  opacity:.42;
-  background:radial-gradient(circle,rgba(255,255,255,.65),rgba(0,0,0,.9));
-}
-
-.film-frame::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:#000;
-  opacity:0;
-  pointer-events:none;
-  z-index:5;
-  transition:opacity .35s ease;
-}
-
-.film-frame.film-black::after{
-  opacity:1;
-}
-  
 .memory-film-intro .light-dust{
   position:absolute;
   inset:-20%;
@@ -2125,11 +2125,11 @@ let audioMuted=false;
 let isWheelLocked=false;
 
 mainBgm.muted=false;
-mainBgm.volume=0.30;
+mainBgm.volume=0.45;
 
 window.addEventListener("click",()=>{
   introVideo.muted=false;
-  introVideo.volume=0.55;
+  introVideo.volume=0.8;
   introVideo.play().catch(()=>{});
 },{once:true});
 
@@ -2157,7 +2157,7 @@ function enter(){
   move(0);
 
   mainBgm.muted=false;
-  mainBgm.volume=0.30;
+  mainBgm.volume=0.45;
   mainBgm.play().catch(()=>{});
 }
 
@@ -2299,7 +2299,7 @@ if(id === "memory"){
 memoryBgm.pause();
 memoryBgm.currentTime = 0;
 memoryBgm.muted = audioMuted;
-memoryBgm.volume = 0.28;
+memoryBgm.volume = 0.42;
 
 memoryBgm.play().catch((e)=>{
   console.log("memoryBgm error", e);
@@ -2320,7 +2320,7 @@ memoryBgm.play().catch((e)=>{
   setTimeout(()=>{
 
     memoryBgm.muted = audioMuted;
-    memoryBgm.volume = 0.28;
+    memoryBgm.volume = 0.42;
 
     if(filmSfx){
       const startVol = filmSfx.volume;
@@ -2411,21 +2411,22 @@ function shuffleArray(arr){
 function playMemoryFilmIntro(){
   const filmIntro = document.getElementById("memoryFilmIntro");
   const filmClip = document.getElementById("filmClip");
-  const filmFrame = document.querySelector(".film-frame");
 
   if(!filmIntro || !filmClip){
     startMemoryFragments();
     return;
   }
 
-filmIntro.classList.remove("hide");
-filmClip.classList.remove(
-  "film-fade",
-  "film-last",
-  "transition-soft",
-  "transition-strong",
-  "first-fade-in"
-);
+  filmIntro.classList.remove("hide");
+
+  filmClip.classList.remove(
+    "film-fade",
+    "film-last",
+    "transition-soft",
+    "transition-strong",
+    "first-fade-in",
+    "film-crossfade"
+  );
 
   let filmIndex = 0;
   let clipTimer = null;
@@ -2458,97 +2459,84 @@ filmClip.classList.remove(
       filmClip.pause();
       filmIntro.classList.add("hide");
 
-      fadeAudio(memoryBgm, 0.12, 1800);
+      fadeAudio(memoryBgm, 0.22, 1800);
 
       setTimeout(()=>{
         startMemoryFragments();
-      },1200);
+      },700);
 
       return;
     }
 
     const src = memoryFilmList[filmIndex];
     const duration = memoryFilmDurations[filmIndex];
-
     const isSoundClip = src.includes("clip_9");
     const isLastClip = src.includes("clip_10");
-    const isStrongTransition = isSoundClip || isLastClip;
 
-    filmClip.classList.add(isStrongTransition ? "transition-strong" : "transition-soft");
+    filmClip.classList.remove(
+      "film-fade",
+      "film-last",
+      "transition-soft",
+      "transition-strong",
+      "first-fade-in",
+      "film-crossfade"
+    );
 
-    if(filmFrame){
-  filmFrame.classList.add("film-black","transition-flash","zoom-transition");
-}
+    void filmClip.offsetWidth;
 
-setTimeout(()=>{
-  if(filmFrame){
-    filmFrame.classList.remove("zoom-transition");
-  }
-},700);
-    
-    setTimeout(()=>{
-      filmClip.src = src;
-      filmClip.currentTime = 0;
+    filmClip.src = src;
+    filmClip.currentTime = 0;
+    filmClip.muted = audioMuted || !isSoundClip;
+    filmClip.volume = isSoundClip ? 0.55 : 0;
 
-      filmClip.muted = audioMuted || !isSoundClip;
-      filmClip.volume = isSoundClip ? 0.5 : 0;
+    filmClip.classList.toggle("film-last", isLastClip);
+    filmClip.classList.add("film-crossfade");
 
-      filmClip.classList.toggle("film-last", isLastClip);
 
-      if(filmIndex === 0){
+    if(filmIndex === 0){
   filmClip.classList.add("first-fade-in");
 }
 
     if(isSoundClip){
-  fadeAudio(memoryBgm, 0, 1200);
-}
+      fadeAudio(memoryBgm, 0, 1200);
+    }
 
-      if(isLastClip){
-        fadeAudio(memoryBgm, 0.12, 6000);
+    if(isLastClip){
+      fadeAudio(memoryBgm, 0.22, 6000);
+    }
+
+    let alreadyNext = false;
+
+    function goNext(){
+      if(alreadyNext) return;
+      alreadyNext = true;
+
+      if(clipTimer){
+        clearTimeout(clipTimer);
+        clipTimer = null;
       }
 
-      let alreadyNext = false;
+      filmClip.pause();
 
-      function goNext(){
-        if(alreadyNext) return;
-        alreadyNext = true;
-
-        if(clipTimer){
-          clearTimeout(clipTimer);
-          clipTimer = null;
-        }
-
-        filmClip.pause();
-
-        if(isSoundClip){
-          fadeAudio(memoryBgm, 0.28, 1300);
-        }
-
-        filmIndex++;
-        playNextFilmClip();
+      if(isSoundClip){
+        fadeAudio(memoryBgm, 0.42, 1300);
       }
 
-      filmClip.onended = goNext;
+      filmIndex++;
+      playNextFilmClip();
+    }
 
-      filmClip.play().catch(()=>{
+    filmClip.onended = goNext;
+
+    filmClip.play().catch(()=>{
+      goNext();
+    });
+
+    if(duration !== null){
+      clipTimer = setTimeout(()=>{
         goNext();
-      });
-
-     if(duration !== null){
-  clipTimer = setTimeout(()=>{
-    goNext();
-  }, duration);
-}
-
-      setTimeout(()=>{
-        if(filmFrame){
-          filmFrame.classList.remove("film-black","transition-flash");
-        }
-
-        filmClip.classList.remove("film-fade","transition-soft","transition-strong");
-      },180);
-
-    },420);
+      }, duration);
+    }
   }
 
   playNextFilmClip();
@@ -2790,7 +2778,7 @@ function hideOverlays(){
   }
 
   mainBgm.muted = audioMuted;
-  mainBgm.volume = 0.30;
+  mainBgm.volume = 0.45;
   mainBgm.play().catch(()=>{});
   document.body.classList.remove("hide-dots");
   document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
