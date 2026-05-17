@@ -2227,14 +2227,14 @@ if(id === "memory"){
   if(mainBgm){
     mainBgm.pause();
     mainBgm.currentTime = 0;
-    mainBgm.muted = true;
+    mainBgm.muted = audioMuted;
     mainBgm.volume = 0;
   }
 
- memoryBgm.pause();
+memoryBgm.pause();
 memoryBgm.currentTime = 0;
 memoryBgm.muted = false;
-memoryBgm.volume = 0.01;
+memoryBgm.volume = 0.28;
 
 memoryBgm.play().catch((e)=>{
   console.log("memoryBgm error", e);
@@ -2644,6 +2644,7 @@ function hideOverlays(){
 
   mainBgm.muted = audioMuted;
   mainBgm.volume = 0.30;
+  mainBgm.play().catch(()=>{});
   document.body.classList.remove("hide-dots");
   document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("show"));
 
