@@ -1498,6 +1498,16 @@ overflow-wrap:anywhere;
   filter:blur(8px) brightness(1.35) saturate(1.25);
 }
 
+  .film-frame.zoom-transition{
+  animation:filmZoomHit .7s ease both;
+}
+
+@keyframes filmZoomHit{
+  0%{transform:scale(1);}
+  45%{transform:scale(1.08);}
+  100%{transform:scale(1);}
+}
+
 .film-frame.transition-flash::after{
   opacity:.75;
   background:radial-gradient(circle,rgba(255,255,255,.9),rgba(0,0,0,.85));
@@ -2338,12 +2348,12 @@ const memoryFilmList = [
   14000, // clip_1
   14000, // clip_2
   15000, // clip_3
-  22000, // clip_9 실제 소리 강조
+  null,  // clip_9 끝까지 재생
   15000, // clip_5
   14000, // clip_6
   14000, // clip_7
   14000, // clip_8
-  18000  // clip_10
+  null   // clip_10 끝까지 재생
 ];
   
 const memoryClipList = [
@@ -2442,9 +2452,15 @@ function playMemoryFilmIntro(){
     filmClip.classList.add(isStrongTransition ? "transition-strong" : "transition-soft");
 
     if(filmFrame){
-      filmFrame.classList.add("film-black","transition-flash");
-    }
+  filmFrame.classList.add("film-black","transition-flash","zoom-transition");
+}
 
+setTimeout(()=>{
+  if(filmFrame){
+    filmFrame.classList.remove("zoom-transition");
+  }
+},700);
+    
     setTimeout(()=>{
       filmClip.src = src;
       filmClip.currentTime = 0;
@@ -2454,9 +2470,9 @@ function playMemoryFilmIntro(){
 
       filmClip.classList.toggle("film-last", isLastClip);
 
-      if(isSoundClip){
-        fadeAudio(memoryBgm, 0, 700);
-      }
+    if(isSoundClip){
+  fadeAudio(memoryBgm, 0, 1200);
+}
 
       if(isLastClip){
         fadeAudio(memoryBgm, 0.12, 6000);
@@ -2489,9 +2505,11 @@ function playMemoryFilmIntro(){
         goNext();
       });
 
-      clipTimer = setTimeout(()=>{
-        goNext();
-      }, duration);
+     if(duration !== null){
+  clipTimer = setTimeout(()=>{
+    goNext();
+  }, duration);
+}
 
       setTimeout(()=>{
         if(filmFrame){
@@ -2669,7 +2687,7 @@ setTimeout(()=>{
     container.appendChild(piece);
   });
 
-  setTimeout(()=>{
+ setTimeout(()=>{
   const memoryText = document.querySelector(".memory-bg-text");
 
   if(memoryText){
@@ -2678,7 +2696,7 @@ setTimeout(()=>{
 
   setTimeout(()=>{
     startMemoryPuzzleMerge();
-  }, 6800);
+  }, 800);
 
 }, 6200);
 }
@@ -2733,7 +2751,7 @@ setTimeout(()=>{
     }
   },450);
 
-},2400);
+},4000);
 }
   
 function hideOverlays(){
