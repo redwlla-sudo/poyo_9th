@@ -2382,21 +2382,19 @@ const memoryFilmList = [
   "clip/clip_5.mp4",
   "clip/clip_6.mp4",
   "clip/clip_7.mp4",
-  "clip/clip_8.mp4",
-  "clip/clip_10.mp4"
+  "clip/clip_8.mp4"
 ];
   
 const memoryFilmDurations = [
-  14000, // clip_4
-  13000, // clip_1
-  13000, // clip_2
-  14000, // clip_3
-  null,  // clip_9 끝까지 재생
-  14000, // clip_5
-  13000, // clip_6
-  13000, // clip_7
-  13000, // clip_8
-  null   // clip_10 끝까지 재생
+  14000,
+  13000,
+  13000,
+  14000,
+  14000,
+  14000,
+  13000,
+  13000,
+  13000
 ];
   
 const memoryClipList = [
@@ -2494,8 +2492,8 @@ function playMemoryFilmIntro(){
 
     const src = memoryFilmList[filmIndex];
     const duration = memoryFilmDurations[filmIndex];
-    const isSoundClip = src.includes("clip_9");
-    const isLastClip = src.includes("clip_10");
+   const isSoundClip = false;
+   const isLastClip = false;
 
     filmClip.classList.remove(
       "film-fade",
@@ -2521,14 +2519,6 @@ function playMemoryFilmIntro(){
   filmClip.classList.add("first-fade-in");
 }
 
-    if(isSoundClip){
-      fadeAudio(memoryBgm, 0, 1200);
-    }
-
-    if(isLastClip){
-      fadeAudio(memoryBgm, 0.22, 6000);
-    }
-
     let alreadyNext = false;
 
     function goNext(){
@@ -2541,10 +2531,6 @@ function playMemoryFilmIntro(){
       }
 
       filmClip.pause();
-
-      if(isSoundClip){
-        fadeAudio(memoryBgm, 0.42, 1300);
-      }
 
       filmIndex++;
       playNextFilmClip();
@@ -2730,11 +2716,11 @@ memoryClipList.forEach((src, i)=>{
     memoryText.classList.add("show");
   }
 
-  setTimeout(()=>{
-    startMemoryPuzzleMerge();
-  }, 800);
+ setTimeout(()=>{
+  startMemoryPuzzleMerge();
+}, 5200);
 
-}, 9000);
+}, 7000);
 }
     
 function startMemoryPuzzleMerge(){
