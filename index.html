@@ -305,6 +305,64 @@ opacity:0.15;
 pointer-events:none;
 }
 
+.content.step-unlocking{
+  position:relative;
+  display:inline-block;
+  color:#00ff88;
+  animation:lockedGlitchOut .75s steps(2,end) forwards;
+}
+
+.content.step-unlocked{
+  animation:unlockedTextIn .55s ease forwards;
+}
+
+@keyframes lockedGlitchOut{
+  0%{
+    opacity:1;
+    transform:translate(0,0);
+    text-shadow:
+      2px 0 #ff0055,
+      -2px 0 #00ffff;
+  }
+
+  20%{
+    transform:translate(-3px,2px);
+    text-shadow:
+      -3px 0 #ff0055,
+      3px 0 #00ffff;
+  }
+
+  45%{
+    transform:translate(3px,-2px);
+    opacity:.8;
+  }
+
+  70%{
+    transform:translate(-2px,1px);
+    opacity:.45;
+  }
+
+  100%{
+    opacity:0;
+    transform:translate(0,0) scale(.96);
+    filter:blur(3px);
+  }
+}
+
+@keyframes unlockedTextIn{
+  from{
+    opacity:0;
+    transform:translateY(6px);
+    filter:blur(4px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+    filter:blur(0);
+  }
+}
+
 /* STEP CARD */
 #stepOverlay{
 position:fixed;
@@ -643,7 +701,7 @@ text-shadow:
 .page5-text{
 text-align:center;
 
-font-size:3.5rem !important;
+font-size:4.1rem !important;
 line-height:1.5 !important;
 
 font-family:'Jalnan' !important;
@@ -3832,8 +3890,17 @@ stepState.unlocked=nextStepNum;
 nextStep.classList.remove("locked");
 
 const content=nextStep.querySelector(".content");
+
 if(content){
-content.innerHTML=stepData[nextStepNum].unlockText;
+  content.classList.remove("step-unlocked");
+  content.classList.add("step-unlocking");
+  content.innerHTML="LOCKED";
+
+  setTimeout(()=>{
+    content.classList.remove("step-unlocking");
+    content.innerHTML=stepData[nextStepNum].unlockText;
+    content.classList.add("step-unlocked");
+  },750);
 }
 }
 
