@@ -302,14 +302,14 @@ transform:scale(1.05);
 
 .step.locked{
 opacity:0.15;
-pointer-events:none;
+pointer-events:auto;
 }
 
 .content.step-unlocking{
   position:relative;
   display:inline-block;
   color:#00ff88;
-  animation:lockedGlitchOut .75s steps(2,end) forwards;
+  animation:lockedGlitchOut 1.15s steps(2,end) forwards;
 }
 
 .content.step-unlocked{
@@ -3900,13 +3900,35 @@ if(content){
     content.classList.remove("step-unlocking");
     content.innerHTML=stepData[nextStepNum].unlockText;
     content.classList.add("step-unlocked");
-  },750);
+  },1150);
 }
 }
 
 steps.forEach(step=>{
-step.addEventListener("click",()=>{
-if(step.classList.contains("locked")) return;
+step.addEventListener("click",()=>{if(step.classList.contains("locked")){
+  const stepNum=parseInt(step.dataset.step,10);
+
+  if(stepNum !== stepState.unlocked + 1) return;
+
+  stepState.unlocked = stepNum;
+  step.classList.remove("locked");
+
+  const content = step.querySelector(".content");
+
+  if(content){
+    content.classList.remove("step-unlocked");
+    content.classList.add("step-unlocking");
+    content.innerHTML = "LOCKED";
+
+    setTimeout(()=>{
+      content.classList.remove("step-unlocking");
+      content.innerHTML = stepData[stepNum].unlockText;
+      content.classList.add("step-unlocked");
+    },1150);
+  }
+
+  return;
+}
 
 const stepNum=parseInt(step.dataset.step,10);
 
@@ -3916,7 +3938,6 @@ openStep(stepNum);
 steps.forEach(s=>s.classList.remove("active"));
 step.classList.add("active");
 
-unlockNextStep(stepNum);
 });
 });
 
