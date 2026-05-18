@@ -1421,7 +1421,7 @@ overflow-wrap:anywhere;
       rgba(0,0,0,.18),
       rgba(0,0,0,.18)
     ),
-    url("memory_stage_bg.png")
+    url("memory_stage_bg.jpg")
     center/cover no-repeat;
 
   display:flex;
@@ -1433,6 +1433,12 @@ overflow-wrap:anywhere;
   overflow:hidden;
 
   transition:opacity 1.4s ease;
+}
+
+.memory-film-intro.hide{
+  opacity:0;
+  pointer-events:none;
+  visibility:hidden;
 }
 
 .film-frame{
@@ -2414,6 +2420,7 @@ function playMemoryFilmIntro(){
     return;
   }
 
+  filmIntro.style.display = "flex";
   filmIntro.classList.remove("hide");
 
   filmClip.classList.remove(
@@ -2455,6 +2462,10 @@ function playMemoryFilmIntro(){
     if(filmIndex >= memoryFilmList.length){
       filmClip.pause();
       filmIntro.classList.add("hide");
+
+      setTimeout(()=>{
+        filmIntro.style.display = "none";
+      },1400);
 
       fadeAudio(memoryBgm, 0.42, 1800);
 
