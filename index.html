@@ -2694,10 +2694,13 @@ memoryClipList.forEach((src, i)=>{
       memoryText.classList.add("show");
     }
 
-    setTimeout(()=>{
-      startMemoryPuzzleMerge();
-    }, 5200);
+   const targetMergeTime = 182; // 3분 2초
+const nowMusicTime = memoryBgm.currentTime;
+const waitToMerge = Math.max((targetMergeTime - nowMusicTime) * 1000, 0);
 
+setTimeout(()=>{
+  startMemoryPuzzleMerge();
+}, waitToMerge);
   }, loadedPieces.length * 850 + 600);
     }
   }, {once:true});
@@ -2744,6 +2747,10 @@ if(flash){
   flash.classList.add("show");
 }
 
+const targetArtTime = 186; // 3분 6초
+const nowArtMusicTime = memoryBgm.currentTime;
+const waitToArt = Math.max((targetArtTime - nowArtMusicTime) * 1000, 0);
+
 setTimeout(()=>{
 
   pieces.forEach(piece=>{
@@ -2754,7 +2761,7 @@ setTimeout(()=>{
     finalArt.classList.add("show");
   }
 
-},2400);
+}, waitToArt);
 
 setTimeout(()=>{
   if(flash){
