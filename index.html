@@ -4272,24 +4272,56 @@ function buildSlots(){
   });
 }
 
-function getNextSlot(){
-  const slots = buildSlots();
+function isOverlapping(a,b){
+  const margin = 22;
 
-  const usedSlotIndexes = postitList.map(
-    item => item.slotIndex
+  return !(
+    a.x + a.w + margin < b.x ||
+    a.x > b.x + b.w + margin ||
+    a.y + a.h + margin < b.y ||
+    a.y > b.y + b.h + margin
   );
+}
 
-  const availableSlots = slots.filter(
-    slot => !usedSlotIndexes.includes(slot.slotIndex)
-  );
+function getRandomSafePosition(){
+  const stageRect = guestStage.getBoundingClientRect();
+  const inputBox = document.querySelector(".guestbook-input-box");
+  const inputRect = inputBox.getBoundingClientRect();
 
-  if(availableSlots.length === 0){
-    return slots[0];
+  const inputTop = inputRect.top - stageRect.top;
+
+  const minX = 40;
+  const maxX = stageRect.width - POSTIT_W - 40;
+
+  const minY = 40;
+  const maxY = inputTop - POSTIT_H - 35;
+
+  for(let i=0;i<80;i++){
+    const x = Math.random() * (maxX - minX) + minX;
+    const y = Math.random() * (maxY - minY) + minY;
+
+    const candidate = {
+      x:x,
+      y:y,
+      w:POSTIT_W,
+      h:POSTIT_H,
+      slotIndex:Date.now() + Math.random()
+    };
+
+    const overlap = postitList.some(item =>
+      isOverlapping(candidate, item.rect)
+    );
+
+    if(!overlap){
+      return candidate;
+    }
   }
 
-  return availableSlots[
-    Math.floor(Math.random() * availableSlots.length)
-  ];
+  return buildSlots()[Math.floor(Math.random() * buildSlots().length)];
+}
+
+function getNextSlot(){
+  return getRandomSafePosition();
 }
 
 function removePostit(target){
