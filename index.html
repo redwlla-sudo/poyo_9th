@@ -2386,15 +2386,15 @@ const memoryFilmList = [
 ];
   
 const memoryFilmDurations = [
-  14000,
-  13000,
-  13000,
-  14000,
-  14000,
-  14000,
-  13000,
-  13000,
-  13000
+  15000, // clip_4
+  14000, // clip_1
+  14000, // clip_2
+  15000, // clip_3
+  15000, // clip_9
+  51000, // clip_5 전체
+  14000, // clip_6
+  14000, // clip_7
+  17800  // clip_8
 ];
   
 const memoryClipList = [
@@ -2751,26 +2751,29 @@ piece.style.transform =
   `rotate(${mergeRotate}deg) scale(1)`;
   });
 
-const flash = document.getElementById("memoryWhiteFlash");
-
-if(flash){
-  flash.classList.add("show");
-}
-
-pieces.forEach(piece=>{
-  piece.style.display = "none";
-});
-
-if(finalArt){
-  finalArt.classList.add("show");
-}
-
 setTimeout(()=>{
+  const flash = document.getElementById("memoryWhiteFlash");
+
   if(flash){
-    flash.classList.remove("show");
-    flash.classList.add("hide");
+    flash.classList.add("show");
   }
-},450);
+
+  pieces.forEach(piece=>{
+    piece.style.display = "none";
+  });
+
+  if(finalArt){
+    finalArt.classList.add("show");
+  }
+
+  setTimeout(()=>{
+    if(flash){
+      flash.classList.remove("show");
+      flash.classList.add("hide");
+    }
+  },450);
+
+},4000);
 }
   
 function hideOverlays(){
