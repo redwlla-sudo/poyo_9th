@@ -2391,10 +2391,10 @@ const memoryFilmDurations = [
   14000, // clip_2
   15000, // clip_3
   15000, // clip_9
-  51000, // clip_5 전체
-  14000, // clip_6
+  14000, // clip_5
+  null,  // clip_6 전체 재생
   14000, // clip_7
-  17800  // clip_8
+  14000  // clip_8
 ];
   
 const memoryClipList = [
@@ -2751,12 +2751,13 @@ piece.style.transform =
   `rotate(${mergeRotate}deg) scale(1)`;
   });
 
-setTimeout(()=>{
-  const flash = document.getElementById("memoryWhiteFlash");
+const flash = document.getElementById("memoryWhiteFlash");
 
-  if(flash){
-    flash.classList.add("show");
-  }
+if(flash){
+  flash.classList.add("show");
+}
+
+setTimeout(()=>{
 
   pieces.forEach(piece=>{
     piece.style.display = "none";
@@ -2766,14 +2767,14 @@ setTimeout(()=>{
     finalArt.classList.add("show");
   }
 
-  setTimeout(()=>{
-    if(flash){
-      flash.classList.remove("show");
-      flash.classList.add("hide");
-    }
-  },450);
+},2400);
 
-},4000);
+setTimeout(()=>{
+  if(flash){
+    flash.classList.remove("show");
+    flash.classList.add("hide");
+  }
+},450);
 }
   
 function hideOverlays(){
