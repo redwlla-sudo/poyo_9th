@@ -4296,6 +4296,13 @@ function getRandomSafePosition(){
   const minY = 40;
   const maxY = inputTop - POSTIT_H - 35;
 
+const forbiddenZone = {
+  x: stageRect.width * 0.12,
+  y: stageRect.height * 0.32,
+  w: stageRect.width * 0.76,
+  h: stageRect.height * 0.32
+};
+
   for(let i=0;i<80;i++){
     const x = Math.random() * (maxX - minX) + minX;
     const y = Math.random() * (maxY - minY) + minY;
@@ -4312,14 +4319,23 @@ function getRandomSafePosition(){
       isOverlapping(candidate, item.rect)
     );
 
-    if(!overlap){
-      return candidate;
+  const hitChalkText = isOverlapping(candidate, forbiddenZone);
+
+   if(!overlap && !hitChalkText){
+  return candidate;
     }
   }
 
-  return buildSlots()[Math.floor(Math.random() * buildSlots().length)];
-}
+ return {
+  x:40,
+  y:40,
+  w:POSTIT_W,
+  h:POSTIT_H,
+  slotIndex:Date.now()
+};
 
+}
+  
 function getNextSlot(){
   return getRandomSafePosition();
 }
