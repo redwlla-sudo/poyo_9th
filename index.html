@@ -1705,11 +1705,13 @@ overflow-wrap:anywhere;
 
   transform:scale(1) rotate(var(--rotate));
 
- left 4s ease,
-top 4s ease,
-width 4s ease,
-transform 4s ease,
-filter 4s ease;
+transition:
+  opacity .6s ease,
+  left 4s ease,
+  top 4s ease,
+  width 4s ease,
+  transform 4s ease,
+  filter 4s ease;
 }
 
 .memory-piece.ready{
