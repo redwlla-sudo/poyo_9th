@@ -4326,14 +4326,14 @@ const forbiddenZone = {
     }
   }
 
- return {
-  x:40,
-  y:40,
-  w:POSTIT_W,
-  h:POSTIT_H,
-  slotIndex:Date.now()
-};
-
+ return buildSlots()
+  .filter(slot => !isOverlapping(slot, forbiddenZone))[0] || {
+    x:40,
+    y:40,
+    w:POSTIT_W,
+    h:POSTIT_H,
+    slotIndex:Date.now()
+  };
 }
   
 function getNextSlot(){
