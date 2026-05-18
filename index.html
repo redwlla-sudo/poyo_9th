@@ -1417,11 +1417,12 @@ overflow-wrap:anywhere;
   z-index:25;
 
   background:
-    radial-gradient(circle at center,
-      rgba(255,255,255,.16) 0%,
-      rgba(35,25,25,.35) 42%,
-      rgba(8,6,8,.92) 100%),
-    linear-gradient(180deg,#151018 0%,#070507 100%);
+    linear-gradient(
+      rgba(0,0,0,.18),
+      rgba(0,0,0,.18)
+    ),
+    url("memory_background.png")
+    center/cover no-repeat;
 
   display:flex;
   align-items:center;
@@ -1432,31 +1433,6 @@ overflow-wrap:anywhere;
   overflow:hidden;
 
   transition:opacity 1.4s ease;
-}
-
-.memory-film-intro .cinema-seats{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  height:24vh;
-  z-index:1;
-  pointer-events:none;
-
-  background:
-    repeating-linear-gradient(
-      90deg,
-      #7a1118 0 52px,
-      #33080b 52px 62px,
-      #7a1118 62px 112px
-    );
-
-  opacity:.82;
-  mask-image:linear-gradient(to top, black 0%, black 62%, transparent 100%);
-}
-  
-.memory-film-intro.hide{
-  opacity:0;
 }
 
 .film-frame{
@@ -2003,7 +1979,6 @@ STEP 3
   <div class="memory-fragment-stage">
 
 <div id="memoryFilmIntro" class="memory-film-intro">
-  <div class="cinema-seats"></div>
   <div class="light-dust"></div>
   <div class="film-noise"></div>
   <div class="film-frame">
