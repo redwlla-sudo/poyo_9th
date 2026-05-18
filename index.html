@@ -2481,7 +2481,7 @@ function playMemoryFilmIntro(){
       filmClip.pause();
       filmIntro.classList.add("hide");
 
-      fadeAudio(memoryBgm, 0.22, 1800);
+      fadeAudio(memoryBgm, 0.42, 1800);
 
       setTimeout(()=>{
         startMemoryFragments();
@@ -2690,16 +2690,29 @@ memoryClipList.forEach((src, i)=>{
     loadedCount++;
 
     if(loadedCount === memoryClipList.length){
-      loadedPieces.forEach((item, idx)=>{
-        const v = item.querySelector("video");
+  loadedPieces.forEach((item, idx)=>{
+    const v = item.querySelector("video");
 
-        v.currentTime = 0.05;
-        v.play().catch(()=>{});
+    v.currentTime = 0.05;
+    v.play().catch(()=>{});
 
-        setTimeout(()=>{
-          item.classList.add("ready");
-        }, idx * 850);
-      });
+    setTimeout(()=>{
+      item.classList.add("ready");
+    }, idx * 850);
+  });
+
+  setTimeout(()=>{
+    const memoryText = document.querySelector(".memory-bg-text");
+
+    if(memoryText){
+      memoryText.classList.add("show");
+    }
+
+    setTimeout(()=>{
+      startMemoryPuzzleMerge();
+    }, 5200);
+
+  }, loadedPieces.length * 850 + 600);
     }
   }, {once:true});
 
@@ -2709,18 +2722,6 @@ memoryClipList.forEach((src, i)=>{
   container.appendChild(piece);
 });
 
- setTimeout(()=>{
-  const memoryText = document.querySelector(".memory-bg-text");
-
-  if(memoryText){
-    memoryText.classList.add("show");
-  }
-
- setTimeout(()=>{
-  startMemoryPuzzleMerge();
-}, 5200);
-
-}, 7000);
 }
     
 function startMemoryPuzzleMerge(){
