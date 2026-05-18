@@ -1105,6 +1105,7 @@ overflow-wrap:anywhere;
 .game-overlay{
   background:#050505;
   overflow:hidden;
+  padding-top:0;
 }
 
 .game-start-screen{
@@ -1307,7 +1308,7 @@ overflow-wrap:anywhere;
   width:100%;
   aspect-ratio:16/9;
   height:auto;
-  object-fit:contain;
+  object-fit:cover;
   background:#000;
   display:block;
 }
@@ -2179,7 +2180,7 @@ STEP 3
   <div class="game-vs-area">
 
   <button class="game-choice" id="leftChoice">
-  <img id="leftThumb" src="">
+ <img id="leftThumb" src="images/thumbnails/thumbnail1.jpg">
   <div class="thumb-hint" id="leftHint"></div>
 </button>
 
@@ -2189,7 +2190,7 @@ STEP 3
 </div>
 
     <button class="game-choice" id="rightChoice">
-  <img id="rightThumb" src="">
+ <img id="rightThumb" src="images/thumbnails/thumbnail2.jpg">
   <div class="thumb-hint" id="rightHint"></div>
 </button>
 
@@ -3079,6 +3080,22 @@ function startGame(){
 
   resetGameState();
 
+function startGame(){
+
+  const firstLeft = randomThumbnail();
+  let firstRight = randomThumbnail();
+
+  while(firstLeft === firstRight){
+    firstRight = randomThumbnail();
+  }
+
+currentLeft = firstLeft;
+currentRight = firstRight;
+
+leftThumb.src = getThumbSrc(firstLeft);
+rightThumb.src = getThumbSrc(firstRight);
+
+ 
   gameStartScreen.style.display = "none";
   gamePlayScreen.style.display = "block";
 
