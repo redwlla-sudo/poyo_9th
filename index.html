@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ㄹ<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -4328,14 +4328,29 @@ function buildSlots(){
 }
 
 function isSlotOverlapping(a,b){
-  const margin = 28;
+  const marginX = 8;
+  const marginY = 34;
 
- return !(
-  a.x + (a.w + 40) + margin < b.x ||
-  a.x > b.x + (b.w + 40) + margin ||
-  a.y + (a.h + 30) + margin < b.y ||
-  a.y > b.y + (b.h + 30) + margin
-);
+  const aBox = {
+    x: a.x + 18,
+    y: a.y + 46,
+    w: a.w - 36,
+    h: a.h - 56
+  };
+
+  const bBox = {
+    x: b.x + 18,
+    y: b.y + 46,
+    w: b.w - 36,
+    h: b.h - 56
+  };
+
+  return !(
+    aBox.x + aBox.w + marginX < bBox.x ||
+    aBox.x > bBox.x + bBox.w + marginX ||
+    aBox.y + aBox.h + marginY < bBox.y ||
+    aBox.y > bBox.y + bBox.h + marginY
+  );
 }
   
 function getNextSlot(excludeSlotIndex = null){
