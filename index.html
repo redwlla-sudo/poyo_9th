@@ -4328,14 +4328,14 @@ function buildSlots(){
 }
 
 function isSlotOverlapping(a,b){
-  const margin = 6;
+  const margin = 28;
 
-  return !(
-    a.x + a.w + margin < b.x ||
-    a.x > b.x + b.w + margin ||
-    a.y + a.h + margin < b.y ||
-    a.y > b.y + b.h + margin
-  );
+ return !(
+  a.x + (a.w + 40) + margin < b.x ||
+  a.x > b.x + (b.w + 40) + margin ||
+  a.y + (a.h + 30) + margin < b.y ||
+  a.y > b.y + (b.h + 30) + margin
+);
 }
   
 function getNextSlot(excludeSlotIndex = null){
