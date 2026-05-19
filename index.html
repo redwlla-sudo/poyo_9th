@@ -4269,7 +4269,7 @@ function buildSlots(){
 }
 
 function isSlotOverlapping(a,b){
-  const margin = 18;
+  const margin = 6;
 
   return !(
     a.x + a.w + margin < b.x ||
@@ -4292,10 +4292,27 @@ function getNextSlot(excludeSlotIndex = null){
     return !sameRemovedSlot && !overlapVisiblePostit;
   });
 
-  if(availableSlots.length === 0){
-    return null;
+if(availableSlots.length === 0){
+  const slots = buildSlots();
+
+  const usedSlotIndexes = postitList.map(
+    item => item.slotIndex
+  );
+
+  const fallbackSlots = slots.filter(
+    slot =>
+      !usedSlotIndexes.includes(slot.slotIndex) &&
+      slot.slotIndex !== excludeSlotIndex
+  );
+
+  if(fallbackSlots.length > 0){
+    return fallbackSlots[
+      Math.floor(Math.random() * fallbackSlots.length)
+    ];
   }
 
+  return null;
+}
   return availableSlots[
     Math.floor(Math.random() * availableSlots.length)
   ];
