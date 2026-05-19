@@ -4231,47 +4231,38 @@ function getAvailableColor(){
 
 function buildSlots(){
   const stageRect = guestStage.getBoundingClientRect();
-  const inputBox = document.querySelector(".guestbook-input-box");
-  const inputRect = inputBox.getBoundingClientRect();
-  const inputTop = inputRect.top - stageRect.top;
 
-  const rawSlots = [
-    { x:5,  y:10 },
-    { x:26, y:18 },
-    { x:67, y:9  },
-    { x:80, y:25 },
-    { x:6,  y:45 },
-    { x:72, y:46 },
-    { x:18, y:66 },
-    { x:42, y:58 },
-    { x:63, y:68 },
-    { x:82, y:61 }
+  const positions = [
+    { x:0.05, y:0.08 },
+    { x:0.27, y:0.07 },
+    { x:0.50, y:0.08 },
+    { x:0.72, y:0.07 },
+
+    { x:0.08, y:0.32 },
+    { x:0.34, y:0.30 },
+    { x:0.60, y:0.31 },
+    { x:0.76, y:0.34 },
+
+    { x:0.06, y:0.55 },
+    { x:0.30, y:0.56 },
+    { x:0.55, y:0.55 },
+    { x:0.74, y:0.56 },
+
+    { x:0.16, y:0.68 },
+    { x:0.42, y:0.70 },
+    { x:0.66, y:0.68 },
+    { x:0.80, y:0.66 }
   ];
 
-  return rawSlots.map((slot,index)=>{
-    const px = stageRect.width * (slot.x / 100);
-    const py = stageRect.height * (slot.y / 100);
-
-    const safeX = Math.min(
-      Math.max(40, px),
-      stageRect.width - POSTIT_W - 40
-    );
-
-    const safeY = Math.min(
-      Math.max(40, py),
-      inputTop - POSTIT_H - 35
-    );
-
-    return {
-      x:safeX,
-      y:safeY,
-      w:POSTIT_W,
-      h:POSTIT_H,
-      slotIndex:index
-    };
-  });
+  return positions.map((pos,index)=>({
+    x: Math.round(stageRect.width * pos.x),
+    y: Math.round(stageRect.height * pos.y),
+    w: POSTIT_W,
+    h: POSTIT_H,
+    slotIndex:index
+  }));
 }
-
+  
 function getNextSlot(excludeSlotIndex = null){
   const slots = buildSlots();
 
