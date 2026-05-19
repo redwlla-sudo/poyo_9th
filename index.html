@@ -1110,11 +1110,6 @@ overflow-wrap:anywhere;
   display:block;
 }
   
-#hiddenMailboxList{
-  max-height:300px;
-  overflow-y:auto;
-  padding-right:8px;
-}
 .game-overlay{
   background:#050505;
   overflow:hidden;
@@ -1971,6 +1966,39 @@ transition:
   max-height:180px !important;
   overflow-y:auto !important;
   padding-right:8px !important;
+}
+
+.hidden-mailbox-item{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.hidden-message-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+}
+
+.hidden-approve,
+.hidden-delete{
+  width:38px;
+  height:38px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:18px;
+  font-weight:900;
+}
+
+.hidden-approve{
+  background:#7dffb3;
+  color:#111;
+}
+
+.hidden-delete{
+  background:#ff8f8f;
+  color:#111;
 }
 
 </style>
@@ -4394,23 +4422,20 @@ function renderMailbox(){
       .reverse()
       .forEach(mail => {
 
-      const item =
-      document.createElement("div");
+        const item = document.createElement("div");
+        item.className = "mailbox-item";
 
-      item.className = "mailbox-item";
+        item.textContent = mail.text;
 
-      item.textContent = mail.text;
+        mailboxListEl.appendChild(item);
 
-      mailboxListEl.appendChild(item);
-
-    });
+      });
   }
 
   /* 관리자 hidden */
   if(adminMode){
 
     hiddenMailboxSection.style.display = "block";
-
     hiddenMailboxSection.classList.add("show");
 
     hiddenMailboxList.innerHTML = "";
@@ -4420,21 +4445,71 @@ function renderMailbox(){
       .reverse()
       .forEach(mail => {
 
-      const item =
-      document.createElement("div");
+        const item = document.createElement("div");
+        item.className = "mailbox-item hidden-mailbox-item";
 
-      item.className = "mailbox-item";
+        const textEl = document.createElement("div");
+        textEl.className = "hidden-message-text";
+        textEl.textContent = `[숨김] ${mail.text}`;
 
-      item.textContent =
-      `[숨김] ${mail.text}`;
+        const actionBox = document.createElement("div");
+        actionBox.className = "hidden-message-actions";
 
-      hiddenMailboxList.appendChild(item);
+        const approveBtn = document.createElement("button");
+        approveBtn.className = "hidden-approve";
+        approveBtn.type = "button";
+        approveBtn.textContent = "✔";
 
-    });
+        approveBtn.addEventListener("click",()=>{
+
+          mail.status = "approved";
+
+          createPostit(mail.text);
+          renderMailbox();
+
+          localStorage.setItem(
+            "poyoMailbox",
+            JSON.stringify(mailboxList)
+          );
+
+        });
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "hidden-delete";
+        deleteBtn.type = "button";
+        deleteBtn.textContent = "✖";
+
+        deleteBtn.addEventListener("click",()=>{
+
+          const realIndex = mailboxList.indexOf(mail);
+
+          if(realIndex !== -1){
+            mailboxList.splice(realIndex,1);
+          }
+
+          renderMailbox();
+
+          localStorage.setItem(
+            "poyoMailbox",
+            JSON.stringify(mailboxList)
+          );
+
+        });
+
+        actionBox.appendChild(approveBtn);
+        actionBox.appendChild(deleteBtn);
+
+        item.appendChild(textEl);
+        item.appendChild(actionBox);
+
+        hiddenMailboxList.appendChild(item);
+
+      });
 
   }else{
 
     hiddenMailboxSection.style.display = "none";
+    hiddenMailboxSection.classList.remove("show");
 
   }
 }
