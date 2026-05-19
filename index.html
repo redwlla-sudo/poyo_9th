@@ -4580,11 +4580,33 @@ function createGuestBook(){
   }
 
   if(check.result === "hidden"){
-    saveToMailbox(text,"hidden",check.reason);
-    renderMailbox();
-    guestInput.value = "";
-    return;
+
+  saveToMailbox(text,"hidden",check.reason);
+
+  renderMailbox();
+
+  const approvedMessages =
+    mailboxList.filter(
+      mail => mail.status === "approved"
+    );
+
+  if(approvedMessages.length > 0){
+
+    const randomMessage =
+      approvedMessages[
+        Math.floor(
+          Math.random() *
+          approvedMessages.length
+        )
+      ];
+
+    createPostit(randomMessage.text);
   }
+
+  guestInput.value = "";
+
+  return;
+}
 
   /* approved만 실시간 표시 + 우편함 저장 */
   saveToMailbox(text,"approved","");
