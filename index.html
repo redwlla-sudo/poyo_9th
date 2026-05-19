@@ -885,9 +885,9 @@ padding:40px;
 .guestbook-postit{
   position:absolute;
 
-  width:300px;
-  min-height:220px;
-  max-height:260px;
+  width:330px;
+  min-height:240px;
+  max-height:285px;
 
   padding:30px 24px 24px;
 
@@ -4088,8 +4088,8 @@ let lastSubmitTime = 0;
 
 const MAX_POSTITS = 10;
 const COOLDOWN = 3000;
-const POSTIT_W = 300;
-const POSTIT_H = 260;
+const POSTIT_W = 330;
+const POSTIT_H = 285;
 
 const MIN_MESSAGE_LENGTH = 5;
 const MAX_MESSAGE_LENGTH = 80;
@@ -4272,16 +4272,24 @@ function buildSlots(){
   });
 }
 
-function getNextSlot(){
+function getNextSlot(excludeSlotIndex = null){
   const slots = buildSlots();
 
   const usedSlotIndexes = postitList.map(
     item => item.slotIndex
   );
 
-  const availableSlots = slots.filter(
-    slot => !usedSlotIndexes.includes(slot.slotIndex)
+  let availableSlots = slots.filter(
+    slot =>
+      !usedSlotIndexes.includes(slot.slotIndex) &&
+      slot.slotIndex !== excludeSlotIndex
   );
+
+  if(availableSlots.length === 0){
+    availableSlots = slots.filter(
+      slot => !usedSlotIndexes.includes(slot.slotIndex)
+    );
+  }
 
   if(availableSlots.length === 0){
     return slots[0];
@@ -4381,8 +4389,10 @@ function renderMailbox(){
 }
 
 function createPostit(text){
-  if(postitList.length >= MAX_POSTITS){
-    const oldPostit = postitList.shift();
+  let removedSlotIndex = null;
+ if(postitList.length >= MAX_POSTITS){
+  const oldPostit = postitList.shift();
+  removedSlotIndex = oldPostit.slotIndex;
 
     oldPostit.el.style.transition =
       "opacity .35s ease, transform .35s ease";
@@ -4396,8 +4406,8 @@ function createPostit(text){
     },350);
   }
 
-  const position = getNextSlot();
-
+ const position = getNextSlot(removedSlotIndex);
+  
   const postit = document.createElement("div");
   postit.className = "guestbook-postit";
   postit.textContent = formatPostitText(text);
