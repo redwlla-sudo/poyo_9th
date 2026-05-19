@@ -1054,7 +1054,19 @@ overflow-wrap:anywhere;
 }
 
 /* 리스트 */
-#mailboxList,
+#mailboxList{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+
+  overflow-y:auto;
+  overscroll-behavior:contain;
+
+  max-height:320px;
+
+  padding-right:6px;
+}
+
 #hiddenMailboxList{
   display:flex;
   flex-direction:column;
@@ -1062,8 +1074,8 @@ overflow-wrap:anywhere;
 
   overflow-y:auto;
   overscroll-behavior:contain;
-  
-  max-height:470px;
+
+  max-height:220px;
 
   padding-right:6px;
 }
@@ -1090,12 +1102,14 @@ overflow-wrap:anywhere;
   opacity:.7;
 }
 
-/* hidden 관리자 전용 */
 #hiddenMailboxSection{
-  max-height:360px;
-  overflow:hidden;
+  margin-top:22px;
 }
 
+#hiddenMailboxSection.show{
+  display:block;
+}
+  
 #hiddenMailboxList{
   max-height:300px;
   overflow-y:auto;
@@ -1942,6 +1956,23 @@ transition:
   50%{translate:0 -18px;}
 }
   
+#mailboxList{
+  max-height:300px !important;
+  overflow-y:auto !important;
+}
+
+#hiddenMailboxSection{
+  margin-top:18px !important;
+  max-height:230px !important;
+  overflow:hidden !important;
+}
+
+#hiddenMailboxList{
+  max-height:180px !important;
+  overflow-y:auto !important;
+  padding-right:8px !important;
+}
+
 </style>
 </head>
 
@@ -4379,6 +4410,8 @@ function renderMailbox(){
   if(adminMode){
 
     hiddenMailboxSection.style.display = "block";
+
+    hiddenMailboxSection.classList.add("show");
 
     hiddenMailboxList.innerHTML = "";
 
