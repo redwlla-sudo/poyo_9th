@@ -1,4 +1,4 @@
-ㄹ<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -2019,6 +2019,206 @@ transform:translateY(0) scale(1);
   color:#111;
 }
 
+.memory-desk-page{
+  position:relative;
+  overflow:hidden;
+
+  background:
+    linear-gradient(
+      rgba(0,0,0,.14),
+      rgba(0,0,0,.18)
+    ),
+    url("poyo_page3_bg.png")
+    center/cover no-repeat;
+}
+
+/* 왼쪽 책 */
+.desk-book{
+  position:absolute;
+  left:7%;
+  top:23%;
+
+  width:190px;
+  height:260px;
+
+  border-radius:14px 22px 22px 14px;
+
+  background:linear-gradient(135deg,#f4d8ff,#b8f2e6);
+
+  box-shadow:
+    0 18px 34px rgba(0,0,0,.32),
+    inset -10px 0 18px rgba(0,0,0,.12);
+
+  transform:rotate(-10deg);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  z-index:2;
+}
+
+.book-title{
+  writing-mode:vertical-rl;
+
+  font-family:'Jalnan', sans-serif;
+  font-size:1.55rem;
+  color:#4a3a5f;
+
+  letter-spacing:4px;
+
+  text-shadow:
+    1px 1px 0 rgba(255,255,255,.45);
+}
+
+/* 오른쪽 앨범 */
+.desk-album{
+  position:absolute;
+  right:7%;
+  top:28%;
+
+  width:240px;
+  height:300px;
+
+  border-radius:24px;
+
+  background:
+    linear-gradient(135deg,#fff7fb,#e6dcff);
+
+  box-shadow:
+    0 20px 38px rgba(0,0,0,.34),
+    inset 0 0 22px rgba(255,255,255,.45);
+
+  transform:rotate(8deg);
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  z-index:2;
+}
+
+.album-title{
+  font-family:'Jalnan', sans-serif;
+  font-size:2rem;
+  color:#6a4c93;
+
+  padding:16px 26px;
+  border-radius:999px;
+
+  background:rgba(255,255,255,.38);
+
+  text-shadow:
+    1px 1px 0 rgba(255,255,255,.6);
+}
+
+/* 가운데 폴라로이드 */
+.polaroid-area{
+  position:absolute;
+  left:50%;
+  top:52%;
+
+  width:720px;
+  height:440px;
+
+  transform:translate(-50%,-50%);
+
+  z-index:5;
+}
+
+.polaroid{
+  position:absolute;
+
+  width:170px;
+  height:220px;
+
+  padding:12px 12px 34px;
+
+  background:#fffaf2;
+
+  border-radius:6px;
+
+  box-shadow:
+    0 14px 28px rgba(0,0,0,.28);
+
+  box-sizing:border-box;
+
+  cursor:pointer;
+
+  transition:
+    transform .35s ease,
+    box-shadow .35s ease;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.polaroid:hover{
+  transform:translateY(-14px) scale(1.04) rotate(var(--r));
+  box-shadow:
+    0 22px 42px rgba(0,0,0,.36);
+}
+
+.polaroid-photo{
+  width:100%;
+  height:138px;
+
+  border-radius:4px;
+
+  background:
+    linear-gradient(135deg,#d9cfff,#b8f2e6);
+
+  box-shadow:
+    inset 0 0 14px rgba(0,0,0,.12);
+}
+
+.polaroid-caption{
+  margin-top:12px;
+
+  font-family:'Fredoka', sans-serif;
+  font-weight:800;
+  font-size:.95rem;
+
+  color:#6b5d52;
+}
+
+/* 폴라로이드 5장 위치 */
+.p1{
+  left:20px;
+  top:120px;
+  --r:-9deg;
+  transform:rotate(-9deg);
+}
+
+.p2{
+  left:150px;
+  top:60px;
+  --r:5deg;
+  transform:rotate(5deg);
+}
+
+.p3{
+  left:285px;
+  top:110px;
+  --r:-2deg;
+  transform:rotate(-2deg);
+}
+
+.p4{
+  left:420px;
+  top:55px;
+  --r:8deg;
+  transform:rotate(8deg);
+}
+
+.p5{
+  left:540px;
+  top:125px;
+  --r:-6deg;
+  transform:rotate(-6deg);
+}
+  
 </style>
 </head>
 
@@ -2100,7 +2300,44 @@ STEP 3
 </div>
 </div>
 
-<div class="page gradient"></div>
+<div class="page page-3 memory-desk-page">
+
+  <div class="desk-book poyo-book">
+    <div class="book-title">포요 9주년</div>
+  </div>
+
+  <div class="desk-album love-album">
+    <div class="album-title">러브레터</div>
+  </div>
+
+  <div class="polaroid-area">
+    <div class="polaroid p1">
+      <div class="polaroid-photo"></div>
+      <div class="polaroid-caption">MEMORY 01</div>
+    </div>
+
+    <div class="polaroid p2">
+      <div class="polaroid-photo"></div>
+      <div class="polaroid-caption">MEMORY 02</div>
+    </div>
+
+    <div class="polaroid p3">
+      <div class="polaroid-photo"></div>
+      <div class="polaroid-caption">MEMORY 03</div>
+    </div>
+
+    <div class="polaroid p4">
+      <div class="polaroid-photo"></div>
+      <div class="polaroid-caption">MEMORY 04</div>
+    </div>
+
+    <div class="polaroid p5">
+      <div class="polaroid-photo"></div>
+      <div class="polaroid-caption">MEMORY 05</div>
+    </div>
+  </div>
+
+</div>
 <div class="page page-4 library-page">
   <div id="guestbook-module">
 
