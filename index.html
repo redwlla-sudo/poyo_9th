@@ -5022,6 +5022,95 @@ mailboxCloseBtn.addEventListener("click",()=>{
 
 });
 </script>
+
+ <!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBanqE8W5hy6Ct_4U7ANR90o3jvrMGDOL0",
+  authDomain: "poyo-9th.firebaseapp.com",
+  projectId: "poyo-9th",
+  storageBucket: "poyo-9th.firebasestorage.app",
+  messagingSenderId: "429411517351",
+  appId: "1:429411517351:web:008ed57183209a60a6ec82",
+  measurementId: "G-NYSGM5PMTN"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const guestMessageInput =
+document.getElementById("guestMessageInput");
+
+const guestMessageBtn =
+document.getElementById("guestMessageBtn");
+
+const guestbookStage =
+document.getElementById("guestbookStage");
+
+const mailboxList =
+document.getElementById("mailboxList");
+
+guestMessageBtn.addEventListener("click", async ()=>{
+
+  const text = guestMessageInput.value.trim();
+
+  if(!text) return;
+
+  await db.collection("guestbook").add({
+    message:text,
+    hidden:false,
+    createdAt:firebase.firestore.FieldValue.serverTimestamp()
+  });
+
+  guestMessageInput.value = "";
+});
+
+db.collection("guestbook")
+.orderBy("createdAt","desc")
+.onSnapshot(snapshot=>{
+
+  guestbookStage.innerHTML = "";
+  mailboxList.innerHTML = "";
+
+  snapshot.forEach(doc=>{
+
+    const data = doc.data();
+
+    if(data.hidden) return;
+
+    const postit = document.createElement("div");
+    postit.className = "guestbook-postit show";
+    postit.textContent = data.message;
+
+    const x = Math.random()*70+8;
+    const y = Math.random()*55+8;
+    const r = Math.random()*16-8;
+
+    postit.style.left = x + "%";
+    postit.style.top = y + "%";
+    postit.style.setProperty("--rotate", r + "deg");
+
+    guestbookStage.appendChild(postit);
+
+    const item = document.createElement("div");
+    item.className = "mailbox-item";
+    item.textContent = data.message;
+
+    mailboxList.appendChild(item);
+  });
+
+  if(mailboxList.innerHTML.trim() === ""){
+    mailboxList.innerHTML = `
+      <p class="mailbox-empty">
+        아직 도착한 메시지가 없어요
+      </p>
+    `;
+  }
+});
+</script> 
   
 </body>
 </html>
