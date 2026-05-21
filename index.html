@@ -2035,9 +2035,15 @@ transform:translateY(0) scale(1);
 /* 3페이지 앨범 */
 .memory-desk-page > .desk-album-img{
   position:absolute !important;
-  left:170px !important;
-  top:150px !important;
+
+  /* 👇 더 안쪽으로 */
+  left:230px !important;
+
+  /* 👇 살짝 아래 */
+  top:170px !important;
+
   width:430px !important;
+
   transform:rotate(-5deg) !important;
   z-index:30 !important;
 }
@@ -2045,11 +2051,15 @@ transform:translateY(0) scale(1);
 /* 3페이지 음반 */
 .memory-desk-page > .desk-cd-img{
   position:absolute !important;
+
   left:50% !important;
-  top:85px !important;
+
+  /* 👇 더 아래로 */
+  top:125px !important;
+
   width:520px !important;
-  
-  /* 위쪽 살짝 걸치는 느낌 유지 */
+
+  /* 👇 위쪽만 걸친 느낌 유지 */
   transform:translateX(-50%) rotate(2deg) !important;
 
   z-index:31 !important;
