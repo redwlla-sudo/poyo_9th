@@ -2078,7 +2078,6 @@ transform:translateY(0) scale(1);
   z-index:3;
 }
 
-/* 폴라로이드 5장 - 더 크게 */
 /* 폴라로이드 영역 */
 .polaroid-area{
   position:absolute;
@@ -2127,13 +2126,65 @@ transform:translateY(0) scale(1);
   width:100%;
   height:185px;
 
-  border-radius:5px;
+  object-fit:cover;
+  display:block;
 
-  background:linear-gradient(135deg,#d9cfff,#b8f2e6);
+  border-radius:5px;
+  background:#000;
 
   box-shadow:inset 0 0 16px rgba(0,0,0,.14);
 }
 
+#videoPopup{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.68);
+  backdrop-filter:blur(8px);
+  z-index:99999999;
+}
+
+#videoPopup.show{
+  display:flex;
+}
+
+.video-popup-box{
+  position:relative;
+  width:min(78vw,1100px);
+  aspect-ratio:16/9;
+  border-radius:24px;
+  overflow:hidden;
+  background:#000;
+}
+
+#popupVideo{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:contain;
+  background:#000;
+}
+
+#popupPlayBtn{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:92px;
+  height:92px;
+  border:none;
+  border-radius:50%;
+  background:rgba(255,255,255,.85);
+  font-size:3rem;
+  cursor:pointer;
+}
+
+#popupPlayBtn.hide{
+  display:none;
+}
+  
 .polaroid-caption{
   margin-top:14px;
 
@@ -2239,34 +2290,53 @@ STEP 3
   <img class="love-letter-img" src="poyo_letter.png" alt="포요 편지">
   
   <div class="polaroid-area">
-    <div class="polaroid p1">
-      <div class="polaroid-photo"></div>
-      <div class="polaroid-caption">MEMORY 01</div>
-    </div>
 
-    <div class="polaroid p2">
-      <div class="polaroid-photo"></div>
-      <div class="polaroid-caption">MEMORY 02</div>
-    </div>
+  <div class="polaroid p1" data-video="poyo/poyo_cute.mp4">
+    <video class="polaroid-photo" muted loop playsinline>
+      <source src="poyo/poyo_cute.mp4" type="video/mp4">
+    </video>
+    <div class="polaroid-caption">MEMORY 01</div>
+  </div>
 
-    <div class="polaroid p3">
-      <div class="polaroid-photo"></div>
-      <div class="polaroid-caption">MEMORY 03</div>
-    </div>
+  <div class="polaroid p2" data-video="poyo/poyo_dna.mp4">
+    <video class="polaroid-photo" muted loop playsinline>
+      <source src="poyo/poyo_dna.mp4" type="video/mp4">
+    </video>
+    <div class="polaroid-caption">MEMORY 02</div>
+  </div>
 
-    <div class="polaroid p4">
-      <div class="polaroid-photo"></div>
-      <div class="polaroid-caption">MEMORY 04</div>
-    </div>
+  <div class="polaroid p3" data-video="poyo/poyo_lingPT.mp4">
+    <video class="polaroid-photo" muted loop playsinline>
+      <source src="poyo/poyo_lingPT.mp4" type="video/mp4">
+    </video>
+    <div class="polaroid-caption">MEMORY 03</div>
+  </div>
 
-    <div class="polaroid p5">
-      <div class="polaroid-photo"></div>
-      <div class="polaroid-caption">MEMORY 05</div>
-    </div>
-    
+  <div class="polaroid p4" data-video="poyo/poyo_puzzle.mp4">
+    <video class="polaroid-photo" muted loop playsinline>
+      <source src="poyo/poyo_puzzle.mp4" type="video/mp4">
+    </video>
+    <div class="polaroid-caption">MEMORY 04</div>
+  </div>
+
+  <div class="polaroid p5" data-video="poyo/poyo_sanabi.mp4">
+    <video class="polaroid-photo" muted loop playsinline>
+      <source src="poyo/poyo_sanabi.mp4" type="video/mp4">
+    </video>
+    <div class="polaroid-caption">MEMORY 05</div>
   </div>
 
 </div>
+
+</div>
+
+<div id="videoPopup">
+  <div class="video-popup-box">
+    <video id="popupVideo" playsinline></video>
+    <button id="popupPlayBtn" type="button">▶</button>
+  </div>
+</div>
+
 <div class="page page-4 library-page">
   <div id="guestbook-module">
 
@@ -3718,6 +3788,61 @@ retryGameBtn.addEventListener("click", retryGame);
 
 rankBtn.addEventListener("click",()=>{
   alert("랭킹 기능은 Firebase 연결 후 추가할 예정입니다.");
+});
+
+const videoPopup = document.getElementById("videoPopup");
+const popupVideo = document.getElementById("popupVideo");
+const popupPlayBtn = document.getElementById("popupPlayBtn");
+
+let beforePopupMainVolume = 0.45;
+
+document.querySelectorAll(".polaroid").forEach(card=>{
+  card.addEventListener("click",()=>{
+    const videoSrc = card.dataset.video;
+    if(!videoSrc) return;
+
+    beforePopupMainVolume = mainBgm ? mainBgm.volume : 0.45;
+
+    if(mainBgm){
+      mainBgm.volume = 0;
+    }
+
+    popupVideo.pause();
+    popupVideo.src = videoSrc;
+    popupVideo.currentTime = 0;
+    popupVideo.muted = false;
+
+    popupPlayBtn.classList.remove("hide");
+    videoPopup.classList.add("show");
+  });
+});
+
+popupPlayBtn.addEventListener("click",(e)=>{
+  e.stopPropagation();
+
+  popupVideo.play().catch(()=>{});
+  popupPlayBtn.classList.add("hide");
+});
+
+videoPopup.addEventListener("click",(e)=>{
+  if(e.target !== videoPopup) return;
+
+  popupVideo.pause();
+  popupVideo.currentTime = 0;
+  popupVideo.removeAttribute("src");
+  popupVideo.load();
+
+  videoPopup.classList.remove("show");
+  popupPlayBtn.classList.remove("hide");
+
+  if(mainBgm){
+    mainBgm.volume = beforePopupMainVolume;
+    mainBgm.play().catch(()=>{});
+  }
+});
+
+popupVideo.addEventListener("ended",()=>{
+  popupPlayBtn.classList.remove("hide");
 });
   
 </script>
