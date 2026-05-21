@@ -2064,52 +2064,66 @@ transform:translateY(0) scale(1);
   pointer-events:none;
 }
 
+/* 앨범 안 사진 공통 */
 .album-photo{
   position:absolute;
   object-fit:cover;
-  border-radius:2px;
+
+  width:100%;
+  height:100%;
+
+  border-radius:4px;
+
+  box-shadow:
+    0 3px 8px rgba(0,0,0,.18);
+
+  z-index:29;
 }
 
-/* 1. 왼쪽 첫번째 작은 사각형 - poyo_album_5 */
+/* 왼쪽 위 작은 세로칸 */
 .album-photo-1{
-  left:11.5%;
-  top:12%;
-  width:20%;
+  left:10.8%;
+  top:11.8%;
+
+  width:16%;
+  height:24%;
+}
+
+/* 왼쪽 아래 큰 가로칸 */
+.album-photo-2{
+  left:8.5%;
+  top:51%;
+
+  width:36%;
   height:30%;
 }
 
-/* 2. 왼쪽 두번째 가로로 넓은 사각형 - poyo_album_3 */
-.album-photo-2{
-  left:13%;
-  top:60%;
-  width:33%;
-  height:28%;
-}
-
-/* 3. 오른쪽 첫번째 세로로 긴 사각형 - poyo_album_1 */
+/* 오른쪽 위 큰 세로칸 */
 .album-photo-3{
-  left:62%;
-  top:12%;
+  left:56%;
+  top:10.8%;
+
   width:24%;
-  height:43%;
+  height:40%;
 }
 
-/* 4. 오른쪽 밑 작은 사각형 왼쪽 - poyo_album_2 */
+/* 오른쪽 아래 왼쪽칸 */
 .album-photo-4{
-  left:55%;
-  top:70%;
-  width:17%;
-  height:20%;
+  left:56%;
+  top:63.5%;
+
+  width:11.5%;
+  height:15%;
 }
 
-/* 5. 오른쪽 밑 작은 사각형 오른쪽 - poyo_album_4 */
+/* 오른쪽 아래 오른쪽칸 */
 .album-photo-5{
-  left:75%;
-  top:70%;
-  width:17%;
-  height:20%;
-}
+  left:69.5%;
+  top:63.5%;
 
+  width:11.5%;
+  height:15%;
+}
 /* 3페이지 음반 */
 .memory-desk-page > .desk-cd-img{
   position:absolute !important;
