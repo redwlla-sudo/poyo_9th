@@ -2048,96 +2048,6 @@ transform:translateY(0) scale(1);
   z-index:30 !important;
 }
 
-/* 앨범 안 사진 5장 */
-.album-photos{
-  position:absolute;
-
-  left:320px;
-  top:250px;
-
-  width:470px;
-  height:324px;
-
-  transform:rotate(-5deg);
-
-  z-index:31;
-  pointer-events:none;
-}
-
-.album-frame{
-  position:absolute;
-  overflow:hidden;
-  border-radius:2px;
-}
-
-.album-frame img{
-  width:100%;
-  height:100%;
-  display:block;
-}
-
-/* 왼쪽 위 작은칸 */
-.album-frame-1{
-  left:10.5%;
-  top:11.5%;
-  width:16.5%;
-  height:24.5%;
-}
-
-.album-frame-1 img{
-  object-fit:cover;
-}
-
-/* 왼쪽 아래 큰 가로칸 */
-.album-frame-2{
-  left:8.2%;
-  top:52%;
-  width:36.5%;
-  height:27%;
-}
-
-.album-frame-2 img{
-  object-fit:contain;
-  object-position:center;
-}
-
-/* 오른쪽 위 큰 세로칸 */
-.album-frame-3{
-  left:56%;
-  top:11%;
-  width:24%;
-  height:40%;
-}
-
-.album-frame-3 img{
-  object-fit:cover;
-}
-
-/* 오른쪽 아래 왼쪽 작은칸 */
-.album-frame-4{
-  left:55.4%;
-  top:63%;
-  width:14%;
-  height:18.5%;
-}
-
-.album-frame-4 img{
-  object-fit:cover;
-}
-
-/* 오른쪽 아래 오른쪽 작은칸 */
-.album-frame-5{
-  left:70.5%;
-  top:63%;
-  width:15%;
-  height:18.5%;
-}
-
-.album-frame-5 img{
-  object-fit:cover;
-  transform:scale(1.18);
-}
-  
 /* 3페이지 음반 */
 .memory-desk-page > .desk-cd-img{
   position:absolute !important;
@@ -2324,35 +2234,10 @@ STEP 3
 
 <div class="page page-3 memory-desk-page">
 
- <!-- 왼쪽 앨범 이미지 -->
-<img class="desk-album-img" src="poyo_album.png" alt="포요 9주년 앨범">
+ <img class="desk-album-img" src="poyo_album.png" alt="포요 앨범">
+  <img class="desk-cd-img" src="poyo_record.png" alt="포요 음반">
+  <img class="love-letter-img" src="poyo_letter.png" alt="포요 편지">
   
-<div class="album-photos">
-  <div class="album-frame album-frame-1">
-    <img src="poyo/poyo_album_5.jpg" alt="">
-  </div>
-
-  <div class="album-frame album-frame-2">
-    <img src="poyo/poyo_album_3.jpg" alt="">
-  </div>
-
-  <div class="album-frame album-frame-3">
-    <img src="poyo/poyo_album_1.jpg" alt="">
-  </div>
-
-  <div class="album-frame album-frame-4">
-    <img src="poyo/poyo_album_2.jpg" alt="">
-  </div>
-
-  <div class="album-frame album-frame-5">
-    <img src="poyo/poyo_album_4.jpg" alt="">
-  </div>
-</div>
-  
-<!-- 가운데 음반 이미지 -->
-<img class="desk-cd-img" src="poyo_record.png" alt="포요 음반">
-<img class="love-letter-img" src="poyo_letter.png" alt="포요 편지">
-
   <div class="polaroid-area">
     <div class="polaroid p1">
       <div class="polaroid-photo"></div>
