@@ -2035,19 +2035,29 @@ transform:translateY(0) scale(1);
 /* 3페이지 앨범/음반 위치 강제 적용 */
 .memory-desk-page > .desk-album-img{
   position:absolute !important;
-  left:95px !important;
+
+  /* 앨범 조금 더 안쪽 */
+  left:130px !important;
   top:135px !important;
+
   width:430px !important;
+
   transform:rotate(-3deg) !important;
   z-index:30 !important;
 }
 
 .memory-desk-page > .desk-cd-img{
   position:absolute !important;
+
+  /* 음반 조금 더 아래 */
   left:50% !important;
-  top:55px !important;
+  top:85px !important;
+
   width:520px !important;
+
+  /* 위쪽 살짝 걸치는 느낌 유지 */
   transform:translateX(-50%) rotate(2deg) !important;
+
   z-index:31 !important;
 }
   
