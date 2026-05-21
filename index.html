@@ -2032,13 +2032,14 @@ transform:translateY(0) scale(1);
     center/cover no-repeat;
 }
 
-/* 왼쪽 앨범 이미지 */
-/* 왼쪽 앨범 이미지 */
 .desk-album-img{
     position:absolute;
-    left:140px;
-    top:190px;
 
+    /* 네가 원한 위치 기준 */
+    left:120px;
+    top:170px;
+
+    /* 현재 마음에 드는 크기 유지 */
     width:430px;
 
     z-index:3;
@@ -2048,12 +2049,15 @@ transform:translateY(0) scale(1);
     filter:drop-shadow(0 12px 18px rgba(0,0,0,0.22));
 }
 
-/* ===== 음반 ===== */
+/* ===== 가운데 음반 ===== */
 .desk-cd-img{
     position:absolute;
-    left:520px;
-    top:90px;
 
+    /* 네가 전에 올린 기준 위치 */
+    left:390px;
+    top:70px;
+
+    /* 지금 크기 유지 */
     width:520px;
 
     z-index:4;
@@ -2083,23 +2087,9 @@ transform:translateY(0) scale(1);
 }
 
 .love-letter::after{
-  content:"";
-  position:absolute;
-  left:50%;
-  bottom:44px;
-  transform:translateX(-50%);
-
-  width:44px;
-  height:44px;
-
-  border-radius:50%;
-  background:#8e5cc7;
-
-  box-shadow:
-    0 4px 10px rgba(0,0,0,.25),
-    inset 0 0 10px rgba(255,255,255,.22);
+  display:none;
 }
-
+  
 .letter-title{
   position:absolute;
   top:58px;
