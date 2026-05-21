@@ -671,6 +671,27 @@ caret-color:#00ff88;
 color:rgba(0,255,136,.38);
 }
 
+/* 👇 여기 추가 */
+#promiseCodeInput{
+  width:100%;
+  height:46px;
+  background:transparent;
+  border:none;
+  border-bottom:2px solid #00ff88;
+  outline:none;
+
+  color:#00ff88;
+  font-family:'NeoDunggeunGothicPro',sans-serif;
+  font-size:1.35rem;
+  font-weight:700;
+  line-height:46px;
+  text-align:center;
+}
+
+#promiseCodeInput::placeholder{
+  color:rgba(0,255,136,.38);
+}
+
 .step3-final{
 position:absolute;
 inset:0;
@@ -4266,9 +4287,12 @@ stepContent.innerHTML=
 '<div class="step3-bg" id="step3Bg"></div>'+
 '<div class="step3-blackout" id="step3Blackout"></div>'+
 '<div class="step3-write" id="step3Write">'+
-'<div class="step3-title">10주년에도 포요와 함께할<br>우리들의 작은 약속을 적어주세요.</div>'+
+'<div class="step3-title">포요님만 입력할 수 있는 약속입니다</div>'+
 '<div class="step3-line-wrap">'+
-'<textarea id="promiseInput" maxlength="42" placeholder="여기에 약속을 적고 Enter를 눌러주세요"></textarea>'+
+'<input id="promiseCodeInput" type="password" placeholder="비밀코드를 입력해주세요">'+
+'</div>'+
+'<div class="step3-line-wrap" id="promiseWriteBox" style="display:none;">'+
+'<textarea id="promiseInput" maxlength="40" placeholder="포요님의 약속을 입력해주세요"></textarea>'+
 '</div>'+
 '</div>'+
 '<div class="step3-final" id="step3Final">'+
@@ -4276,6 +4300,38 @@ stepContent.innerHTML=
 '</div>';
 
 const input=document.getElementById("promiseInput");
+
+/* 👇 여기 추가 */
+const promiseCodeInput =
+document.getElementById("promiseCodeInput");
+
+const promiseWriteBox =
+document.getElementById("promiseWriteBox");
+
+if(promiseCodeInput && promiseWriteBox){
+
+  promiseCodeInput.addEventListener("keydown",(e)=>{
+
+    if(e.key !== "Enter") return;
+
+    if(promiseCodeInput.value.trim() === "POYO_9th"){
+
+      promiseCodeInput.style.display = "none";
+
+      promiseWriteBox.style.display = "block";
+
+    }else{
+
+      alert("비밀코드가 맞지 않아요");
+
+      promiseCodeInput.value = "";
+
+    }
+
+  });
+
+}
+  
 const write=document.getElementById("step3Write");
 const bg=document.getElementById("step3Bg");
 const blackout=document.getElementById("step3Blackout");
