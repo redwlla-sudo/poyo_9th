@@ -4297,16 +4297,19 @@ const promiseText = input.value.trim();
 
 const chalkText = document.getElementById("promiseChalkText");
 if(chalkText){
-
   chalkText.style.display = "flex";
-
-  chalkText.textContent =
-  promiseText;
-
+  chalkText.textContent = promiseText;
 }
 
+/* STEP3 약속 Firebase 저장 */
+if(typeof db !== "undefined"){
+  db.collection("promises").add({
+    message: promiseText,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+}
+  
 submitted=true;
-
 startFinalStepBgm(bg,final,blackout,write);
 
 }
@@ -4470,7 +4473,7 @@ const hardBlockRules = {
   ],
 
   politics:[
-    "대통령","정당","국힘","민주당","좌파","우파","선거","정치"
+    "대통령","정당","국힘","민주당","좌파","우파","선거","정치","윤""이재명
   ],
 
   links:[
@@ -5050,7 +5053,7 @@ document.getElementById("guestMessageBtn");
 const guestbookStage =
 document.getElementById("guestbookStage");
 
-const mailboxList =
+const firebaseMailboxList =
 document.getElementById("mailboxList");
 
 guestMessageBtn.addEventListener("click", async ()=>{
@@ -5073,7 +5076,7 @@ db.collection("guestbook")
 .onSnapshot(snapshot=>{
 
   guestbookStage.innerHTML = "";
-  mailboxList.innerHTML = "";
+  firebaseMailboxList.innerHTML = "";
 
   snapshot.forEach(doc=>{
 
@@ -5084,6 +5087,18 @@ db.collection("guestbook")
     const postit = document.createElement("div");
     postit.className = "guestbook-postit show";
     postit.textContent = data.message;
+
+    postit.dataset.id = doc.id;
+
+  postit.addEventListener("click", async ()=>{
+  const ok = confirm("이 포스트잇을 숨길까요?");
+
+  if(!ok) return;
+
+  await db.collection("guestbook").doc(doc.id).update({
+    hidden:true
+  });
+});
 
     const x = Math.random()*70+8;
     const y = Math.random()*55+8;
@@ -5099,15 +5114,31 @@ db.collection("guestbook")
     item.className = "mailbox-item";
     item.textContent = data.message;
 
-    mailboxList.appendChild(item);
+    firebaseMailboxList.appendChild(item);
   });
 
-  if(mailboxList.innerHTML.trim() === ""){
-    mailboxList.innerHTML = `
+  if(firebaseMailboxList.innerHTML.trim() === ""){
+    firebaseMailboxList.innerHTML = `
       <p class="mailbox-empty">
         아직 도착한 메시지가 없어요
       </p>
     `;
+  }
+});
+
+db.collection("promises")
+.orderBy("createdAt","desc")
+.limit(1)
+.onSnapshot(snapshot=>{
+
+  if(snapshot.empty) return;
+
+  const latestPromise = snapshot.docs[0].data();
+  const chalkText = document.getElementById("promiseChalkText");
+
+  if(chalkText && latestPromise.message){
+    chalkText.style.display = "flex";
+    chalkText.textContent = latestPromise.message;
   }
 });
 </script> 
