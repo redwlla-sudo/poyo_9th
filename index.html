@@ -2060,83 +2060,82 @@ transform:translateY(0) scale(1);
 
   transform:rotate(-5deg);
 
-  z-index:29;
+  z-index:31;
   pointer-events:none;
 }
 
-/* 앨범 안 사진 공통 */
-.album-photo{
+.album-frame{
   position:absolute;
-  object-fit:cover;
+  overflow:hidden;
+  border-radius:2px;
+}
 
+.album-frame img{
   width:100%;
   height:100%;
-
-  border-radius:4px;
-
-  box-shadow:
-    0 3px 8px rgba(0,0,0,.18);
-
-  z-index:29;
+  display:block;
 }
 
-/* 왼쪽 위 작은 세로칸 */
-.album-photo-1{
-  left:10.8%;
-  top:11.8%;
-
-  width:16%;
-  height:24%;
+/* 왼쪽 위 작은칸 */
+.album-frame-1{
+  left:10.5%;
+  top:11.5%;
+  width:16.5%;
+  height:24.5%;
 }
 
-/* 2번 - 왼쪽 아래 큰 가로 프레임 */
-.album-photo-2{
-  left:8.4%;
-  top:52.5%;
+.album-frame-1 img{
+  object-fit:cover;
+}
 
+/* 왼쪽 아래 큰 가로칸 */
+.album-frame-2{
+  left:8.2%;
+  top:52%;
   width:36.5%;
-  height:26.5%;
+  height:27%;
+}
 
+.album-frame-2 img{
   object-fit:contain;
-  object-position:center center;
-
-  background:transparent;
-  box-shadow:none;
+  object-position:center;
 }
 
 /* 오른쪽 위 큰 세로칸 */
-.album-photo-3{
+.album-frame-3{
   left:56%;
-  top:10.8%;
-
+  top:11%;
   width:24%;
   height:40%;
 }
 
-/* 4. 오른쪽 아래 왼쪽칸 - poyo_album_2 */
-.album-photo-4{
-  left:55.2%;
-  top:62.8%;
-
-  width:14%;
-  height:18.5%;
-
+.album-frame-3 img{
   object-fit:cover;
 }
 
-/* 5번 - 오른쪽 아래 오른쪽 작은 프레임 */
-.album-photo-5{
-  left:70.7%;
-  top:62.3%;
+/* 오른쪽 아래 왼쪽 작은칸 */
+.album-frame-4{
+  left:55.4%;
+  top:63%;
+  width:14%;
+  height:18.5%;
+}
 
-  width:14.8%;
-  height:19%;
-
+.album-frame-4 img{
   object-fit:cover;
-  object-position:center center;
+}
 
+/* 오른쪽 아래 오른쪽 작은칸 */
+.album-frame-5{
+  left:70.5%;
+  top:63%;
+  width:15%;
+  height:18.5%;
+}
+
+.album-frame-5 img{
+  object-fit:cover;
   transform:scale(1.18);
-  transform-origin:center center;
 }
   
 /* 3페이지 음반 */
@@ -2329,11 +2328,25 @@ STEP 3
 <img class="desk-album-img" src="poyo_album.png" alt="포요 9주년 앨범">
   
 <div class="album-photos">
-  <img src="poyo/poyo_album_5.jpg" class="album-photo album-photo-1" alt="">
-  <img src="poyo/poyo_album_3.jpg" class="album-photo album-photo-2" alt="">
-  <img src="poyo/poyo_album_1.jpg" class="album-photo album-photo-3" alt="">
-  <img src="poyo/poyo_album_2.jpg" class="album-photo album-photo-4" alt="">
-  <img src="poyo/poyo_album_4.jpg" class="album-photo album-photo-5" alt="">
+  <div class="album-frame album-frame-1">
+    <img src="poyo/poyo_album_5.jpg" alt="">
+  </div>
+
+  <div class="album-frame album-frame-2">
+    <img src="poyo/poyo_album_3.jpg" alt="">
+  </div>
+
+  <div class="album-frame album-frame-3">
+    <img src="poyo/poyo_album_1.jpg" alt="">
+  </div>
+
+  <div class="album-frame album-frame-4">
+    <img src="poyo/poyo_album_2.jpg" alt="">
+  </div>
+
+  <div class="album-frame album-frame-5">
+    <img src="poyo/poyo_album_4.jpg" alt="">
+  </div>
 </div>
   
 <!-- 가운데 음반 이미지 -->
